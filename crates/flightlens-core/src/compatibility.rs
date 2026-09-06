@@ -35,12 +35,10 @@ pub fn pack(version: Option<&str>) -> Option<&'static Pack> {
     // Vendor and release builds commonly append a suffix, for example
     // `4.5.3.KAACK_V19`. Use the certified schema for the same major/minor
     // line while keeping the original firmware identity in the document.
-    // Keep unknown numeric patch releases conservative. A suffixed vendor
-    // build identifies its upstream major/minor line explicitly, whereas a
-    // plain future patch may have changed parameter semantics.
-    if version.split('.').count() <= 3 {
-        return None;
-    }
+    // The bundled packs are certified at the first patch release of each
+    // supported major/minor line. Plain patch releases on that same line
+    // (for example 4.4.2) use the same schema; vendor suffixes are handled by
+    // the same major/minor lookup below.
     let mut parts = version.split('.');
     let major = parts.next()?.parse::<u16>().ok()?;
     let minor = parts.next()?.parse::<u16>().ok()?;
@@ -86,5 +84,32 @@ impl Schema {
             "string" => true,
             _ => false,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::pack;
+
+    #[test]
+    fn matches_supported_patch_releases_by_major_minor() {
+        assert_eq!(
+            pack(Some("4.3.1")).map(|p| p.id.as_str()),
+            Some("betaflight-4.3.0-schema-1")
+        );
+        assert_eq!(
+            pack(Some("4.4.2")).map(|p| p.id.as_str()),
+            Some("betaflight-4.4.0-schema-1")
+        );
+        assert_eq!(
+            pack(Some("4.5.1")).map(|p| p.id.as_str()),
+            Some("betaflight-4.5.0-schema-1")
+        );
+    }
+
+    #[test]
+    fn rejects_unsupported_lines() {
+        assert!(pack(Some("4.2.11")).is_none());
+        assert!(pack(Some("5.0.0")).is_none());
     }
 }

@@ -211,7 +211,7 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
     let mut offset = 0;
     d.diagnostics.push(Diagnostic{line:None,severity:"info".into(),message:"No uniquely verified target baseline is bundled. Omitted values remain unknown; this is a declared configuration, not a simulation of boot-time corrections.".into()});
     if pack.is_none() {
-        d.diagnostics.push(Diagnostic{line:None,severity:"warning".into(),message:"No exact compatibility pack matches this header. Raw inspection is available; semantic plots and export are disabled.".into()});
+        d.diagnostics.push(Diagnostic{line:None,severity:"warning".into(),message:"No compatible schema matches this firmware line. Raw inspection is available; semantic plots and export are disabled.".into()});
     }
     for (i, raw) in text.split_inclusive('\n').enumerate() {
         let line = i as u32 + 1;

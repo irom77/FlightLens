@@ -99,12 +99,12 @@ fn malformed_assignment_does_not_resurrect_previous_value() {
     assert_eq!(d.number(&Scope::Pid(0), "p_roll"), None);
 }
 #[test]
-fn headerless_and_future_versions_are_partial() {
+fn headerless_and_unsupported_versions_are_partial() {
     for s in [
         "set roll_rc_rate = 20\n".into(),
         format!(
             "{}\nprofile 0\nset p_roll = 30\n",
-            header().replace("4.5.0", "4.5.1")
+            header().replace("4.5.0", "4.6.1")
         ),
     ] {
         let d = config(&s);
