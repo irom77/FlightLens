@@ -16,6 +16,8 @@
   <img src="https://img.shields.io/badge/license-GPL--3.0--or--later-72e4c0?style=flat-square&labelColor=152024&color=315b4c" alt="GPL-3.0-or-later" />
 </p>
 
+> **Betaflight compatibility:** FlightLens currently supports configuration backups from Betaflight **4.3, 4.4, and 4.5** through bundled, versioned schemas. Vendor builds that append a suffix to a supported release (for example, `4.5.3.KAACK_V19`) use the matching major/minor schema. Other firmware versions may open as partial documents with unsupported values shown as unknown until a compatible schema is available.
+
 ## Why FlightLens
 
 Flight controller backups are useful, but they are hard to read as raw CLI text. FlightLens turns a backup into a clear, navigable snapshot while keeping the source close at hand.
@@ -59,6 +61,29 @@ pnpm dev
 ```
 
 The browser preview does not have native file access or the Rust analysis commands.
+
+### Run the checks
+
+From WSL/Linux, run the complete automated check suite with:
+
+```sh
+./test.sh
+```
+
+This verifies Rust and frontend code, generated bindings, and every `.txt` backup
+in `/home/irom/fpv_cli_dumps/backups`. To use a different read-only backup folder,
+set `FLIGHTLENS_CORPUS`:
+
+```sh
+FLIGHTLENS_CORPUS=/path/to/backups ./test.sh
+```
+
+The optional strict mode also fails when a compatible backup has no complete Rates
+profile or PID profile with known values:
+
+```sh
+FLIGHTLENS_CORPUS_STRICT=1 ./test.sh
+```
 
 ### Windows installer
 

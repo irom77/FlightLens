@@ -15,6 +15,7 @@ import { tabs, useWorkspace } from "./stores/workspace";
 import { Plot } from "./Plots";
 import { OsdGlyphs } from "./OsdGlyphs";
 import logo from "./assets/flightlens-logo.svg";
+import packageJson from "../package.json";
 import sample from "../fixtures/configs/betaflight-4.5.0.dump?raw";
 const empty: Inspection = { rates: [], osd: [], audits: [] };
 const value = (p: Parameter) => String(p.value.value);
@@ -112,7 +113,8 @@ export default function App() {
         <div className="brand">
           <img className="brandmark" src={logo} alt="" aria-hidden="true" />
           <div>
-            FlightLens<small>OFFLINE CONFIG INSPECTOR</small>
+            FlightLens
+            <small>OFFLINE CONFIG INSPECTOR · v{packageJson.version}</small>
           </div>
         </div>
         <button
@@ -169,7 +171,9 @@ export default function App() {
             <br />
             Original files are never changed.
           </p>
-          <small>PHASE 1 · DEVELOPMENT BUILD</small>
+          <small>
+            PHASE 1 · DEVELOPMENT BUILD · v{packageJson.version}
+          </small>
         </div>
       </aside>
       <main>
@@ -393,6 +397,10 @@ function Inspector({
       (p.scope.kind === "pid" && p.scope.index === pid) ||
       (p.scope.kind === "rate" && p.scope.index === rate),
   );
+  const rateSetting = (axis: string, suffix: string) =>
+    current.find(
+      (p) => p.scope.kind === "rate" && p.key === `${axis}_${suffix}`,
+    );
   const profile = (
     kind: "PID" | "Rate",
     values: number[],
@@ -487,18 +495,28 @@ function Inspector({
         {tab === "Rates" && (
           <>
             <div className="stats">
-              {inspection.rates.map((c) => (
-                <div className="stat" key={c.name}>
-                  <span>{c.name.toUpperCase()}</span>
-                  <strong>
-                    {c.points.length
-                      ? Math.round(c.points[c.points.length - 1].y)
-                      : "—"}{" "}
-                    <small>°/s</small>
-                  </strong>
-                  <small>Full-stick static rate</small>
-                </div>
-              ))}
+              {inspection.rates.map((c) => {
+                const rc = rateSetting(c.name, "rc_rate");
+                const superRate = rateSetting(c.name, "srate");
+                const expo = rateSetting(c.name, "expo");
+                return (
+                  <div className="stat" key={c.name}>
+                    <span>{c.name.toUpperCase()}</span>
+                    <strong>
+                      {c.points.length
+                        ? Math.round(c.points[c.points.length - 1].y)
+                        : "Unavailable"}{" "}
+                      {c.points.length > 0 && <small>°/s</small>}
+                    </strong>
+                    <small>
+                      RC {rc ? value(rc) : "unknown"} · Super{" "}
+                      {superRate ? value(superRate) : "unknown"} · Expo{" "}
+                      {expo ? value(expo) : "unknown"}
+                    </small>
+                    <small>{c.reason ?? "Full-stick static rate"}</small>
+                  </div>
+                );
+              })}
             </div>
             <div className="card">
               <div className="card-heading">

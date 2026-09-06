@@ -49,7 +49,41 @@ pnpm build
 cargo check -p flightlens
 ```
 
+### Real-backup coverage test
+
+Run the repeatable corpus smoke test from WSL/Linux with:
+
+```sh
+./test.sh
+```
+
+The script runs the Rust, generated-binding, TypeScript, and frontend checks,
+then analyzes every `.txt` backup under
+`/home/irom/fpv_cli_dumps/backups` (or `FLIGHTLENS_CORPUS=/path/to/backups`).
+It reports, per file, compatible schema status, complete and partial Rates
+profiles, PID profiles with known values, filter/port/mode/OSD coverage, audit
+coverage, and whether Rates/PID export validation can run. Partial `diff all`
+backups are expected to report unknown fields; the test never guesses omitted
+defaults. It fails on import/read errors or structural empty-view regressions.
+
+For a deliberately strict report that also fails compatible files with no
+complete Rates or PID profile, use:
+
+```sh
+FLIGHTLENS_CORPUS_STRICT=1 ./test.sh
+```
+
 The core checks do not need desktop GUI libraries. The last command does. Native picker, drag/drop, clipboard and packaged-app smoke checks need a graphical desktop; CI compilation is not a substitute for those checks.
+
+## External Betaflight backup corpus
+
+When additional real-world Betaflight coverage is useful, the local backup corpus is available at:
+
+```text
+/home/irom/fpv_cli_dumps/backups
+```
+
+The corresponding source repository is [irom77/fpv_cli_dumps](https://github.com/irom77/fpv_cli_dumps). Use these files as read-only analysis inputs when developing or reproducing parser and compatibility issues. Keep committed tests deterministic and self-contained under `fixtures/`; do not make the FlightLens test suite depend on this external checkout or copy unreviewed backup contents into the application repository.
 
 `pnpm bindings` regenerates TypeScript DTOs from Rust (`ts-rs`). Compatibility regeneration is an explicit developer action: `python3 tools/build_compatibility.py`. `python3 tools/build_rate_vectors.py` fetches pinned upstream source and compiles its original rate functions using a C compiler to regenerate differential fixtures. Neither tool is bundled or called by the application.
 
