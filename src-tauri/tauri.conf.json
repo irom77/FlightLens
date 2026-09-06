@@ -29,7 +29,7 @@
     "targets": "all",
     "shortDescription": "Offline FPV backup inspection",
     "license": "GPL-3.0-or-later",
-    "icon": ["icons/icon.png"],
+    "icon": ["icons/icon.ico", "icons/icon.png"],
     "windows": {
       "webviewInstallMode": {
         "type": "downloadBootstrapper",
