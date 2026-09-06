@@ -421,6 +421,34 @@ kbd {
   gap: 14px;
   margin-bottom: 20px;
 }
+.profile-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 4px 0 12px;
+}
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  text-align: left;
+  padding: 12px 14px;
+  background: #18262a;
+  border-color: #2d3e40;
+}
+.profile-card.selected {
+  border-color: #72e4c0;
+  box-shadow: inset 3px 0 #72e4c0;
+}
+.profile-card strong {
+  color: #dce7e4;
+  font-size: 13px;
+}
+.profile-card span {
+  color: #8ca599;
+  font-size: 11px;
+}
 .stat {
   background: #18262a;
   border: 1px solid #2d3e40;

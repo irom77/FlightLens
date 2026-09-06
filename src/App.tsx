@@ -345,38 +345,8 @@ export default function App() {
   );
 }
 
-export function bestProfile(d: ConfigDocument, kind: "pid" | "rate"): number {
-  const profiles = kind === "pid" ? d.pidProfiles : d.rateProfiles;
-  const selected = kind === "pid" ? d.selectedPid : d.selectedRate;
-  if (!profiles.length) return selected ?? 0;
-  const keys =
-    kind === "pid"
-      ? ["p_roll", "i_roll", "d_roll", "f_roll", "d_min_roll", "d_max_roll"]
-      : [
-          "rates_type",
-          "roll_rc_rate",
-          "pitch_rc_rate",
-          "yaw_rc_rate",
-          "roll_srate",
-          "pitch_srate",
-          "yaw_srate",
-          "roll_expo",
-          "pitch_expo",
-          "yaw_expo",
-        ];
-  const score = (profile: number) =>
-    keys.reduce(
-      (total, key) =>
-        total + (d.parameters[`${kind}:${profile}:${key}`]?.valid ? 1 : 0),
-      0,
-    );
-  return profiles.reduce((best, profile) => {
-    const currentScore = score(profile);
-    const bestScore = score(best);
-    if (currentScore > bestScore) return profile;
-    if (currentScore === bestScore && profile === selected) return profile;
-    return best;
-  }, profiles[0]);
+export function defaultProfile(profiles: number[]): number {
+  return profiles.includes(0) ? 0 : (profiles[0] ?? 0);
 }
 
 function Inspector({
@@ -389,22 +359,30 @@ function Inspector({
   reload: () => void;
 }) {
   const { tab, setTab } = useWorkspace();
-  // Backups often contain values under a profile and then restore a different
-  // profile at the end of the dump. Start on the profile with the most useful
-  // explicit values so Rates and PID are immediately inspectable; users can
-  // still switch profiles with the selectors.
-  const [pid, setPid] = useState(() => bestProfile(d, "pid"));
-  const [rate, setRate] = useState(() => bestProfile(d, "rate"));
+  // Betaflight profile numbers are user-facing 1-based values. Keep profile 1
+  // selected initially, while rendering every discovered profile below.
+  const [pid, setPid] = useState(() => defaultProfile(d.pidProfiles));
+  const [rate, setRate] = useState(() => defaultProfile(d.rateProfiles));
   const [inspection, setInspection] = useState<Inspection>(empty);
+  const [rateInspections, setRateInspections] = useState<
+    Record<number, Inspection>
+  >({});
   const [line, setLine] = useState<number | null>(null);
   const [rawPage, setRawPage] = useState(0);
   useEffect(() => {
     let current = true;
     setInspection(empty);
-    api
-      .inspect(d.id, rate)
-      .then((v) => {
-        if (current) setInspection(v);
+    setRateInspections({});
+    Promise.all(
+      (d.rateProfiles.length ? d.rateProfiles : [rate]).map(
+        async (profile) => [profile, await api.inspect(d.id, profile)] as const,
+      ),
+    )
+      .then((entries) => {
+        if (!current) return;
+        const all = Object.fromEntries(entries);
+        setRateInspections(all);
+        setInspection(all[rate] ?? empty);
       })
       .catch((e) => {
         if (current) onError(message(e));
@@ -412,7 +390,7 @@ function Inspector({
     return () => {
       current = false;
     };
-  }, [d.id, rate, onError]);
+  }, [d.id, rate, d.rateProfiles, onError]);
   const source = (n: number) => {
     setLine(n);
     setRawPage(Math.floor((n - 1) / 500));
@@ -433,6 +411,10 @@ function Inspector({
       (p.scope.kind === "pid" && p.scope.index === pid) ||
       (p.scope.kind === "rate" && p.scope.index === rate),
   );
+  const profileParameters = (kind: "pid" | "rate", index: number) =>
+    parameters.filter((p) => p.scope.kind === kind && p.scope.index === index);
+  const profileValue = (kind: "pid" | "rate", index: number, key: string) =>
+    profileParameters(kind, index).find((p) => p.key === key);
   const rateSetting = (axis: string, suffix: string) =>
     current.find(
       (p) => p.scope.kind === "rate" && p.key === `${axis}_${suffix}`,
@@ -530,6 +512,49 @@ function Inspector({
         )}
         {tab === "Rates" && (
           <>
+            <div className="profile-overview">
+              {(d.rateProfiles.length ? d.rateProfiles : [rate]).map(
+                (profileIndex) => {
+                  const values = profileParameters("rate", profileIndex);
+                  const result = rateInspections[profileIndex];
+                  const complete =
+                    result?.rates.filter((c) => c.points.length).length ?? 0;
+                  return (
+                    <button
+                      className={`profile-card ${profileIndex === rate ? "selected" : ""}`}
+                      key={profileIndex}
+                      onClick={() => setRate(profileIndex)}
+                    >
+                      <strong>Profile {profileIndex + 1}</strong>
+                      <span>{values.length} explicit settings</span>
+                      <span>{complete}/3 rate curves available</span>
+                      <small>
+                        RC{" "}
+                        {profileValue("rate", profileIndex, "roll_rc_rate")
+                          ? value(
+                              profileValue(
+                                "rate",
+                                profileIndex,
+                                "roll_rc_rate",
+                              )!,
+                            )
+                          : "—"}
+                        {" · "}Super{" "}
+                        {profileValue("rate", profileIndex, "roll_srate")
+                          ? value(
+                              profileValue("rate", profileIndex, "roll_srate")!,
+                            )
+                          : "—"}
+                      </small>
+                    </button>
+                  );
+                },
+              )}
+            </div>
+            <p className="muted">
+              Detailed view: Profile {rate + 1}. Select another profile above to
+              switch.
+            </p>
             <div className="stats">
               {inspection.rates.map((c) => {
                 const rc = rateSetting(c.name, "rc_rate");
@@ -572,6 +597,45 @@ function Inspector({
         )}
         {tab === "PID" && (
           <>
+            <div className="profile-overview">
+              {(d.pidProfiles.length ? d.pidProfiles : [pid]).map(
+                (profileIndex) => {
+                  const values = profileParameters("pid", profileIndex);
+                  const known = ["p_roll", "i_roll", "d_roll", "f_roll"].filter(
+                    (key) => profileValue("pid", profileIndex, key)?.valid,
+                  ).length;
+                  return (
+                    <button
+                      className={`profile-card ${profileIndex === pid ? "selected" : ""}`}
+                      key={profileIndex}
+                      onClick={() => setPid(profileIndex)}
+                    >
+                      <strong>Profile {profileIndex + 1}</strong>
+                      <span>{values.length} explicit settings</span>
+                      <span>{known}/4 core PID gains available</span>
+                      <small>
+                        P{" "}
+                        {profileValue("pid", profileIndex, "p_roll")
+                          ? value(profileValue("pid", profileIndex, "p_roll")!)
+                          : "—"}
+                        {" · "}I{" "}
+                        {profileValue("pid", profileIndex, "i_roll")
+                          ? value(profileValue("pid", profileIndex, "i_roll")!)
+                          : "—"}
+                        {" · "}D{" "}
+                        {profileValue("pid", profileIndex, "d_roll")
+                          ? value(profileValue("pid", profileIndex, "d_roll")!)
+                          : "—"}
+                      </small>
+                    </button>
+                  );
+                },
+              )}
+            </div>
+            <p className="muted">
+              Detailed view: Profile {pid + 1}. Select another profile above to
+              switch.
+            </p>
             <div className="card">
               <table>
                 <thead>
