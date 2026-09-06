@@ -1,0 +1,55 @@
+# Betaflight / STM32F405 (S405) 4.4.0 Jan 01 2024 / 00:00:00 (synthetic) MSP API: 1.46
+# Synthetic fixture; not a flight-ready configuration or verified baseline.
+board_name SYNTHETIC
+manufacturer_id TEST
+# name: FlightLens example
+defaults nosave
+set craft_name = FlightLens example
+feature OSD
+feature RX_SERIAL
+set motor_pwm_protocol = DSHOT300
+set dshot_bidir = ON
+set motor_poles = 14
+serial 0 64 115200 57600 0 115200
+serial 20 1 115200 57600 0 115200
+aux 0 0 0 1700 2100 0 0
+aux 1 1 1 1300 1700 0 0
+set osd_vbat_pos = 2401
+set osd_rssi_pos = 2408
+set osd_craft_name_pos = 2442
+set gyro_lpf1_type = PT1
+set gyro_lpf1_static_hz = 250
+profile 0
+set p_roll = 45
+set i_roll = 80
+set d_roll = 30
+set f_roll = 120
+set p_pitch = 47
+set i_pitch = 84
+set d_pitch = 34
+set f_pitch = 125
+set p_yaw = 45
+set i_yaw = 80
+set d_yaw = 0
+set f_yaw = 120
+set dterm_lpf1_type = PT1
+set dterm_lpf1_static_hz = 100
+rateprofile 0
+set rates_type = ACTUAL
+set roll_rc_rate = 20
+set roll_srate = 80
+set roll_expo = 50
+set pitch_rc_rate = 20
+set pitch_srate = 80
+set pitch_expo = 50
+set yaw_rc_rate = 15
+set yaw_srate = 65
+set yaw_expo = 35
+rateprofile 1
+set rates_type = BETAFLIGHT
+set roll_rc_rate = 100
+set roll_srate = 70
+set roll_expo = 20
+rateprofile 0
+profile 0
+save

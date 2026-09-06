@@ -1,0 +1,6 @@
+src/bindings/
+fixtures/
+crates/
+Cargo.lock
+pnpm-lock.yaml
+src-tauri/gen/

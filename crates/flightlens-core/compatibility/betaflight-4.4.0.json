@@ -1,0 +1,4420 @@
+{
+  "baseline": null,
+  "id": "betaflight-4.4.0-schema-1",
+  "notice": "Schema does not certify build features or defaults. GPL-3.0-or-later; derived from Betaflight.",
+  "parameters": {
+    "3d_deadband_high": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "3d_deadband_low": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "3d_deadband_throttle": {
+      "kind": "integer",
+      "max": 100,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "3d_limit_high": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "3d_limit_low": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "3d_neutral": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "3d_switched_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "abs_control_cutoff": {
+      "kind": "integer",
+      "max": 45,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "abs_control_error_limit": {
+      "kind": "integer",
+      "max": 45,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "abs_control_gain": {
+      "kind": "integer",
+      "max": 20,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "abs_control_limit": {
+      "kind": "integer",
+      "max": 255,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "acc_calibration": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "acc_hardware": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AUTO",
+        "NONE",
+        "ADXL345",
+        "MPU6050",
+        "MMA8452",
+        "BMA280",
+        "LSM303DLHC",
+        "MPU6000",
+        "MPU6500",
+        "MPU9250",
+        "ICM20601",
+        "ICM20602",
+        "ICM20608G",
+        "ICM20649",
+        "ICM20689",
+        "ICM42605",
+        "ICM42688P",
+        "BMI160",
+        "BMI270",
+        "LSM6DSO",
+        "FAKE"
+      ]
+    },
+    "acc_high_range": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "acc_limit": {
+      "kind": "integer",
+      "max": 500,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "acc_limit_yaw": {
+      "kind": "integer",
+      "max": 500,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "acc_lpf_hz": {
+      "kind": "integer",
+      "max": 500,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "acc_trim_pitch": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "acc_trim_roll": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "acro_trainer_angle_limit": {
+      "kind": "integer",
+      "max": 80,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "acro_trainer_debug_axis": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "ROLL",
+        "PITCH"
+      ]
+    },
+    "acro_trainer_gain": {
+      "kind": "integer",
+      "max": 255,
+      "min": 25,
+      "scope": "pid",
+      "values": []
+    },
+    "acro_trainer_lookahead_ms": {
+      "kind": "integer",
+      "max": 200,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "adc_tempsensor_calibration110": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "adc_tempsensor_calibration30": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "adc_vrefint_calibration": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "airmode_start_throttle_percent": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "align_board_pitch": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "align_board_roll": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "align_board_yaw": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "altitude_d_lpf": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 10,
+      "scope": "global",
+      "values": []
+    },
+    "altitude_lpf": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 10,
+      "scope": "global",
+      "values": []
+    },
+    "altitude_prefer_baro": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "altitude_source": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "DEFAULT",
+        "BARO_ONLY",
+        "GPS_ONLY"
+      ]
+    },
+    "angle_level_strength": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "anti_gravity_cutoff_hz": {
+      "kind": "integer",
+      "max": 50,
+      "min": 2,
+      "scope": "pid",
+      "values": []
+    },
+    "anti_gravity_gain": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "anti_gravity_p_gain": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "auto_disarm_delay": {
+      "kind": "integer",
+      "max": 60,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "auto_profile_cell_count": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "baro_hardware": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AUTO",
+        "NONE",
+        "BMP085",
+        "MS5611",
+        "BMP280",
+        "LPS",
+        "QMP6988",
+        "BMP388",
+        "DPS310",
+        "2SMPB_02B"
+      ]
+    },
+    "bat_capacity": {
+      "kind": "integer",
+      "max": 20000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "battery_continue": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "beeper_dshot_beacon_tone": {
+      "kind": "integer",
+      "max": null,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "blackbox_disable_acc": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "blackbox_disable_alt": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "blackbox_disable_bat": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "blackbox_disable_debug": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "blackbox_disable_gps": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "blackbox_disable_gyro": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "blackbox_disable_mag": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "blackbox_disable_motors": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "blackbox_disable_pids": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "blackbox_disable_rc": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "blackbox_disable_rssi": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "blackbox_disable_setpoint": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "blackbox_high_resolution": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "NORMAL",
+        "MOTOR_TEST",
+        "ALWAYS"
+      ]
+    },
+    "blackbox_sample_rate": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "1/1",
+        "1/2",
+        "1/4",
+        "1/8",
+        "1/16"
+      ]
+    },
+    "camera_control_button_resistance": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "camera_control_internal_resistance": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 10,
+      "scope": "global",
+      "values": []
+    },
+    "camera_control_inverted": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "camera_control_key_delay": {
+      "kind": "integer",
+      "max": 500,
+      "min": 100,
+      "scope": "global",
+      "values": []
+    },
+    "camera_control_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "HARDWARE_PWM",
+        "SOFTWARE_PWM",
+        "DAC"
+      ]
+    },
+    "camera_control_ref_voltage": {
+      "kind": "integer",
+      "max": 400,
+      "min": 200,
+      "scope": "global",
+      "values": []
+    },
+    "cbat_alert_percent": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "channel_forwarding_start": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "cpu_overclock": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "192MHZ",
+        "216MHZ",
+        "240MHZ",
+        "108MHZ",
+        "120MHZ",
+        "240MHZ"
+      ]
+    },
+    "craft_name": {
+      "kind": "string",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "crash_delay": {
+      "kind": "integer",
+      "max": 500,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "crash_dthreshold": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "crash_gthreshold": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 100,
+      "scope": "pid",
+      "values": []
+    },
+    "crash_limit_yaw": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "crash_recovery": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON",
+        "BEEP",
+        "DISARM"
+      ]
+    },
+    "crash_recovery_angle": {
+      "kind": "integer",
+      "max": 30,
+      "min": 5,
+      "scope": "pid",
+      "values": []
+    },
+    "crash_recovery_rate": {
+      "kind": "integer",
+      "max": 255,
+      "min": 50,
+      "scope": "pid",
+      "values": []
+    },
+    "crash_setpoint_threshold": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 50,
+      "scope": "pid",
+      "values": []
+    },
+    "crash_time": {
+      "kind": "integer",
+      "max": 5000,
+      "min": 100,
+      "scope": "pid",
+      "values": []
+    },
+    "crashflip_expo": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "crashflip_motor_percent": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "crsf_use_negotiated_baud": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "d_max_advance": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "d_max_gain": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "d_min_pitch": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "d_min_roll": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "d_min_yaw": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "d_pitch": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "d_roll": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "d_yaw": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "deadband": {
+      "kind": "integer",
+      "max": 32,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "debug_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "displayport_max7456_blk": {
+      "kind": "integer",
+      "max": 3,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "displayport_max7456_col_adjust": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "displayport_max7456_inv": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "displayport_max7456_row_adjust": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "displayport_max7456_wht": {
+      "kind": "integer",
+      "max": 3,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "displayport_msp_col_adjust": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "displayport_msp_fonts": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "displayport_msp_row_adjust": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "displayport_msp_use_device_blink": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "dshot_bidir": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "dshot_edt": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "dshot_idle_value": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "dterm_lpf1_dyn_expo": {
+      "kind": "integer",
+      "max": 10,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dterm_lpf1_dyn_max_hz": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dterm_lpf1_dyn_min_hz": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dterm_lpf1_static_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dterm_lpf1_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "PT1",
+        "BIQUAD",
+        "PT2",
+        "PT3"
+      ]
+    },
+    "dterm_lpf2_static_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dterm_lpf2_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "PT1",
+        "BIQUAD",
+        "PT2",
+        "PT3"
+      ]
+    },
+    "dterm_notch_cutoff": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dterm_notch_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dyn_idle_d_gain": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dyn_idle_i_gain": {
+      "kind": "integer",
+      "max": 250,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "dyn_idle_max_increase": {
+      "kind": "integer",
+      "max": 255,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "dyn_idle_min_rpm": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dyn_idle_p_gain": {
+      "kind": "integer",
+      "max": 250,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "dyn_notch_count": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "dyn_notch_max_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 200,
+      "scope": "global",
+      "values": []
+    },
+    "dyn_notch_min_hz": {
+      "kind": "integer",
+      "max": 250,
+      "min": 20,
+      "scope": "global",
+      "values": []
+    },
+    "dyn_notch_q": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "enable_stick_arming": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "esc_sensor_current_offset": {
+      "kind": "integer",
+      "max": 16000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "esc_sensor_halfduplex": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "expresslrs_domain": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AU433",
+        "AU915",
+        "EU433",
+        "EU868",
+        "IN866",
+        "FCC915",
+        "ISM2400",
+        "CE2400",
+        "NONE"
+      ]
+    },
+    "expresslrs_model_id": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "expresslrs_rate_index": {
+      "kind": "integer",
+      "max": 3,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "expresslrs_switch_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "WIDE",
+        "HYBRID"
+      ]
+    },
+    "expresslrs_uid": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "f_pitch": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "f_roll": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "f_yaw": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "failsafe_delay": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "failsafe_off_delay": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "failsafe_procedure": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AUTO-LAND",
+        "DROP",
+        "GPS-RESCUE"
+      ]
+    },
+    "failsafe_recovery_delay": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "failsafe_stick_threshold": {
+      "kind": "integer",
+      "max": 50,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "failsafe_switch_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "STAGE1",
+        "KILL",
+        "STAGE2"
+      ]
+    },
+    "failsafe_throttle": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "failsafe_throttle_low_delay": {
+      "kind": "integer",
+      "max": 300,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "feedforward_averaging": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "2_POINT",
+        "3_POINT",
+        "4_POINT"
+      ]
+    },
+    "feedforward_boost": {
+      "kind": "integer",
+      "max": 50,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "feedforward_jitter_factor": {
+      "kind": "integer",
+      "max": 20,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "feedforward_max_rate_limit": {
+      "kind": "integer",
+      "max": 150,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "feedforward_smooth_factor": {
+      "kind": "integer",
+      "max": 75,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "feedforward_transition": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "flysky_spi_rf_channels": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "flysky_spi_tx_id": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "force_battery_cell_count": {
+      "kind": "integer",
+      "max": 24,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "fpv_mix_degrees": {
+      "kind": "integer",
+      "max": 90,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_default_lat": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_default_long": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_gps_format": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_spi_a1_source": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "VBAT",
+        "EXTADC",
+        "CONST"
+      ]
+    },
+    "frsky_spi_autobind": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "frsky_spi_bind_hop_data": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_spi_offset": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_spi_tx_id": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_unit": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "IMPERIAL",
+        "METRIC",
+        "BRITISH"
+      ]
+    },
+    "frsky_vfas_precision": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_x_rx_num": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "NORMAL",
+        "MIXTILT"
+      ]
+    },
+    "gps_auto_baud": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gps_auto_config": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gps_provider": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "NMEA",
+        "UBLOX",
+        "MSP"
+      ]
+    },
+    "gps_rescue_allow_arming_without_fix": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gps_rescue_alt_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "MAX_ALT",
+        "FIXED_ALT",
+        "CURRENT_ALT"
+      ]
+    },
+    "gps_rescue_ascend_rate": {
+      "kind": "integer",
+      "max": 2500,
+      "min": 50,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_descend_rate": {
+      "kind": "integer",
+      "max": 500,
+      "min": 25,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_descent_dist": {
+      "kind": "integer",
+      "max": 500,
+      "min": 5,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_ground_speed": {
+      "kind": "integer",
+      "max": 3000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_initial_climb": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_landing_alt": {
+      "kind": "integer",
+      "max": 15,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_min_sats": {
+      "kind": "integer",
+      "max": 50,
+      "min": 5,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_min_start_dist": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 20,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_pitch_angle_max": {
+      "kind": "integer",
+      "max": 60,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_return_alt": {
+      "kind": "integer",
+      "max": 255,
+      "min": 2,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_roll_mix": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_sanity_checks": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "RESCUE_SANITY_OFF",
+        "RESCUE_SANITY_ON",
+        "RESCUE_SANITY_FS_ONLY"
+      ]
+    },
+    "gps_rescue_throttle_d": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_throttle_hover": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 1000,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_throttle_i": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_throttle_max": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 1000,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_throttle_min": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 1000,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_throttle_p": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_use_mag": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gps_rescue_velocity_d": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_velocity_i": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_velocity_p": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_yaw_p": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_sbas_integrity": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gps_sbas_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AUTO",
+        "EGNOS",
+        "WAAS",
+        "MSAS",
+        "GAGAN",
+        "NONE"
+      ]
+    },
+    "gps_set_home_point_once": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gps_ublox_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AIRBORNE",
+        "PEDESTRIAN",
+        "DYNAMIC"
+      ]
+    },
+    "gps_ublox_use_galileo": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gps_use_3d_speed": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gyro_cal_on_first_arm": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gyro_calib_duration": {
+      "kind": "integer",
+      "max": 3000,
+      "min": 50,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_calib_noise_limit": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_filter_debug_axis": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "ROLL",
+        "PITCH",
+        "YAW"
+      ]
+    },
+    "gyro_hardware_lpf": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "NORMAL",
+        "OPTION_1",
+        "OPTION_2",
+        "EXPERIMENTAL"
+      ]
+    },
+    "gyro_high_range": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gyro_lpf1_dyn_expo": {
+      "kind": "integer",
+      "max": 10,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_lpf1_dyn_max_hz": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_lpf1_dyn_min_hz": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_lpf1_static_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_lpf1_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "PT1",
+        "BIQUAD",
+        "PT2",
+        "PT3"
+      ]
+    },
+    "gyro_lpf2_static_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_lpf2_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "PT1",
+        "BIQUAD",
+        "PT2",
+        "PT3"
+      ]
+    },
+    "gyro_notch1_cutoff": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_notch1_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_notch2_cutoff": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_notch2_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_offset_yaw": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_overflow_detect": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "YAW",
+        "ALL"
+      ]
+    },
+    "horizon_level_strength": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "horizon_tilt_effect": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "horizon_tilt_expert_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "horizon_transition": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "hott_alarm_int": {
+      "kind": "integer",
+      "max": 120,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "i_pitch": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "i_roll": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "i_yaw": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "ibat_lpf_period": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ibata_offset": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "ibatv_offset": {
+      "kind": "integer",
+      "max": 16000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ibatv_scale": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "ibus_sensor": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "imu_dcm_ki": {
+      "kind": "integer",
+      "max": 32000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "imu_dcm_kp": {
+      "kind": "integer",
+      "max": 32000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "imu_process_denom": {
+      "kind": "integer",
+      "max": 4,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "input_filtering_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "integrated_yaw_relax": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "iterm_limit": {
+      "kind": "integer",
+      "max": 500,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "iterm_relax": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "RP",
+        "RPY",
+        "RP_INC",
+        "RPY_INC"
+      ]
+    },
+    "iterm_relax_cutoff": {
+      "kind": "integer",
+      "max": 50,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "iterm_relax_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "GYRO",
+        "SETPOINT"
+      ]
+    },
+    "iterm_rotation": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "iterm_windup": {
+      "kind": "integer",
+      "max": 100,
+      "min": 30,
+      "scope": "pid",
+      "values": []
+    },
+    "launch_angle_limit": {
+      "kind": "integer",
+      "max": 80,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "launch_control_gain": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "launch_control_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "NORMAL",
+        "PITCHONLY",
+        "FULL"
+      ]
+    },
+    "launch_trigger_allow_reset": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "launch_trigger_throttle_percent": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "ledstrip_beacon_armed_only": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "ledstrip_beacon_color": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "ledstrip_beacon_percent": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ledstrip_beacon_period_ms": {
+      "kind": "integer",
+      "max": 10000,
+      "min": 50,
+      "scope": "global",
+      "values": []
+    },
+    "ledstrip_brightness": {
+      "kind": "integer",
+      "max": 100,
+      "min": 5,
+      "scope": "global",
+      "values": []
+    },
+    "ledstrip_grb_rgb": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "GRB",
+        "RGB",
+        "GRBW"
+      ]
+    },
+    "ledstrip_profile": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "RACE",
+        "BEACON"
+      ]
+    },
+    "ledstrip_race_color": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "ledstrip_visual_beeper": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "ledstrip_visual_beeper_color": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "level_limit": {
+      "kind": "integer",
+      "max": 90,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "level_race_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "mag_calibration": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "mag_hardware": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AUTO",
+        "NONE",
+        "HMC5883",
+        "AK8975",
+        "AK8963",
+        "QMC5883",
+        "LIS3MDL",
+        "MAG_MPU925X_AK8963"
+      ]
+    },
+    "mavlink_mah_as_heading_divisor": {
+      "kind": "integer",
+      "max": 30000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "max_aux_channels": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "max_check": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "max_throttle": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "mid_rc": {
+      "kind": "integer",
+      "max": 1700,
+      "min": 1200,
+      "scope": "global",
+      "values": []
+    },
+    "min_check": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "min_command": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "min_throttle": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "mixer_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "LEGACY",
+        "LINEAR",
+        "DYNAMIC"
+      ]
+    },
+    "motor_output_limit": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "motor_output_reordering": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "motor_poles": {
+      "kind": "integer",
+      "max": 255,
+      "min": 4,
+      "scope": "global",
+      "values": []
+    },
+    "motor_pwm_inversion": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "motor_pwm_protocol": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "PWM",
+        "ONESHOT125",
+        "ONESHOT42",
+        "MULTISHOT",
+        "BRUSHED",
+        "DSHOT150",
+        "DSHOT300",
+        "DSHOT600",
+        "PROSHOT1000",
+        "DISABLED"
+      ]
+    },
+    "motor_pwm_rate": {
+      "kind": "integer",
+      "max": 32000,
+      "min": 200,
+      "scope": "global",
+      "values": []
+    },
+    "msp_override_channels_mask": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_adjustment_range_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_ah_invert": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "osd_ah_max_pit": {
+      "kind": "integer",
+      "max": 90,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_ah_max_rol": {
+      "kind": "integer",
+      "max": 90,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_ah_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_ah_sbar_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_alt_alarm": {
+      "kind": "integer",
+      "max": 10000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_altitude_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_anti_gravity_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_aux_channel": {
+      "kind": "integer",
+      "max": null,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "osd_aux_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_aux_scale": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "osd_aux_symbol": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_avg_cell_voltage_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_battery_usage_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_camera_frame_height": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_camera_frame_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_camera_frame_width": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_canvas_height": {
+      "kind": "integer",
+      "max": 31,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_canvas_width": {
+      "kind": "integer",
+      "max": 63,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_cap_alarm": {
+      "kind": "integer",
+      "max": 20000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_compass_bar_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_core_temp_alarm": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_core_temp_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_craft_name_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_craftname_msgs": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "osd_crosshairs_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_current_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_debug_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_disarmed_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_displayport_device": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "NONE",
+        "AUTO",
+        "MAX7456",
+        "MSP",
+        "FRSKYOSD"
+      ]
+    },
+    "osd_distance_alarm": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_efficiency_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_esc_current_alarm": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_esc_rpm_alarm": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_esc_rpm_freq_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_esc_rpm_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_esc_temp_alarm": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_esc_tmp_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_flight_dist_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_flip_arrow_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_flymode_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_framerate_hz": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_g_force_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_gps_lat_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_gps_lon_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_gps_sats_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_gps_sats_show_hdop": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "osd_gps_speed_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_home_dir_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_home_dist_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_link_quality_alarm": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_link_quality_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_link_tx_power_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_log_status_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_logo_on_arming": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON",
+        "FIRST_ARMING"
+      ]
+    },
+    "osd_logo_on_arming_duration": {
+      "kind": "integer",
+      "max": 50,
+      "min": 5,
+      "scope": "global",
+      "values": []
+    },
+    "osd_mah_drawn_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_menu_background": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "TRANSPARENT",
+        "BLACK",
+        "GRAY",
+        "LIGHT_GRAY"
+      ]
+    },
+    "osd_motor_diag_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_nheading_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_nvario_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_pid_pitch_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_pid_profile_name_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_pid_roll_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_pid_yaw_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_pidrate_profile_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_pilot_name_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_pit_ang_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_power_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_profile": {
+      "kind": "integer",
+      "max": null,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "osd_profile_1_name": {
+      "kind": "string",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_profile_2_name": {
+      "kind": "string",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_profile_3_name": {
+      "kind": "string",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_profile_name_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rate_profile_name_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rcchannels": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rcchannels_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_ready_mode_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_remaining_time_estimate_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rol_ang_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rsnr_alarm": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rsnr_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rssi_alarm": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rssi_dbm_alarm": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rssi_dbm_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rssi_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rtc_date_time_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_stat_avg_cell_value": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "osd_stat_bitmask": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_stick_overlay_left_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_stick_overlay_radio_mode": {
+      "kind": "integer",
+      "max": 4,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "osd_stick_overlay_right_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_bitrate_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_delay_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_distance_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_fan_speed_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_goggle_dvr_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_goggle_voltage_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_lq_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_vtx_dvr_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_vtx_temp_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_vtx_voltage_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_warnings_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_throttle_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_tim1": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_tim2": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_tim_1_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_tim_2_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_total_flights_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_units": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "IMPERIAL",
+        "METRIC",
+        "BRITISH"
+      ]
+    },
+    "osd_up_down_reference_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_vbat_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_vtx_channel_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_warn_bitmask": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_warnings_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_wh_drawn_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "p_pitch": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "p_roll": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "p_yaw": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "pid_at_min_throttle": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "pid_in_tlm": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "pid_process_denom": {
+      "kind": "integer",
+      "max": null,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "pidsum_limit": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "pidsum_limit_yaw": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "pilot_name": {
+      "kind": "string",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "pitch_expo": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "pitch_level_expo": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "pitch_rate_limit": {
+      "kind": "integer",
+      "max": 1998,
+      "min": 200,
+      "scope": "rate",
+      "values": []
+    },
+    "pitch_rc_rate": {
+      "kind": "integer",
+      "max": 255,
+      "min": 1,
+      "scope": "rate",
+      "values": []
+    },
+    "pitch_srate": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "profile_name": {
+      "kind": "string",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "pwr_on_arm_grace": {
+      "kind": "integer",
+      "max": 30,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "quickrates_rc_expo": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "rate",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "rangefinder_hardware": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "NONE",
+        "HCSR04",
+        "TFMINI",
+        "TF02"
+      ]
+    },
+    "rate_6pos_switch": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "rateprofile_name": {
+      "kind": "string",
+      "max": null,
+      "min": null,
+      "scope": "rate",
+      "values": []
+    },
+    "rates_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "rate",
+      "values": [
+        "BETAFLIGHT",
+        "RACEFLIGHT",
+        "KISS",
+        "ACTUAL",
+        "QUICK"
+      ]
+    },
+    "rc_smoothing": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "rc_smoothing_auto_factor": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "rc_smoothing_auto_factor_throttle": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "rc_smoothing_debug_axis": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "ROLL",
+        "PITCH",
+        "YAW",
+        "THROTTLE"
+      ]
+    },
+    "rc_smoothing_feedforward_cutoff": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rc_smoothing_setpoint_cutoff": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rc_smoothing_throttle_cutoff": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rcdevice_feature": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rcdevice_init_dev_attempt_interval": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "rcdevice_init_dev_attempts": {
+      "kind": "integer",
+      "max": 10,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rcdevice_protocol_version": {
+      "kind": "integer",
+      "max": 1,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "reboot_character": {
+      "kind": "integer",
+      "max": 126,
+      "min": 48,
+      "scope": "global",
+      "values": []
+    },
+    "report_cell_voltage": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "roll_expo": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "roll_level_expo": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "roll_rate_limit": {
+      "kind": "integer",
+      "max": 1998,
+      "min": 200,
+      "scope": "rate",
+      "values": []
+    },
+    "roll_rc_rate": {
+      "kind": "integer",
+      "max": 255,
+      "min": 1,
+      "scope": "rate",
+      "values": []
+    },
+    "roll_srate": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "rpm_filter_fade_range_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rpm_filter_harmonics": {
+      "kind": "integer",
+      "max": 3,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rpm_filter_lpf_hz": {
+      "kind": "integer",
+      "max": 500,
+      "min": 100,
+      "scope": "global",
+      "values": []
+    },
+    "rpm_filter_min_hz": {
+      "kind": "integer",
+      "max": 200,
+      "min": 30,
+      "scope": "global",
+      "values": []
+    },
+    "rpm_filter_q": {
+      "kind": "integer",
+      "max": 3000,
+      "min": 250,
+      "scope": "global",
+      "values": []
+    },
+    "rssi_channel": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rssi_invert": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "rssi_offset": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "rssi_scale": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "rssi_smoothing": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rssi_src_frame_errors": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "rssi_src_frame_lpf_period": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "runaway_takeoff_deactivate_delay": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 100,
+      "scope": "global",
+      "values": []
+    },
+    "runaway_takeoff_deactivate_throttle_percent": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rx_max_usec": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "rx_min_usec": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "sbus_baud_fast": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "serial_update_rate_hz": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 100,
+      "scope": "global",
+      "values": []
+    },
+    "serialmsp_halfduplex": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "serialrx_halfduplex": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "serialrx_inverted": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "serialrx_provider": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "SPEK1024",
+        "SPEK2048",
+        "SBUS",
+        "SUMD",
+        "SUMH",
+        "XB-B",
+        "XB-B-RJ01",
+        "IBUS",
+        "JETIEXBUS",
+        "CRSF",
+        "SRXL",
+        "CUSTOM",
+        "FPORT",
+        "SRXL2",
+        "GHST"
+      ]
+    },
+    "servo_center_pulse": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "servo_lowpass_hz": {
+      "kind": "integer",
+      "max": 400,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "servo_pwm_rate": {
+      "kind": "integer",
+      "max": 498,
+      "min": 50,
+      "scope": "global",
+      "values": []
+    },
+    "simplified_d_gain": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_dmax_gain": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_dterm_filter": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "simplified_dterm_filter_multiplier": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_feedforward_gain": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_gyro_filter": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "simplified_gyro_filter_multiplier": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "simplified_i_gain": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_master_multiplier": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_pi_gain": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_pids_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "RP",
+        "RPY"
+      ]
+    },
+    "simplified_pitch_d_gain": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_pitch_pi_gain": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "small_angle": {
+      "kind": "integer",
+      "max": 180,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "spektrum_sat_bind": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "spektrum_sat_bind_autoreset": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "spektrum_spi_mfg_id": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "spektrum_spi_num_channels": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "spektrum_spi_protocol": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "srxl2_baud_fast": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "srxl2_unit_id": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "stats_mah_used": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "stats_min_armed_time_s": {
+      "kind": "integer",
+      "max": 127,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "stats_total_dist_m": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "stats_total_flights": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "stats_total_time_s": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "task_statistics": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_acc_x": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_acc_y": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_acc_z": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_altitude": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_cap_used": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_current": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_distance": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_esc_current": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_esc_rpm": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_esc_temperature": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_esc_voltage": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_fuel": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_ground_speed": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_heading": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_lat_long": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_mode": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_pitch": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_roll": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_sensors": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_temperature": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_vario": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_voltage": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "thr_corr_angle": {
+      "kind": "integer",
+      "max": 900,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "thr_corr_value": {
+      "kind": "integer",
+      "max": 150,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "thr_expo": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "thr_mid": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "throttle_boost": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "throttle_boost_cutoff": {
+      "kind": "integer",
+      "max": 50,
+      "min": 5,
+      "scope": "pid",
+      "values": []
+    },
+    "throttle_limit_percent": {
+      "kind": "integer",
+      "max": 100,
+      "min": 25,
+      "scope": "rate",
+      "values": []
+    },
+    "throttle_limit_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "rate",
+      "values": [
+        "OFF",
+        "SCALE",
+        "CLIP"
+      ]
+    },
+    "thrust_linear": {
+      "kind": "integer",
+      "max": 150,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "timezone_offset_minutes": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "tlm_halfduplex": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "tlm_inverted": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "tpa_breakpoint": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "PD",
+        "D"
+      ]
+    },
+    "tpa_rate": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "transient_throttle_limit": {
+      "kind": "integer",
+      "max": 30,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "tri_unarmed_servo": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "usb_hid_cdc": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "use_cbat_alerts": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "use_integrated_yaw": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "use_unsynced_pwm": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "use_vbat_alerts": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "vbat_cutoff_percent": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_detect_cell_voltage": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_display_lpf_period": {
+      "kind": "integer",
+      "max": 255,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_divider": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_duration_for_critical": {
+      "kind": "integer",
+      "max": 150,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_duration_for_warning": {
+      "kind": "integer",
+      "max": 150,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_full_cell_voltage": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_hysteresis": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_max_cell_voltage": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_min_cell_voltage": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_multiplier": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_sag_compensation": {
+      "kind": "integer",
+      "max": 150,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "vbat_sag_lpf_period": {
+      "kind": "integer",
+      "max": 255,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_warning_cell_voltage": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "vcd_h_offset": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "vcd_v_offset": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "vcd_video_system": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AUTO",
+        "PAL",
+        "NTSC",
+        "HD"
+      ]
+    },
+    "vtx_band": {
+      "kind": "integer",
+      "max": 8,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vtx_channel": {
+      "kind": "integer",
+      "max": 8,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vtx_freq": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vtx_halfduplex": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "vtx_low_power_disarm": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON",
+        "UNTIL_FIRST_ARM"
+      ]
+    },
+    "vtx_pit_mode_freq": {
+      "kind": "integer",
+      "max": null,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vtx_power": {
+      "kind": "integer",
+      "max": 8,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vtx_softserial_alt": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "yaw_control_reversed": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "yaw_deadband": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "yaw_expo": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "yaw_lowpass_hz": {
+      "kind": "integer",
+      "max": 500,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "yaw_motors_reversed": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "yaw_rate_limit": {
+      "kind": "integer",
+      "max": 1998,
+      "min": 200,
+      "scope": "rate",
+      "values": []
+    },
+    "yaw_rc_rate": {
+      "kind": "integer",
+      "max": 255,
+      "min": 1,
+      "scope": "rate",
+      "values": []
+    },
+    "yaw_spin_recovery": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON",
+        "AUTO"
+      ]
+    },
+    "yaw_spin_threshold": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "yaw_srate": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    }
+  },
+  "sources": {
+    "cli/settings.c": {
+      "sha256": "092ff58a2505eb09f94c0db359fb0f3700b0b69b6170c6ffdda8257f0021d211",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.4.0/src/main/cli/settings.c"
+    },
+    "cli/settings.h": {
+      "sha256": "25100cbda8937864cbcc6d25ee22a1cf3e82ce21ef619a094f05ced52d60a2a4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.4.0/src/main/cli/settings.h"
+    },
+    "fc/parameter_names.h": {
+      "sha256": "c91828f12265808341896e2fcad1781c3e75423d41721e1d5b70fcafeaf24644",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.4.0/src/main/fc/parameter_names.h"
+    }
+  },
+  "version": "4.4.0"
+}
