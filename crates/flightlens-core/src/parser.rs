@@ -168,9 +168,9 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
             title: label.into(),
             family: if bb { "blackbox".into() } else { family.into() },
             message: if bb {
-                "Telemetry decoding available in Phase 4".into()
+                "Telemetry decoding available in Phase 3".into()
             } else {
-                "This firmware adapter is planned for Phase 3. Source remains unchanged.".into()
+                "This firmware adapter is planned for Phase 4. Source remains unchanged.".into()
             },
         }));
     }

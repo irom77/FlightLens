@@ -50,7 +50,7 @@ pub fn open_path(path: &Path, source_id: &str) -> Result<Artifact, String> {
         .read_to_end(&mut prefix)
         .map_err(|_| "Cannot identify selected source")?;
     if is_blackbox(&prefix) {
-        return Ok(Artifact::Recognized(crate::RecognizedArtifact{id:source_id.into(),title:label.into(),family:"blackbox".into(),message:"Telemetry decoding available in Phase 4. Binary data has not been parsed as CLI text.".into()}));
+        return Ok(Artifact::Recognized(crate::RecognizedArtifact{id:source_id.into(),title:label.into(),family:"blackbox".into(),message:"Telemetry decoding available in Phase 3. Binary data has not been parsed as CLI text.".into()}));
     }
     let text = read_stable(path)?;
     analyze(&text, &label, source_id)

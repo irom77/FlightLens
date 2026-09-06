@@ -32,7 +32,7 @@ The parser preserves original bytes of valid UTF-8 text, including BOM, CRLF, co
 
 Filter plots model an individual static lowpass stage, not a full chain or an in-flight dynamic-notch center. The OSD font and numeric samples are illustrative; unknown glyph layouts use a marker and unknown footprint. Audits expose evaluated, skipped, and insufficient-data rules. Initial checks cover configured motor poles, bidirectional DShot protocol consistency, mode overlaps, and declared arming ranges. UART sharing, failsafe prerequisites, deadband heuristics, and PID safety thresholds are not certified. No findings is never a “safe to fly” result.
 
-Blackbox files are recognized from their headers without parsing binary data as CLI. iNAV and recognizable ArduPilot parameter files are identified, with their adapters deferred to Phase 3. No telemetry decoding, workspace scanner, comparison, sessions, cloud provider, update service, or background network access is included in Phase 1.
+Blackbox files are recognized from their headers without parsing binary data as CLI. iNAV and recognizable ArduPilot parameter files are identified, with their adapters deferred to Phase 4. No telemetry decoding, workspace scanner, comparison, sessions, cloud provider, update service, or background network access is included in Phase 1; Blackbox decoding and diagnostics are planned for Phase 3.
 
 Text imports are limited to 16 MiB and 100,000 lines. The open document repository is limited to 32 snapshots / 128 MiB of original text. These limits bound input size, not total process memory. File reads compare metadata before/after and retry once. Save As creates a new file and refuses to overwrite any existing file.
 

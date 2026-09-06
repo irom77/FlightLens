@@ -28,25 +28,29 @@ Flight controller backups are useful, but they are hard to read as raw CLI text.
 
 ## Get started
 
-### 1. Install the desktop prerequisites
+### 1. Install FlightLens
 
-FlightLens is a Tauri desktop application. You need Node.js 24, pnpm 10.30.3, Rust, and the platform libraries listed in the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/).
+Download the latest desktop installer from the [FlightLens GitHub Releases](https://github.com/irom77/FlightLens/releases) page.
 
-On Ubuntu 24.04:
+- **Windows:** download the `.exe` installer, run it, and keep the default per-user installation choice. No administrator account is required.
+- **macOS:** download the `.dmg`, open it, and drag FlightLens to **Applications**. On the first launch, macOS may ask you to confirm the app because releases are not code-signed yet; use **Control-click → Open**.
 
-```sh
-sudo apt install build-essential pkg-config libwebkit2gtk-4.1-dev libgtk-3-dev \
-  libdbus-1-dev libxdo-dev libayatana-appindicator3-dev librsvg2-dev patchelf
-```
+The Windows installer can install Microsoft Edge WebView2 when it is missing. The macOS release is currently distributed as an unsigned `.dmg`.
 
-### 2. Install and launch
+### 2. Open a backup
+
+Launch FlightLens and open a `.txt`, `.diff`, `.dump`, `.param`, `.parm`, `.bbl`, or `.bfl` file. You can also drop a file on the window or press **Ctrl/Cmd+Shift+V** to paste CLI text.
+
+Your original backup is read-only. FlightLens creates an immutable snapshot for inspection and never writes back to the source file.
+
+### Build from source
+
+Developers can run the application locally with Node.js 24, pnpm 10.30.3, Rust, and the platform libraries listed in the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/).
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm tauri dev
 ```
-
-The desktop window is the full application. Open a `.txt`, `.diff`, `.dump`, `.param`, `.parm`, `.bbl`, or `.bfl` file, drop it on the window, or press **Ctrl/Cmd+Shift+V** to paste CLI text.
 
 To preview the interface in a browser only:
 
@@ -94,6 +98,6 @@ FlightLens is an inspection and export assistant. It does not connect to a fligh
 
 ## Roadmap
 
-Phase 1 is the Betaflight inspection MVP. Workspace indexing, saved sessions, semantic comparison, iNAV and ArduPilot adapters, Blackbox decoding, and optional diagnostics are planned as separate phases.
+See the [FlightLens roadmap](ROADMAP.md) for the planned releases and implementation details. Phase 1 is the Betaflight inspection MVP; workspace indexing and comparison follow in Phase 2. Blackbox telemetry and diagnostics are planned for Phase 3, followed by iNAV and ArduPilot adapters in Phase 4.
 
 <p align="center"><sub>FlightLens keeps your backup local, legible, and honest.</sub></p>
