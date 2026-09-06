@@ -113,6 +113,22 @@ fn headerless_and_future_versions_are_partial() {
     }
 }
 #[test]
+fn vendor_suffix_versions_use_their_major_minor_schema() {
+    let text = format!(
+        "{}\nprofile 0\nset p_roll = 55\nrateprofile 0\nset rates_type = BETAFLIGHT\nset roll_rc_rate = 88\nset roll_srate = 70\nset roll_expo = 0\n",
+        header().replace("4.5.0", "4.5.3.KAACK_V19")
+    );
+    let d = config(&text);
+    assert_eq!(d.firmware.version.as_deref(), Some("4.5.3.KAACK_V19"));
+    assert_eq!(
+        d.firmware.pack_id.as_deref(),
+        Some("betaflight-4.5.0-schema-1")
+    );
+    assert_eq!(d.number(&Scope::Pid(0), "p_roll"), Some(55.));
+    assert_eq!(d.number(&Scope::Rate(0), "roll_rc_rate"), Some(88.));
+    assert!(rates(&d, 0)[0].reason.is_none());
+}
+#[test]
 fn recognized_artifacts_do_not_enter_cli() {
     for text in [
         "H Product:Blackbox flight data recorder by Nicholas Sherlock\n",

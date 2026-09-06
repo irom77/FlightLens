@@ -121,9 +121,10 @@ fn version_from(header: &str) -> Option<String> {
     header
         .split_whitespace()
         .find(|w| {
-            let p: Vec<_> = w.split('.').collect();
-            p.len() == 3
-                && p.iter()
+            let mut parts = w.split('.');
+            parts.by_ref().take(3).count() == 3
+                && w.split('.')
+                    .take(3)
                     .all(|v| !v.is_empty() && v.bytes().all(|b| b.is_ascii_digit()))
         })
         .map(str::to_owned)

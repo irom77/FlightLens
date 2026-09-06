@@ -27,7 +27,28 @@ pub fn packs() -> &'static [Pack; 3] {
     })
 }
 pub fn pack(version: Option<&str>) -> Option<&'static Pack> {
-    packs().iter().find(|p| Some(p.version.as_str()) == version)
+    let version = version?;
+    if let Some(pack) = packs().iter().find(|p| p.version == version) {
+        return Some(pack);
+    }
+
+    // Vendor and release builds commonly append a suffix, for example
+    // `4.5.3.KAACK_V19`. Use the certified schema for the same major/minor
+    // line while keeping the original firmware identity in the document.
+    // Keep unknown numeric patch releases conservative. A suffixed vendor
+    // build identifies its upstream major/minor line explicitly, whereas a
+    // plain future patch may have changed parameter semantics.
+    if version.split('.').count() <= 3 {
+        return None;
+    }
+    let mut parts = version.split('.');
+    let major = parts.next()?.parse::<u16>().ok()?;
+    let minor = parts.next()?.parse::<u16>().ok()?;
+    packs().iter().find(|pack| {
+        let mut pack_parts = pack.version.split('.');
+        pack_parts.next().and_then(|v| v.parse::<u16>().ok()) == Some(major)
+            && pack_parts.next().and_then(|v| v.parse::<u16>().ok()) == Some(minor)
+    })
 }
 impl Schema {
     pub fn scope(&self, pid: Option<u8>, rate: Option<u8>) -> Scope {
