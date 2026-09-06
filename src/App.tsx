@@ -171,9 +171,7 @@ export default function App() {
             <br />
             Original files are never changed.
           </p>
-          <small>
-            PHASE 1 · DEVELOPMENT BUILD · v{packageJson.version}
-          </small>
+          <small>PHASE 1 · DEVELOPMENT BUILD · v{packageJson.version}</small>
         </div>
       </aside>
       <main>
@@ -347,6 +345,40 @@ export default function App() {
   );
 }
 
+export function bestProfile(d: ConfigDocument, kind: "pid" | "rate"): number {
+  const profiles = kind === "pid" ? d.pidProfiles : d.rateProfiles;
+  const selected = kind === "pid" ? d.selectedPid : d.selectedRate;
+  if (!profiles.length) return selected ?? 0;
+  const keys =
+    kind === "pid"
+      ? ["p_roll", "i_roll", "d_roll", "f_roll", "d_min_roll", "d_max_roll"]
+      : [
+          "rates_type",
+          "roll_rc_rate",
+          "pitch_rc_rate",
+          "yaw_rc_rate",
+          "roll_srate",
+          "pitch_srate",
+          "yaw_srate",
+          "roll_expo",
+          "pitch_expo",
+          "yaw_expo",
+        ];
+  const score = (profile: number) =>
+    keys.reduce(
+      (total, key) =>
+        total + (d.parameters[`${kind}:${profile}:${key}`]?.valid ? 1 : 0),
+      0,
+    );
+  return profiles.reduce((best, profile) => {
+    const currentScore = score(profile);
+    const bestScore = score(best);
+    if (currentScore > bestScore) return profile;
+    if (currentScore === bestScore && profile === selected) return profile;
+    return best;
+  }, profiles[0]);
+}
+
 function Inspector({
   document: d,
   onError,
@@ -357,8 +389,12 @@ function Inspector({
   reload: () => void;
 }) {
   const { tab, setTab } = useWorkspace();
-  const [pid, setPid] = useState(d.selectedPid ?? d.pidProfiles[0] ?? 0);
-  const [rate, setRate] = useState(d.selectedRate ?? d.rateProfiles[0] ?? 0);
+  // Backups often contain values under a profile and then restore a different
+  // profile at the end of the dump. Start on the profile with the most useful
+  // explicit values so Rates and PID are immediately inspectable; users can
+  // still switch profiles with the selectors.
+  const [pid, setPid] = useState(() => bestProfile(d, "pid"));
+  const [rate, setRate] = useState(() => bestProfile(d, "rate"));
   const [inspection, setInspection] = useState<Inspection>(empty);
   const [line, setLine] = useState<number | null>(null);
   const [rawPage, setRawPage] = useState(0);
