@@ -35,7 +35,9 @@ fn main() {
     let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../src/bindings/core.ts");
     if std::env::args().any(|a| a == "--check") {
         assert_eq!(
-            std::fs::read_to_string(path).expect("generated bindings missing"),
+            std::fs::read_to_string(path)
+                .expect("generated bindings missing")
+                .replace("\r\n", "\n"),
             text,
             "Generated bindings drifted; run pnpm bindings"
         );
