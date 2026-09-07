@@ -23,9 +23,14 @@ pub struct Profiles {
 /// other parameter groups move between minor releases and need their own pass.
 #[derive(Debug, Default, Deserialize)]
 pub struct Defaults {
+    pub verified: Vec<VerifiedRelease>,
     pub reset_sha256: String,
     /// CLI key to the value the CLI would print for it.
     pub values: BTreeMap<String, String>,
+}
+#[derive(Debug, Deserialize)]
+pub struct VerifiedRelease {
+    pub version: String,
 }
 #[derive(Debug, Deserialize)]
 pub struct Pack {
@@ -36,10 +41,11 @@ pub struct Pack {
     pub defaults: Defaults,
     pub parameters: BTreeMap<String, Schema>,
 }
-pub fn packs() -> &'static [Pack; 3] {
-    static PACKS: OnceLock<[Pack; 3]> = OnceLock::new();
+pub fn packs() -> &'static [Pack; 4] {
+    static PACKS: OnceLock<[Pack; 4]> = OnceLock::new();
     PACKS.get_or_init(|| {
         [
+            include_str!("../compatibility/betaflight-4.2.0.json"),
             include_str!("../compatibility/betaflight-4.3.0.json"),
             include_str!("../compatibility/betaflight-4.4.0.json"),
             include_str!("../compatibility/betaflight-4.5.0.json"),
@@ -76,15 +82,14 @@ pub fn pack(version: Option<&str>) -> Option<&'static Pack> {
 /// defaults, which a custom build is free to change with nothing in the dump to
 /// say whether it did. So a default is only ever applied to a plain
 /// `major.minor.patch` release, where the reset function is proven identical
-/// across the whole line.
+/// across the explicitly verified releases listed in the bundled pack.
 pub fn defaults_certified(version: &str) -> bool {
-    let mut parts = version.split('.');
-    let numeric = parts
-        .by_ref()
-        .take(3)
-        .filter(|p| !p.is_empty() && p.bytes().all(|b| b.is_ascii_digit()))
-        .count();
-    numeric == 3 && parts.next().is_none()
+    pack(Some(version)).is_some_and(|pack| {
+        pack.defaults
+            .verified
+            .iter()
+            .any(|release| release.version == version)
+    })
 }
 impl Schema {
     pub fn scope(&self, pid: Option<u8>, rate: Option<u8>) -> Scope {
@@ -132,6 +137,10 @@ mod tests {
     #[test]
     fn matches_supported_patch_releases_by_major_minor() {
         assert_eq!(
+            pack(Some("4.2.11")).map(|p| p.id.as_str()),
+            Some("betaflight-4.2.0-schema-1")
+        );
+        assert_eq!(
             pack(Some("4.3.1")).map(|p| p.id.as_str()),
             Some("betaflight-4.3.0-schema-1")
         );
@@ -147,7 +156,7 @@ mod tests {
 
     #[test]
     fn rejects_unsupported_lines() {
-        assert!(pack(Some("4.2.11")).is_none());
+        assert!(pack(Some("4.1.7")).is_none());
         assert!(pack(Some("5.0.0")).is_none());
     }
 }

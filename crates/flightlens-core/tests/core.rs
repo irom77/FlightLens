@@ -554,9 +554,10 @@ fn vendor_builds_and_invalid_values_are_never_filled_in() {
         Some("betaflight-4.5.0-schema-1")
     );
     assert!(vendor.derived.is_empty());
-    assert!(vendor.diagnostics.iter().any(|x| x
-        .message
-        .contains("not a plain release on a certified line")));
+    assert!(vendor
+        .diagnostics
+        .iter()
+        .any(|x| x.message.contains("not in the verified release list")));
 
     // A value the schema rejects is declared, so it is not derived either: the
     // curve must stay unavailable rather than silently show the default.
@@ -638,4 +639,55 @@ fn a_document_that_qualifies_for_no_defaults_says_why() {
     let applied = with("defaults nosave\nrateprofile 0\n");
     assert!(!applied.derived.is_empty());
     assert_eq!(applied.derived_note, None);
+}
+
+#[test]
+fn betaflight_42_explicit_rates_and_pids_are_inspectable() {
+    let d = config(
+        &include_str!("../../../fixtures/configs/betaflight-4.5.0.dump")
+            .replace("4.5.0", "4.2.11")
+            .replace("defaults nosave", "# explicit settings only")
+            .replace("dterm_lpf1_static_hz", "dterm_lowpass_hz")
+            .replace("dterm_lpf1_type", "dterm_lowpass_type"),
+    );
+    assert!(d.firmware.pack_id.is_some());
+    assert!(rates(&d, 0).iter().all(|c| c.points.len() == 201));
+    for axis in ["roll", "pitch", "yaw"] {
+        for gain in ["p", "i", "d", "f"] {
+            assert!(d
+                .number(&Scope::Pid(0), &format!("{gain}_{axis}"))
+                .is_some());
+        }
+    }
+    assert_eq!(d.number(&Scope::Pid(0), "d_yaw"), Some(0.0));
+    let quick = config(
+        &d.syntax
+            .iter()
+            .map(|line| line.raw.as_str())
+            .collect::<String>()
+            .replace("ACTUAL", "QUICK"),
+    );
+    assert!(rates(&quick, 0).iter().all(|c| c.points.len() == 201));
+    assert!(export(&quick, &request(&quick, &["rates"])).is_ok());
+}
+
+#[test]
+fn betaflight_42_defaults_require_verified_release_and_reset() {
+    for patch in 0..=11 {
+        let d = config(&format!(
+            "# Betaflight / STM32F405 4.2.{patch}\ndefaults nosave\nrateprofile 0\n"
+        ));
+        assert_eq!(d.number_or_default(&Scope::Rate(0), "roll_expo"), Some(0.0));
+        assert!(rates(&d, 0).iter().all(|c| c.points.len() == 201));
+    }
+    for version in ["4.2.99", "4.2.11.CUSTOM"] {
+        let d = config(&format!(
+            "# Betaflight / STM32F405 {version}\ndefaults nosave\nrateprofile 0\n"
+        ));
+        assert!(d.firmware.pack_id.is_some());
+        assert!(d.derived.is_empty());
+        assert!(rates(&d, 0).iter().all(|c| c.points.is_empty()));
+    }
+    let d = config("# Betaflight / STM32F405 4.2.11\nrateprofile 0\n");
+    assert!(d.derived.is_empty());
 }

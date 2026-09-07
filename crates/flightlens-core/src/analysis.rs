@@ -1,5 +1,5 @@
 // Rate equations derived from Betaflight fc/rc.c (GPL-3.0-or-later).
-use crate::{ConfigDocument, Scope};
+use crate::{compatibility, ConfigDocument, Scope};
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]
@@ -123,7 +123,11 @@ pub fn rates(d: &ConfigDocument, profile: u8) -> Vec<Curve> {
                 let rc = number("rc_rate")?;
                 let sr = number("srate")?;
                 let e = number("expo")?;
-                let quick = if kind == "QUICK" {
+                // 4.2 QuickRates has fixed expo behavior and no CLI toggle.
+                let quick = if kind == "QUICK"
+                    && compatibility::pack(d.firmware.version.as_deref())
+                        .is_some_and(|p| p.parameters.contains_key("quickrates_rc_expo"))
+                {
                     match d.text_or_default(&scope, "quickrates_rc_expo").as_deref() {
                         Some("ON") => true,
                         Some("OFF") => false,

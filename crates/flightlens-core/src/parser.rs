@@ -8,7 +8,7 @@ pub const AUX_CHANNEL_COUNT: u32 = 14;
 
 /// Read back the values the source left out.
 ///
-/// A Betaflight dump prints only what differs from the reset it names, so on a
+/// A Betaflight diff prints only what differs from the reset it names, so on a
 /// document whose `defaults` line states that baseline, a key no `set` touches
 /// still holds the reset value. Reading that is decoding the format, not
 /// inventing a value -- but only while the baseline itself is certain, so the
@@ -35,7 +35,7 @@ fn derive_defaults(
     };
     if !compatibility::defaults_certified(&version) {
         let note = format!(
-            "This build reports {version}, which is not a plain release on a certified line. Values the source omits are left unknown rather than read back from the Betaflight {} defaults, because a custom build may change any of them and nothing in the backup says whether it did.",
+            "This build reports {version}, which is not in the verified release list. Values the source omits are left unknown rather than read back from the Betaflight {} defaults, because an unverified or custom build may change any of them and nothing in the backup says whether it did.",
             pack.version
         );
         d.diagnostics.push(Diagnostic {

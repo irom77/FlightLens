@@ -231,6 +231,7 @@ export default function App() {
                 </button>
               </div>
             </div>
+            <BackupInstructions />
             <button
               className="text-button"
               disabled={!desktop || busy}
@@ -300,6 +301,7 @@ export default function App() {
               Paste CLI backup text, including its firmware header and profile
               selectors. Maximum 16 MiB.
             </p>
+            <BackupInstructions />
             <label>
               Document name
               <input
@@ -350,6 +352,68 @@ export function defaultProfile(profiles: number[]): number {
   return profiles.includes(0) ? 0 : (profiles[0] ?? 0);
 }
 
+export function populatedProfiles(
+  d: ConfigDocument,
+  kind: "pid" | "rate",
+): number[] {
+  const settings = [
+    ...Object.values(d.parameters),
+    ...Object.values(d.derived),
+  ];
+  return (kind === "pid" ? d.pidProfiles : d.rateProfiles).filter((index) =>
+    settings.some(
+      (setting) =>
+        setting?.scope.kind === kind && setting.scope.index === index,
+    ),
+  );
+}
+
+function BackupInstructions() {
+  return (
+    <section className="notice" aria-label="Expected backup format">
+      <b>For complete Rates and PID inspection: Betaflight CLI dump all</b>
+      <ol>
+        <li>
+          Connect the configured flight controller to Betaflight Configurator
+          and open the CLI tab.
+        </li>
+        <li>
+          Type <code>dump all</code> and press Enter. Wait for the output to
+          finish.
+        </li>
+        <li>
+          Save the entire output as a text file, including the firmware header
+          and all profiles, then open it here. You can also paste the entire
+          output.
+        </li>
+      </ol>
+      <p>
+        This includes unchanged settings. A <code>diff</code> or{" "}
+        <code>diff all</code> backup is accepted, but omitted Rates, Expo, or
+        PID values may remain unknown. No reset or <code>defaults</code> command
+        is needed. FlightLens currently supports Betaflight 4.2, 4.3, 4.4, and
+        4.5 schemas; a full dump does not add support for other firmware
+        versions.
+      </p>
+    </section>
+  );
+}
+
+function MissingSettingsNotice() {
+  return (
+    <>
+      <p className="notice" role="status">
+        <b>Incomplete inspection data.</b> Unknown means this backup does not
+        establish the value; it does not mean zero. For complete inspection,
+        capture
+        <code> dump all</code> as described below. Omitted vendor defaults
+        cannot be reconstructed reliably from a diff.
+      </p>
+      <BackupInstructions />
+    </>
+  );
+}
+
 function Inspector({
   document: d,
   onError,
@@ -360,10 +424,11 @@ function Inspector({
   reload: () => void;
 }) {
   const { tab, setTab } = useWorkspace();
-  // Betaflight profile numbers are user-facing 1-based values. Keep profile 1
-  // selected initially, while rendering every discovered profile below.
-  const [pid, setPid] = useState(() => defaultProfile(d.pidProfiles));
-  const [rate, setRate] = useState(() => defaultProfile(d.rateProfiles));
+  // Keep original CLI numbers, but skip sections with no inspection data.
+  const pidProfiles = populatedProfiles(d, "pid");
+  const rateProfiles = populatedProfiles(d, "rate");
+  const [pid, setPid] = useState(() => defaultProfile(pidProfiles));
+  const [rate, setRate] = useState(() => defaultProfile(rateProfiles));
   const [inspection, setInspection] = useState<Inspection>(empty);
   const [rateInspections, setRateInspections] = useState<
     Record<number, Inspection>
@@ -514,48 +579,48 @@ function Inspector({
           </div>
           <div className="profile-controls">
             {["PID", "Filters", "Export"].includes(tab) &&
-              profile("PID", d.pidProfiles, pid, setPid)}
+              profile("PID", pidProfiles, pid, setPid)}
             {["Rates", "Export"].includes(tab) &&
-              profile("Rate", d.rateProfiles, rate, setRate)}
+              profile("Rate", rateProfiles, rate, setRate)}
           </div>
         </div>
         {!d.firmware.packId && (
           <p className="notice">
-            Exact version support is unavailable. Source and parsed syntax
-            remain inspectable; semantic views and export require a supported
-            header.
+            This firmware version is not supported for Rates and PID inspection.
+            FlightLens currently supports Betaflight 4.2, 4.3, 4.4, and 4.5
+            schemas. A new backup will not resolve this compatibility gap.
+            Source and parsed syntax remain inspectable; semantic views and
+            export require supported firmware.
           </p>
         )}
         {tab === "Rates" && (
           <>
             <div className="profile-overview">
-              {(d.rateProfiles.length ? d.rateProfiles : [rate]).map(
-                (profileIndex) => {
-                  const values = profileParameters("rate", profileIndex);
-                  const result = rateInspections[profileIndex];
-                  const complete =
-                    result?.rates.filter((c) => c.points.length).length ?? 0;
-                  return (
-                    <button
-                      className={`profile-card ${profileIndex === rate ? "selected" : ""}`}
-                      key={profileIndex}
-                      onClick={() => setRate(profileIndex)}
-                    >
-                      <strong>Profile {profileIndex + 1}</strong>
-                      <span>
-                        {values.length} explicit settings
-                        {derivedFor(profileIndex).length > 0 &&
-                          ` · ${derivedFor(profileIndex).length} from firmware defaults`}
-                      </span>
-                      <span>{complete}/3 rate curves available</span>
-                      <small>
-                        RC {shown(profileIndex, "roll_rc_rate") ?? "—"}
-                        {" · "}Super {shown(profileIndex, "roll_srate") ?? "—"}
-                      </small>
-                    </button>
-                  );
-                },
-              )}
+              {rateProfiles.map((profileIndex) => {
+                const values = profileParameters("rate", profileIndex);
+                const result = rateInspections[profileIndex];
+                const complete =
+                  result?.rates.filter((c) => c.points.length).length ?? 0;
+                return (
+                  <button
+                    className={`profile-card ${profileIndex === rate ? "selected" : ""}`}
+                    key={profileIndex}
+                    onClick={() => setRate(profileIndex)}
+                  >
+                    <strong>Profile {profileIndex + 1}</strong>
+                    <span>
+                      {values.length} explicit settings
+                      {derivedFor(profileIndex).length > 0 &&
+                        ` · ${derivedFor(profileIndex).length} from firmware defaults`}
+                    </span>
+                    <span>{complete}/3 rate curves available</span>
+                    <small>
+                      RC {shown(profileIndex, "roll_rc_rate") ?? "—"}
+                      {" · "}Super {shown(profileIndex, "roll_srate") ?? "—"}
+                    </small>
+                  </button>
+                );
+              })}
             </div>
             <p className="muted">
               Detailed view: Profile {rate + 1}. Select another profile above to
@@ -598,6 +663,9 @@ function Inspector({
               </div>
               <Plot curves={inspection.rates} />
             </div>
+            {inspection.rates.some((curve) => curve.points.length === 0) && (
+              <MissingSettingsNotice />
+            )}
             {d.derivedNote && (
               <p className="notice">
                 <b>No firmware defaults were read back.</b> {d.derivedNote}
@@ -620,39 +688,37 @@ function Inspector({
         {tab === "PID" && (
           <>
             <div className="profile-overview">
-              {(d.pidProfiles.length ? d.pidProfiles : [pid]).map(
-                (profileIndex) => {
-                  const values = profileParameters("pid", profileIndex);
-                  const known = ["p_roll", "i_roll", "d_roll", "f_roll"].filter(
-                    (key) => profileValue("pid", profileIndex, key)?.valid,
-                  ).length;
-                  return (
-                    <button
-                      className={`profile-card ${profileIndex === pid ? "selected" : ""}`}
-                      key={profileIndex}
-                      onClick={() => setPid(profileIndex)}
-                    >
-                      <strong>Profile {profileIndex + 1}</strong>
-                      <span>{values.length} explicit settings</span>
-                      <span>{known}/4 core PID gains available</span>
-                      <small>
-                        P{" "}
-                        {profileValue("pid", profileIndex, "p_roll")
-                          ? value(profileValue("pid", profileIndex, "p_roll")!)
-                          : "—"}
-                        {" · "}I{" "}
-                        {profileValue("pid", profileIndex, "i_roll")
-                          ? value(profileValue("pid", profileIndex, "i_roll")!)
-                          : "—"}
-                        {" · "}D{" "}
-                        {profileValue("pid", profileIndex, "d_roll")
-                          ? value(profileValue("pid", profileIndex, "d_roll")!)
-                          : "—"}
-                      </small>
-                    </button>
-                  );
-                },
-              )}
+              {pidProfiles.map((profileIndex) => {
+                const values = profileParameters("pid", profileIndex);
+                const known = ["p_roll", "i_roll", "d_roll", "f_roll"].filter(
+                  (key) => profileValue("pid", profileIndex, key)?.valid,
+                ).length;
+                return (
+                  <button
+                    className={`profile-card ${profileIndex === pid ? "selected" : ""}`}
+                    key={profileIndex}
+                    onClick={() => setPid(profileIndex)}
+                  >
+                    <strong>Profile {profileIndex + 1}</strong>
+                    <span>{values.length} explicit settings</span>
+                    <span>{known}/4 core PID gains available</span>
+                    <small>
+                      P{" "}
+                      {profileValue("pid", profileIndex, "p_roll")
+                        ? value(profileValue("pid", profileIndex, "p_roll")!)
+                        : "—"}
+                      {" · "}I{" "}
+                      {profileValue("pid", profileIndex, "i_roll")
+                        ? value(profileValue("pid", profileIndex, "i_roll")!)
+                        : "—"}
+                      {" · "}D{" "}
+                      {profileValue("pid", profileIndex, "d_roll")
+                        ? value(profileValue("pid", profileIndex, "d_roll")!)
+                        : "—"}
+                    </small>
+                  </button>
+                );
+              })}
             </div>
             <p className="muted">
               Detailed view: Profile {pid + 1}. Select another profile above to
@@ -697,6 +763,12 @@ function Inspector({
                 </tbody>
               </table>
             </div>
+            {["roll", "pitch", "yaw"].some((axis) =>
+              ["p", "i", "d", "f"].some((gain) => {
+                const parameter = profileValue("pid", pid, `${gain}_${axis}`);
+                return !parameter || !parameter.valid || !parameter.supported;
+              }),
+            ) && <MissingSettingsNotice />}
             <p className="notice">
               Gains do not establish the aircraft’s physical response. Native
               D-min/D-max names are preserved; an absent name is not inferred

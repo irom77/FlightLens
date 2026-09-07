@@ -10,7 +10,8 @@ CONSTANTS = {'UINT8_MAX':255,'UINT16_MAX':65535,'INT8_MIN':-128,'INT8_MAX':127,
 # Every plain release on each certified line. `pack()` in the Rust core resolves
 # a dump from any of these to the pack certified at the first release of the
 # line, so a default may only be recorded if it is identical at all of them.
-PATCH_RELEASES = {'4.3.0':['4.3.0','4.3.1','4.3.2'],
+PATCH_RELEASES = {'4.2.0':[f'4.2.{patch}' for patch in range(12)],
+ '4.3.0':['4.3.0','4.3.1','4.3.2'],
  '4.4.0':['4.4.0','4.4.1','4.4.2','4.4.3'],
  '4.5.0':['4.5.0','4.5.1','4.5.2','4.5.3','4.5.4','4.5.5']}
 RESET_FN = 'pgResetFn_controlRateProfiles'
@@ -19,7 +20,7 @@ def reset_body(text):
     start = text.index('void ' + RESET_FN)
     return text[start:text.index('\n}', start)]
 
-for version in ['4.3.0','4.4.0','4.5.0']:
+for version in PATCH_RELEASES:
     sources = {}
     def fetch(path):
         url = f'https://raw.githubusercontent.com/betaflight/betaflight/{version}/src/main/{path}'
@@ -27,7 +28,8 @@ for version in ['4.3.0','4.4.0','4.5.0']:
         sources[path] = {'url':url, 'sha256':hashlib.sha256(data).hexdigest()}
         return data.decode()
     settings = fetch('cli/settings.c')
-    names = fetch('fc/parameter_names.h')
+    # 4.2 uses literal CLI names; parameter_names.h was added later.
+    names = '' if version == '4.2.0' else fetch('fc/parameter_names.h')
     settings_h = fetch('cli/settings.h')
     common_pre = fetch('target/common_pre.h')
     defines = dict(re.findall(r'#define\s+(\w+)\s+"([^"\n]+)"', names))
@@ -63,7 +65,7 @@ for version in ['4.3.0','4.4.0','4.5.0']:
         assert found, (version, macro)
         return max(found)
     profiles = {'pid':count('PID_PROFILE_COUNT'), 'rate':count('CONTROL_RATE_PROFILE_COUNT')}
-    # A Betaflight dump prints only what differs from the reset the firmware
+    # A Betaflight diff prints only what differs from the reset the firmware
     # applies on `defaults`, so a key the dump never sets still holds the reset
     # value. That is readable evidence rather than a guess -- but only if the
     # reset is sourced as rigorously as the schema, so it is extracted here from

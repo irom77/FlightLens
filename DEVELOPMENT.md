@@ -26,7 +26,9 @@ pnpm tauri dev
 
 ## Fidelity and current boundaries
 
-Compatibility schemas are bundled for the exact tags **4.3.0, 4.4.0, and 4.5.0**. They retain source URLs and checksums. A schema establishes types and scope, **not factory defaults or target build availability**. No verified target baselines are bundled. Every omitted value remains unknown; headerless excerpts and other releases retain raw inspection without claiming semantic compatibility. Synthetic fixtures are not hardware certification or flight-ready configurations.
+Compatibility schemas are bundled from pinned Betaflight **4.2.0, 4.3.0, 4.4.0, and 4.5.0** sources, retaining URLs and checksums. Patch and vendor releases use the matching major/minor schema; that does not certify target build features. Rate defaults are recovered only when the backup declares a reset and its exact release appears in the pack's verified list (4.2.0–4.2.11, 4.3.0–4.3.2, 4.4.0–4.4.3, and 4.5.0–4.5.5). Vendor and unverified releases receive no default recovery. PID defaults and target baselines are not bundled, so omitted PID gains remain unknown. Headerless excerpts and unsupported firmware retain raw inspection. Synthetic fixtures are not hardware certification or flight-ready configurations.
+
+Betaflight 4.2 QuickRates has fixed expo behavior, without the later `quickrates_rc_expo` option. Inspection and export respect that distinction. Differential vectors compile upstream rate functions from both 4.2.0 and 4.2.11 in addition to the later pinned tags.
 
 The parser preserves original bytes of valid UTF-8 text, including BOM, CRLF, comments, malformed commands, and unsupported lines. Interpretation follows source order and tracks independent profiles, resets, feature operations, serial allocations, and mode slots. Other collection commands remain visible in Raw. VTX table export has separate dependency validation; VTX AUX ranges and direct-frequency mode are deliberately blocked. Full destination collection replacement and cross-target migration are not supported.
 
@@ -57,11 +59,16 @@ Run the repeatable corpus smoke test from WSL/Linux with:
 ./test.sh
 ```
 
-The script runs the Rust, generated-binding, TypeScript, and frontend checks,
+Install the renderer test browser once with `pnpm exec playwright install chromium`
+(or set `FLIGHTLENS_CHROMIUM` to an installed compatible Chromium executable).
+Standalone `pnpm test:ui` needs Cargo on PATH or `FLIGHTLENS_CARGO` set.
+
+The script runs the Rust, generated-binding, TypeScript, frontend, and renderer checks,
 then analyzes every `.txt` backup under
 `/home/irom/fpv_cli_dumps/backups` (or `FLIGHTLENS_CORPUS=/path/to/backups`).
 It reports, per file, compatible schema status, complete and partial Rates
-profiles, PID profiles with known values, filter/port/mode/OSD coverage, audit
+profiles, complete PID profiles (all 12 P/I/D/F gains across roll, pitch, and
+yaw), filter/port/mode/OSD coverage, audit
 coverage, and whether Rates/PID export validation can run. Partial `diff all`
 backups are expected to report unknown fields; the test never guesses omitted
 defaults. It fails on import/read errors or structural empty-view regressions.
@@ -72,6 +79,18 @@ complete Rates or PID profile, use:
 ```sh
 FLIGHTLENS_CORPUS_STRICT=1 ./test.sh
 ```
+
+Strict PID coverage requires all 12 valid, supported gains in one profile;
+filter settings and gains in other profiles cannot fill missing cells. Zero is
+a known gain. Reports distinguish profiles with any gains from complete profiles.
+These regression tests run in the normal Rust test suite without private backups.
+Renderer tests assert explicit P/I/D/F table values, zero gains, unknown gains,
+and curve counts and full-stick rates after profile changes. Their IPC substitute
+returns profile-specific results computed by Rust from synthetic input; it does
+not exercise native file picking or the packaged Windows WebView.
+The Windows release workflow runs these tests before building installers.
+A non-strict corpus run measures coverage and can succeed with partial data;
+it does not certify that the desktop renders every backup correctly.
 
 The core checks do not need desktop GUI libraries. The last command does. Native picker, drag/drop, clipboard and packaged-app smoke checks need a graphical desktop; CI compilation is not a substitute for those checks.
 
@@ -95,3 +114,16 @@ The corresponding source repository is [irom77/fpv_cli_dumps](https://github.com
 - `fixtures`: synthetic configurations, malformed inputs and pinned C rate reference vectors.
 
 GPL-3.0-or-later. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Signing, platform packages, and the first public release belong to Phase 2.
+
+### Capturing complete inspection input
+
+For complete Rates and PID inspection, save the entire `dump all` output from
+the currently configured controller, including the firmware header. This includes
+unchanged settings across profiles. `diff all` omits unchanged values, so an
+offline reader needs verified defaults to reconstruct them. FlightLens currently
+derives only rate defaults under its baseline and firmware checks; vendor builds
+may have different defaults. Unknown Expo does not mean zero. Running `dump all`
+does not require a reset or a separate `defaults` command. Unsupported firmware
+still needs a compatibility implementation even with a complete dump.
+
+Reference: [Betaflight profiles](https://www.betaflight.com/docs/development/Profiles).

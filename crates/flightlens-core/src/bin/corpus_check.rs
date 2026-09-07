@@ -21,6 +21,7 @@ struct Summary {
     complete_rate_profiles: usize,
     partial_rate_profiles: usize,
     pid_profiles_with_values: usize,
+    complete_pid_profiles: usize,
     /// Files whose *selected* rate profile renders all three curves, which is
     /// what a user actually opens the Rates tab to see.
     selected_rate_complete: usize,
@@ -62,12 +63,10 @@ fn basename(path: &Path) -> String {
 }
 
 fn known_pid_values(document: &ConfigDocument, profile: u8) -> usize {
-    document
-        .parameters
-        .values()
-        .filter(|parameter| {
-            parameter.scope == Scope::Pid(profile) && parameter.valid && parameter.supported
-        })
+    ["roll", "pitch", "yaw"]
+        .into_iter()
+        .flat_map(|axis| ["p", "i", "d", "f"].map(move |gain| format!("{gain}_{axis}")))
+        .filter(|key| document.number(&Scope::Pid(profile), key).is_some())
         .count()
 }
 
@@ -104,6 +103,7 @@ fn check_config(document: &ConfigDocument, strict: bool, summary: &mut Summary) 
     let mut partial_rates = 0;
     let mut complete_pids = 0;
     let mut pid_values = 0;
+    let mut pids_with_values = 0;
 
     for profile in &document.rate_profiles {
         let curves = analysis::rates(document, *profile);
@@ -137,6 +137,9 @@ fn check_config(document: &ConfigDocument, strict: bool, summary: &mut Summary) 
         let count = known_pid_values(document, *profile);
         pid_values += count;
         if count > 0 {
+            pids_with_values += 1;
+        }
+        if count == 12 {
             complete_pids += 1;
         }
     }
@@ -196,7 +199,7 @@ fn check_config(document: &ConfigDocument, strict: bool, summary: &mut Summary) 
         invariant_failure = true;
     }
     if strict && document.firmware.pack_id.is_some() && complete_pids == 0 {
-        eprintln!("  FAIL strict PID: no profile has known PID values");
+        eprintln!("  FAIL strict PID: no profile has all 12 known P/I/D/F gains");
         invariant_failure = true;
     }
 
@@ -208,11 +211,12 @@ fn check_config(document: &ConfigDocument, strict: bool, summary: &mut Summary) 
     }
     summary.complete_rate_profiles += complete_rates;
     summary.partial_rate_profiles += partial_rates;
-    summary.pid_profiles_with_values += complete_pids;
+    summary.pid_profiles_with_values += pids_with_values;
+    summary.complete_pid_profiles += complete_pids;
 
     println!(
         "{} {:<62} fw={} pack={} errors={} rates={}/{} derived={} pid={}/{} filters={} ports={} modes={} osd={} audit={} export(r/p)={}/{}{}{}",
-        if document.firmware.pack_id.is_some() { "PASS" } else { "INFO" },
+        if invariant_failure { "FAIL" } else if document.firmware.pack_id.is_none() { "INFO" } else if complete_rates == 0 || complete_pids == 0 { "PARTIAL" } else { "PASS" },
         basename(Path::new(&document.title)),
         document.firmware.version.as_deref().unwrap_or("unknown"),
         if document.firmware.pack_id.is_some() { "yes" } else { "no" },
@@ -272,7 +276,7 @@ fn main() {
         root.display(),
         files.len()
     );
-    println!("Legend: rates=complete profiles/seen profiles, pid=profiles with known values/seen profiles");
+    println!("Legend: rates=complete profiles/seen profiles, pid=complete P/I/D/F profiles/seen profiles");
     println!();
     let mut summary = Summary {
         files: files.len(),
@@ -310,7 +314,7 @@ fn main() {
     }
     println!();
     println!(
-        "Summary: files={} configs={} skipped={} failures={} parse_errors={} selected_rate_complete={} files_with_derived={} complete_rate_profiles={} partial_rate_profiles={} pid_profiles_with_values={}",
+        "Summary: files={} configs={} skipped={} failures={} parse_errors={} selected_rate_complete={} files_with_derived={} complete_rate_profiles={} partial_rate_profiles={} pid_profiles_with_values={} complete_pid_profiles={}",
         summary.files,
         summary.configs,
         summary.unsupported,
@@ -321,8 +325,71 @@ fn main() {
         summary.complete_rate_profiles,
         summary.partial_rate_profiles,
         summary.pid_profiles_with_values,
+        summary.complete_pid_profiles,
     );
     if summary.failures > 0 {
         process::exit(1);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn document(pid_lines: &str) -> ConfigDocument {
+        // Keep complete rates so a strict failure isolates PID coverage.
+        let fixture = include_str!("../../../../fixtures/configs/betaflight-4.5.0.dump");
+        let rates = fixture.split("rateprofile 0").nth(1).unwrap();
+        let text =
+            format!("# Betaflight / STM32F405 4.5.0\nprofile 0\n{pid_lines}\nrateprofile 0{rates}");
+        let Artifact::Config(document) = analyze(&text, "synthetic", "synthetic").unwrap() else {
+            panic!("expected configuration");
+        };
+        *document
+    }
+
+    fn gains() -> String {
+        ["roll", "pitch", "yaw"]
+            .into_iter()
+            .flat_map(|axis| {
+                ["p", "i", "d", "f"].map(move |gain| format!("set {gain}_{axis} = 0\n"))
+            })
+            .collect()
+    }
+
+    #[test]
+    fn filters_are_not_pid_gains() {
+        let d = document("set dterm_lpf1_static_hz = 100");
+        assert_eq!(known_pid_values(&d, 0), 0);
+        assert!(check_config(&d, true, &mut Summary::default()));
+    }
+
+    #[test]
+    fn one_gain_does_not_make_a_complete_pid_profile() {
+        let d = document("set p_roll = 45");
+        assert_eq!(known_pid_values(&d, 0), 1);
+        assert!(check_config(&d, true, &mut Summary::default()));
+    }
+
+    #[test]
+    fn complete_zero_gains_are_known() {
+        let d = document(&gains());
+        assert_eq!(known_pid_values(&d, 0), 12);
+        assert!(!check_config(&d, true, &mut Summary::default()));
+    }
+
+    #[test]
+    fn invalid_gain_does_not_count_as_known() {
+        let d = document(&format!("{}set p_roll = invalid\n", gains()));
+        assert_eq!(known_pid_values(&d, 0), 11);
+        assert!(check_config(&d, true, &mut Summary::default()));
+    }
+
+    #[test]
+    fn gains_cannot_be_combined_across_profiles() {
+        let d = document(
+            "set p_roll = 45\nprofile 1\nset i_roll = 80\nset d_roll = 30\nset f_roll = 120",
+        );
+        assert!(check_config(&d, true, &mut Summary::default()));
     }
 }

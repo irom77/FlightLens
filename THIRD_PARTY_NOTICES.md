@@ -4,12 +4,14 @@ FlightLens original application code is licensed under GPL-3.0-or-later. The com
 
 ## Betaflight / Cleanflight
 
-The rate and lowpass equations, CLI schema metadata, mode/serial mappings and OSD position encoding derive from the Betaflight project, tags 4.3.0, 4.4.0 and 4.5.0. Betaflight and Cleanflight contributors retain their copyrights. Their source is licensed GPL-3.0-or-later; the upstream notice states:
+The rate and lowpass equations, CLI schema metadata, mode/serial mappings and OSD position encoding derive from the Betaflight project, tags 4.2.0, 4.2.11, 4.3.0, 4.4.0 and 4.5.0. Betaflight and Cleanflight contributors retain their copyrights. Their source is licensed GPL-3.0-or-later; the upstream notice states:
 
 > This file is part of Cleanflight and Betaflight.
 
 Source locations:
 
+- https://github.com/betaflight/betaflight/tree/4.2.0/src/main
+- https://github.com/betaflight/betaflight/tree/4.2.11/src/main
 - https://github.com/betaflight/betaflight/tree/4.3.0/src/main
 - https://github.com/betaflight/betaflight/tree/4.4.0/src/main
 - https://github.com/betaflight/betaflight/tree/4.5.0/src/main

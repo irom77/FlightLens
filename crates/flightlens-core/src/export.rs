@@ -152,6 +152,7 @@ pub fn export(d: &ConfigDocument, r: &ExportRequest) -> Result<ValidatedSnippet,
         if d.text(&Scope::Rate(r.rate_profile), "rates_type")
             .as_deref()
             == Some("QUICK")
+            && pack.parameters.contains_key("quickrates_rc_expo")
             && d.parameter(&Scope::Rate(r.rate_profile), "quickrates_rc_expo")
                 .is_none()
         {

@@ -2,7 +2,7 @@
 import hashlib,json,pathlib,re,subprocess,tempfile,urllib.request
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 results=[]
-for version in ['4.3.0','4.4.0','4.5.0']:
+for version in ['4.2.0','4.2.11','4.3.0','4.4.0','4.5.0']:
     url=f'https://raw.githubusercontent.com/betaflight/betaflight/{version}/src/main/fc/rc.c'
     data=urllib.request.urlopen(url).read(); source=data.decode()
     functions=[]
@@ -13,6 +13,7 @@ for version in ['4.3.0','4.4.0','4.5.0']:
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
+#define powerf(x,n) powf(x,n)
 #define power3(x) ((x)*(x)*(x))
 #define power5(x) ((x)*(x)*(x)*(x)*(x))
 #define MAX(a,b) ((a)>(b)?(a):(b))
@@ -42,6 +43,8 @@ printf("%s,%d,%d,%d,%d,%.9g,%.9g\\n",names[m],cases[c][0],cases[c][1],cases[c][2
         output=subprocess.check_output([str(path/'reference')],text=True)
     for line in output.splitlines():
         model,rc,sr,e,q,x,y=line.split(',')
+        # 4.2 has no quickRatesRcExpo field; only its fixed OFF behavior exists.
+        if version.startswith('4.2.') and q == '1': continue
         results.append({'version':version,'model':model,'rc':float(rc),'superRate':float(sr),'expo':float(e),'quickExpo':q=='1','x':float(x),'y':float(y)})
     print(version,hashlib.sha256(data).hexdigest())
 (ROOT/'fixtures/rate-vectors.json').write_text(json.dumps(results,separators=(',',':'))+'\n')

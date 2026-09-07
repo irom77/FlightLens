@@ -35,6 +35,20 @@ jobs:
       - name: Install JavaScript dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Check Rust core and generated bindings
+        shell: bash
+        run: |
+          cargo test -p flightlens-core
+          pnpm bindings:check
+
+      - name: Check frontend behavior
+        shell: bash
+        run: |
+          pnpm typecheck
+          pnpm test
+          pnpm exec playwright install chromium
+          pnpm test:ui
+
       - name: Build macOS bundle
         run: pnpm tauri build
 

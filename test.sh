@@ -39,6 +39,9 @@ pnpm typecheck
 echo "== Frontend tests =="
 pnpm test
 
+echo "== Renderer behavior =="
+pnpm test:ui
+
 echo "== Real-backup corpus coverage =="
 "$CARGO_BIN" run --quiet -p flightlens-core --bin corpus_check -- "${CORPUS_ARGS[@]}"
 
