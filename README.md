@@ -45,7 +45,7 @@ The Windows installer can install Microsoft Edge WebView2 when it is missing. Th
 
 Launch FlightLens and open a `.txt`, `.diff`, `.dump`, `.param`, `.parm`, `.bbl`, or `.bfl` file. You can also drop a file on the window or press **Ctrl/Cmd+Shift+V** to paste CLI text.
 
-For complete Rates and PID inspection, use the `dump all` procedure above. FlightLens warns when the imported text does not contain evidence of `dump all`; that warning is intentional. The app preserves missing values as unknown instead of filling them with guesses.
+**Before opening it, use Betaflight CLI `dump all` and save or paste the complete output.** A `diff` or `diff all` file can be opened, but unchanged Rates, Expo, and PID values may be unavailable. FlightLens warns when the imported text does not contain evidence of `dump all`; that warning is intentional. The app preserves missing values as unknown instead of filling them with guesses.
 
 Your original backup is read-only. FlightLens creates an immutable snapshot for inspection and never writes back to the source file.
 
