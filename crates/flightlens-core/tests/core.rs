@@ -348,3 +348,265 @@ fn all_export_groups_reparse_for_each_certified_tag() {
         }
     }
 }
+#[test]
+fn firmware_profile_counts_come_from_the_schema() {
+    // Betaflight 4.4 raised the PID profile count from three to four. The
+    // fourth profile must be attributed, not rejected as malformed, and the
+    // settings that follow it must stay in that scope.
+    let d = with("profile 3\nset p_roll = 42\n");
+    assert_eq!(d.number(&Scope::Pid(3), "p_roll"), Some(42.0));
+    assert_eq!(d.selected_pid, Some(3));
+    assert!(d.pid_profiles.contains(&3));
+    assert!(!d.diagnostics.iter().any(|x| x.severity == "error"));
+
+    // 4.3 certifies three PID profiles and six rate profiles.
+    let older = config(&format!(
+        "{}\nrateprofile 5\nset roll_srate = 70\n",
+        header().replace("4.5.0", "4.3.0")
+    ));
+    assert_eq!(older.number(&Scope::Rate(5), "roll_srate"), Some(70.0));
+    assert!(!older.diagnostics.iter().any(|x| x.severity == "error"));
+}
+#[test]
+fn out_of_range_profile_warns_without_discarding_settings() {
+    // 4.5 certifies four rate profiles. A sixth is reported, but the source is
+    // still read as declared rather than silently dropped into unknown scope.
+    let d = with("rateprofile 5\nset roll_srate = 70\n");
+    assert_eq!(d.number(&Scope::Rate(5), "roll_srate"), Some(70.0));
+    assert!(!d.diagnostics.iter().any(|x| x.severity == "error"));
+    assert!(d
+        .diagnostics
+        .iter()
+        .any(|x| x.severity == "warning" && x.message.contains("Rate profile 5")));
+    // A selector that is not a number remains malformed.
+    assert!(parse_line("profile 3").is_ok());
+    assert!(parse_line("profile garbage").is_err());
+}
+#[test]
+fn bitset_flags_are_on_off_not_integers() {
+    // MODE_BITSET settings print as ON/OFF in the CLI. Typing them as integers
+    // made every real dump fail schema validation and blocked export.
+    let d = with("set blackbox_disable_acc = OFF\nset telemetry_disabled_pitch = ON\n");
+    assert!(!d.diagnostics.iter().any(|x| x.severity == "error"));
+    for (key, value) in [
+        ("blackbox_disable_acc", "OFF"),
+        ("telemetry_disabled_pitch", "ON"),
+    ] {
+        let p = &d.parameters[&format!("global:{key}")];
+        assert!(p.supported, "{key} must resolve to a schema");
+        assert!(p.valid, "{key} = {value} must validate");
+    }
+    // The enum is still closed: a value the firmware never prints is invalid.
+    let bad = with("set blackbox_disable_acc = 7\n");
+    assert!(bad.diagnostics.iter().any(|x| x.severity == "error"));
+}
+#[test]
+fn unassignable_aux_channel_is_read_and_flagged_not_dropped() {
+    // Betaflight prints `auxChannelIndex` as the raw stored byte, so a mode
+    // configured without a channel appears as 255 in real 4.3 and 4.4 dumps.
+    // The row is the user's configuration and must survive parsing.
+    let d = with("aux 2 13 255 1300 1700 0 0\n");
+    assert_eq!(d.modes.len(), 1);
+    assert_eq!(d.modes[0].channel, 255);
+    assert!(!d.modes[0].channel_assigned);
+    assert_eq!(d.modes[0].start, 1300);
+    assert!(!d.diagnostics.iter().any(|x| x.severity == "error"));
+    assert!(d
+        .diagnostics
+        .iter()
+        .any(|x| x.severity == "warning" && x.message.contains("AUX channel 255")));
+
+    // Channel 13 is the last assignable one; 14 is the first that is not.
+    assert!(with("aux 0 0 13 1300 1700 0 0\n").modes[0].channel_assigned);
+    assert!(!with("aux 0 0 14 1300 1700 0 0\n").modes[0].channel_assigned);
+    // A channel that is not a byte at all is still malformed.
+    assert!(parse_line("aux 0 0 256 1300 1700 0 0").is_err());
+}
+#[test]
+fn export_refuses_modes_the_firmware_would_discard() {
+    // `cliAux` zeroes the whole mode activation condition when it reads back a
+    // channel it cannot assign, so exporting the line verbatim would erase the
+    // mode rather than restore it.
+    let mut d = fixture("4.5.0");
+    assert!(export(&d, &request(&d, &["modes"])).is_ok());
+    d.modes[0].channel = 255;
+    d.modes[0].channel_assigned = false;
+    let err = export(&d, &request(&d, &["modes"])).unwrap_err();
+    assert!(err.contains("assignable AUX channel"), "{err}");
+    // Other groups are unaffected by a mode the request never asked for.
+    assert!(export(&d, &request(&d, &["rates"])).is_ok());
+}
+#[test]
+fn blackbox_headers_are_detected_away_from_byte_zero() {
+    assert!(is_blackbox(b"H Product:Blackbox flight data recorder"));
+    // A byte-order mark, leading junk, or a recovered partial first session
+    // pushes the header off the start; such a log is not CLI text.
+    let mut shifted = b"\xef\xbb\xbf\n".to_vec();
+    shifted.extend_from_slice(b"H Product:Blackbox flight data recorder");
+    assert!(is_blackbox(&shifted));
+    assert!(!is_blackbox(
+        b"# Betaflight / STM32F405 4.5.0\nset roll_srate = 70\n"
+    ));
+    assert!(!is_blackbox(b"H Product:"));
+}
+#[test]
+fn export_gate_is_scoped_to_the_groups_the_request_asks_for() {
+    // A malformed serial line is a real defect, but it cannot reach a rates
+    // snippet. Blocking every group on it made one bad line a total outage.
+    let mut text = std::fs::read_to_string("../../fixtures/configs/betaflight-4.5.0.dump").unwrap();
+    text.push_str("serial 30 nonsense\n");
+    let d = config(&text);
+    assert!(d.diagnostics.iter().any(|x| x.severity == "error"));
+    assert!(export(&d, &request(&d, &["rates"])).is_ok());
+    assert!(export(&d, &request(&d, &["modes"])).is_ok());
+
+    let err = export(&d, &request(&d, &["serial"])).unwrap_err();
+    assert!(err.contains("serial needs line"), "{err}");
+    // The line is named so the message is actionable.
+    let line = text.lines().count() as u32;
+    assert!(err.contains(&line.to_string()), "{err}");
+    // Selecting the affected group alongside a clean one still blocks.
+    assert!(export(&d, &request(&d, &["rates", "serial"])).is_err());
+}
+#[test]
+fn export_gate_still_blocks_what_the_snippet_depends_on() {
+    let base = std::fs::read_to_string("../../fixtures/configs/betaflight-4.5.0.dump").unwrap();
+    // A malformed aux line is the modes group's own dependency.
+    let d = config(&format!("{base}aux 1 2 3\n"));
+    assert!(export(&d, &request(&d, &["modes"])).is_err());
+    assert!(export(&d, &request(&d, &["rates"])).is_ok());
+    // Features are emitted for the OSD and serial groups, so a malformed
+    // feature line blocks both and nothing else.
+    let d = config(&format!("{base}feature 3D\n"));
+    assert!(export(&d, &request(&d, &["osd"])).is_err());
+    assert!(export(&d, &request(&d, &["serial"])).is_err());
+    assert!(export(&d, &request(&d, &["rates"])).is_ok());
+    // A selector that did not parse leaves the following settings in an
+    // indeterminate profile, so its own group can no longer be proven complete.
+    let d = config(&format!("{base}rateprofile x\n"));
+    assert!(export(&d, &request(&d, &["rates"])).is_err());
+    assert!(export(&d, &request(&d, &["modes"])).is_ok());
+    // An unrecognised malformed line is unattributable and blocks everything.
+    let d = config(&format!("{base}set = 5\n"));
+    for group in ["rates", "modes", "serial", "osd"] {
+        assert!(export(&d, &request(&d, &[group])).is_err(), "{group}");
+    }
+}
+#[test]
+fn invalid_values_block_only_the_group_that_would_carry_them() {
+    let base = std::fs::read_to_string("../../fixtures/configs/betaflight-4.5.0.dump").unwrap();
+    // An invalid OSD value is attributed to its own parameter, so it blocks the
+    // OSD group by name and leaves the rest of the snippet alone.
+    let d = config(&format!("{base}set osd_units = FURLONGS\n"));
+    let err = export(&d, &request(&d, &["osd"])).unwrap_err();
+    assert!(
+        err.contains("osd_units") && err.contains("schema rejects"),
+        "{err}"
+    );
+    let line = d.parameters["global:osd_units"].line;
+    assert!(err.contains(&format!("line {line}")), "{err}");
+    assert!(export(&d, &request(&d, &["rates"])).is_ok());
+    assert!(export(&d, &request(&d, &["modes", "serial"])).is_ok());
+}
+
+#[test]
+fn omitted_rate_values_are_read_back_only_from_a_declared_baseline() {
+    // Without `defaults` the file states no baseline, so an omission means
+    // nothing and the curve stays suppressed exactly as before.
+    let bare = with("rateprofile 0\nset roll_rc_rate = 12\n");
+    assert!(bare.derived.is_empty());
+    assert!(rates(&bare, 0).iter().all(|c| c.points.is_empty()));
+
+    let d = with("defaults nosave\nrateprofile 0\nset roll_rc_rate = 12\n");
+    let scope = Scope::Rate(0);
+    // A declared value always wins; only untouched keys are read back.
+    assert_eq!(d.number(&scope, "roll_rc_rate"), Some(12.0));
+    assert!(d.derived_value(&scope, "roll_rc_rate").is_none());
+    let expo = d.derived_value(&scope, "roll_expo").unwrap();
+    assert_eq!(expo.raw_value, "0");
+    assert_eq!(expo.source_version, "4.5.0");
+    assert_eq!(
+        d.text_or_default(&scope, "rates_type").as_deref(),
+        Some("ACTUAL")
+    );
+    assert_eq!(d.number_or_default(&scope, "roll_rc_rate"), Some(12.0));
+    assert_eq!(d.number_or_default(&scope, "yaw_srate"), Some(67.0));
+
+    let curves = rates(&d, 0);
+    assert!(curves.iter().all(|c| c.points.len() == 201));
+    let roll = curves.iter().find(|c| c.name == "roll").unwrap();
+    assert!(!roll.derived_inputs.contains(&"roll_rc_rate".to_string()));
+    assert_eq!(
+        roll.derived_inputs,
+        ["rates_type", "roll_srate", "roll_expo"]
+    );
+}
+
+#[test]
+fn vendor_builds_and_invalid_values_are_never_filled_in() {
+    // A vendor build resolves to its major/minor schema for syntax and bounds,
+    // which a custom build cannot change -- but it can change any default, and
+    // nothing in the dump says whether it did.
+    let vendor =
+        config("# Betaflight / STM32F405 4.5.3.KAACK_V19\ndefaults nosave\nrateprofile 0\n");
+    assert_eq!(
+        vendor.firmware.pack_id.as_deref(),
+        Some("betaflight-4.5.0-schema-1")
+    );
+    assert!(vendor.derived.is_empty());
+    assert!(vendor.diagnostics.iter().any(|x| x
+        .message
+        .contains("not a plain release on a certified line")));
+
+    // A value the schema rejects is declared, so it is not derived either: the
+    // curve must stay unavailable rather than silently show the default.
+    let d = with("defaults nosave\nrateprofile 0\nset roll_srate = 900\n");
+    let scope = Scope::Rate(0);
+    assert!(d.derived_value(&scope, "roll_srate").is_none());
+    assert_eq!(d.number_or_default(&scope, "roll_srate"), None);
+    let curves = rates(&d, 0);
+    assert!(curves
+        .iter()
+        .find(|c| c.name == "roll")
+        .unwrap()
+        .points
+        .is_empty());
+    assert!(
+        curves
+            .iter()
+            .find(|c| c.name == "yaw")
+            .unwrap()
+            .points
+            .len()
+            == 201
+    );
+}
+
+#[test]
+fn export_never_emits_a_value_the_source_did_not_declare() {
+    // Reading a default back is a claim about the file. Writing one to a flight
+    // controller would be a line the user never wrote, so the snippet still has
+    // to declare all ten rate keys itself.
+    let d = with("defaults nosave\nrateprofile 0\nset roll_rc_rate = 12\n");
+    assert!(!d.derived.is_empty());
+    assert!(rates(&d, 0).iter().all(|c| c.points.len() == 201));
+    let error = export(&d, &request(&d, &["rates"])).unwrap_err();
+    assert!(error.contains("rates_type"), "{error}");
+
+    let complete = with(&format!(
+        "defaults nosave\nrateprofile 0\nset rates_type = ACTUAL\n{}",
+        ["roll", "pitch", "yaw"]
+            .iter()
+            .map(|a| format!("set {a}_rc_rate = 12\nset {a}_srate = 70\nset {a}_expo = 5\n"))
+            .collect::<String>()
+    ));
+    let snippet = export(&complete, &request(&complete, &["rates"])).unwrap();
+    for derived in complete.derived.values() {
+        assert!(
+            !snippet.text.contains(&format!("set {} ", derived.key)),
+            "{} was exported but no source line declares it",
+            derived.key
+        );
+    }
+    assert!(snippet.text.contains("set roll_srate = 70"));
+}

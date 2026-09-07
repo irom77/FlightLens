@@ -1,5 +1,61 @@
 {
   "baseline": null,
+  "defaults": {
+    "reset_sha256": "b6890c50ec4d762798f65753641bc9c6ab3433c49af9501af72c1b50b5c921bf",
+    "source": "fc/controlrate_profile.c pgResetFn_controlRateProfiles",
+    "values": {
+      "pitch_expo": "0",
+      "pitch_rate_limit": "1998",
+      "pitch_rc_rate": "7",
+      "pitch_srate": "67",
+      "quickrates_rc_expo": "OFF",
+      "rates_type": "ACTUAL",
+      "roll_expo": "0",
+      "roll_rate_limit": "1998",
+      "roll_rc_rate": "7",
+      "roll_srate": "67",
+      "thr_expo": "0",
+      "thr_mid": "50",
+      "throttle_limit_percent": "100",
+      "throttle_limit_type": "OFF",
+      "yaw_expo": "0",
+      "yaw_rate_limit": "1998",
+      "yaw_rc_rate": "7",
+      "yaw_srate": "67"
+    },
+    "verified": [
+      {
+        "sha256": "adf8ae7ce41e806ba011f5b51d6684e72964febef7aff12be1a2fcec905ca547",
+        "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/fc/controlrate_profile.c",
+        "version": "4.5.0"
+      },
+      {
+        "sha256": "adf8ae7ce41e806ba011f5b51d6684e72964febef7aff12be1a2fcec905ca547",
+        "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/fc/controlrate_profile.c",
+        "version": "4.5.1"
+      },
+      {
+        "sha256": "adf8ae7ce41e806ba011f5b51d6684e72964febef7aff12be1a2fcec905ca547",
+        "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/fc/controlrate_profile.c",
+        "version": "4.5.2"
+      },
+      {
+        "sha256": "adf8ae7ce41e806ba011f5b51d6684e72964febef7aff12be1a2fcec905ca547",
+        "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/fc/controlrate_profile.c",
+        "version": "4.5.3"
+      },
+      {
+        "sha256": "adf8ae7ce41e806ba011f5b51d6684e72964febef7aff12be1a2fcec905ca547",
+        "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/fc/controlrate_profile.c",
+        "version": "4.5.4"
+      },
+      {
+        "sha256": "adf8ae7ce41e806ba011f5b51d6684e72964febef7aff12be1a2fcec905ca547",
+        "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/fc/controlrate_profile.c",
+        "version": "4.5.5"
+      }
+    ]
+  },
   "id": "betaflight-4.5.0-schema-1",
   "notice": "Schema does not certify build features or defaults. GPL-3.0-or-later; derived from Betaflight.",
   "parameters": {
@@ -392,102 +448,144 @@
       "values": []
     },
     "blackbox_disable_acc": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "blackbox_disable_alt": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "blackbox_disable_bat": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "blackbox_disable_debug": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "blackbox_disable_gps": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "blackbox_disable_gyro": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "blackbox_disable_gyrounfilt": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "blackbox_disable_mag": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "blackbox_disable_motors": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "blackbox_disable_pids": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "blackbox_disable_rc": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "blackbox_disable_rpm": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "blackbox_disable_rssi": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "blackbox_disable_setpoint": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "blackbox_high_resolution": {
       "kind": "enum",
@@ -4067,130 +4165,184 @@
       ]
     },
     "telemetry_disabled_acc_x": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_acc_y": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_acc_z": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_altitude": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_cap_used": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_current": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_distance": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_esc_current": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_esc_rpm": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_esc_temperature": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_esc_voltage": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_fuel": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_ground_speed": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_heading": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_lat_long": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_mode": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_pitch": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_roll": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_sensors": {
       "kind": "integer",
@@ -4200,25 +4352,34 @@
       "values": []
     },
     "telemetry_disabled_temperature": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_vario": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "telemetry_disabled_voltage": {
-      "kind": "integer",
+      "kind": "enum",
       "max": null,
       "min": null,
       "scope": "global",
-      "values": []
+      "values": [
+        "OFF",
+        "ON"
+      ]
     },
     "thr_corr_angle": {
       "kind": "integer",
@@ -4700,6 +4861,10 @@
       "values": []
     }
   },
+  "profiles": {
+    "pid": 4,
+    "rate": 4
+  },
   "sources": {
     "cli/settings.c": {
       "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
@@ -4709,9 +4874,25 @@
       "sha256": "dfb6825ed75ac04a6131fa57424fd3fee284f6c5a5a3fcb159a4003a4639df8e",
       "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/cli/settings.h"
     },
+    "fc/controlrate_profile.c": {
+      "sha256": "adf8ae7ce41e806ba011f5b51d6684e72964febef7aff12be1a2fcec905ca547",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/fc/controlrate_profile.c"
+    },
+    "fc/controlrate_profile.h": {
+      "sha256": "7445019cdb9313a6b17739b48870feca7741b319ea3c3db22328a85c47140f5f",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/fc/controlrate_profile.h"
+    },
     "fc/parameter_names.h": {
       "sha256": "354936f5494affbd5eb713510fad0671e1e631fb284e8a5d897b794b6e85ca5e",
       "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/fc/parameter_names.h"
+    },
+    "flight/pid.h": {
+      "sha256": "063078b7871c56441d8c30d676c8f7659f29fe55bcd7b04e177c0bf08a994515",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/flight/pid.h"
+    },
+    "target/common_pre.h": {
+      "sha256": "23fbf11ee4416e33be94ba77dd2307e45ac52262070ce14d05175eb25119457c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/target/common_pre.h"
     }
   },
   "version": "4.5.0"

@@ -21,6 +21,10 @@ struct Summary {
     complete_rate_profiles: usize,
     partial_rate_profiles: usize,
     pid_profiles_with_values: usize,
+    /// Files whose *selected* rate profile renders all three curves, which is
+    /// what a user actually opens the Rates tab to see.
+    selected_rate_complete: usize,
+    files_with_derived: usize,
 }
 
 fn usage() {
@@ -196,12 +200,18 @@ fn check_config(document: &ConfigDocument, strict: bool, summary: &mut Summary) 
         invariant_failure = true;
     }
 
+    if inspection.rates.iter().all(|c| !c.points.is_empty()) {
+        summary.selected_rate_complete += 1;
+    }
+    if !document.derived.is_empty() {
+        summary.files_with_derived += 1;
+    }
     summary.complete_rate_profiles += complete_rates;
     summary.partial_rate_profiles += partial_rates;
     summary.pid_profiles_with_values += complete_pids;
 
     println!(
-        "{} {:<62} fw={} pack={} errors={} rates={}/{} pid={}/{} filters={} ports={} modes={} osd={} audit={} export(r/p)={}/{}{}{}",
+        "{} {:<62} fw={} pack={} errors={} rates={}/{} derived={} pid={}/{} filters={} ports={} modes={} osd={} audit={} export(r/p)={}/{}{}{}",
         if document.firmware.pack_id.is_some() { "PASS" } else { "INFO" },
         basename(Path::new(&document.title)),
         document.firmware.version.as_deref().unwrap_or("unknown"),
@@ -209,6 +219,7 @@ fn check_config(document: &ConfigDocument, strict: bool, summary: &mut Summary) 
         errors,
         complete_rates,
         document.rate_profiles.len(),
+        document.derived.len(),
         complete_pids,
         document.pid_profiles.len(),
         known_filter_values(document),
@@ -299,12 +310,14 @@ fn main() {
     }
     println!();
     println!(
-        "Summary: files={} configs={} skipped={} failures={} parse_errors={} complete_rate_profiles={} partial_rate_profiles={} pid_profiles_with_values={}",
+        "Summary: files={} configs={} skipped={} failures={} parse_errors={} selected_rate_complete={} files_with_derived={} complete_rate_profiles={} partial_rate_profiles={} pid_profiles_with_values={}",
         summary.files,
         summary.configs,
         summary.unsupported,
         summary.failures,
         summary.parse_errors,
+        summary.selected_rate_complete,
+        summary.files_with_derived,
         summary.complete_rate_profiles,
         summary.partial_rate_profiles,
         summary.pid_profiles_with_values,

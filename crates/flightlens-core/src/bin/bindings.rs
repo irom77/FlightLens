@@ -5,6 +5,7 @@ fn main() {
         Value::decl(),
         Scope::decl(),
         Parameter::decl(),
+        Derived::decl(),
         Diagnostic::decl(),
         Command::decl(),
         SyntaxLine::decl(),

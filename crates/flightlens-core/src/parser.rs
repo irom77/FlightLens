@@ -1,6 +1,70 @@
 use crate::{compatibility, model::*, source};
 use std::collections::{BTreeMap, BTreeSet};
 
+/// `MAX_AUX_CHANNEL_COUNT` in `rx/rx.h`: the 18 supported RC channels less the
+/// four stick channels. Identical in every Betaflight line FlightLens certifies,
+/// and not build-dependent, so it is a constant rather than a schema field.
+pub const AUX_CHANNEL_COUNT: u32 = 14;
+
+/// Read back the values the source left out.
+///
+/// A Betaflight dump prints only what differs from the reset it names, so on a
+/// document whose `defaults` line states that baseline, a key no `set` touches
+/// still holds the reset value. Reading that is decoding the format, not
+/// inventing a value -- but only while the baseline itself is certain, so the
+/// pack must carry a proven reset table and the firmware must be a plain
+/// release on the certified line rather than a vendor build.
+fn derive_defaults(d: &mut ConfigDocument, pack: Option<&'static compatibility::Pack>, line: u32) {
+    let Some(pack) = pack.filter(|p| !p.defaults.values.is_empty()) else {
+        return;
+    };
+    let Some(version) = d.firmware.version.clone() else {
+        return;
+    };
+    if !compatibility::defaults_certified(&version) {
+        d.diagnostics.push(Diagnostic{line:Some(line),severity:"info".into(),message:format!(
+            "This build reports {version}, which is not a plain release on a certified line. Values the source omits are left unknown rather than read back from the {} defaults, because a custom build may change any of them.", pack.version)});
+        return;
+    }
+    let mut count = 0;
+    for profile in d.rate_profiles.clone() {
+        let scope = Scope::Rate(profile);
+        for (key, raw) in &pack.defaults.values {
+            let Some(schema) = pack.parameters.get(key) else {
+                continue;
+            };
+            if schema.scope(None, Some(profile)) != scope {
+                continue;
+            }
+            let id = format!("{}:{key}", scope.key());
+            // A declared key is never derived, even when its value is invalid:
+            // masking a value the schema rejects with the default would report
+            // a configuration the source does not contain.
+            if d.parameters.contains_key(&id) {
+                continue;
+            }
+            let (value, valid) = schema.parse(raw);
+            if !valid {
+                continue;
+            }
+            d.derived.insert(
+                id,
+                Derived {
+                    key: key.clone(),
+                    scope: scope.clone(),
+                    value,
+                    raw_value: raw.clone(),
+                    source_version: pack.version.clone(),
+                },
+            );
+            count += 1;
+        }
+    }
+    if count > 0 {
+        d.diagnostics.push(Diagnostic{line:Some(line),severity:"info".into(),message:format!(
+            "This line resets the configuration, so the {count} rate-profile settings the source never assigns still hold their Betaflight {} defaults. They are shown as read back from the firmware, never as declared, and are not exported.", pack.version)});
+    }
+}
 pub fn parse_line(raw: &str) -> Result<Command, String> {
     let text = raw.trim_start_matches('\u{feff}').trim();
     if text.is_empty() {
@@ -27,10 +91,11 @@ pub fn parse_line(raw: &str) -> Result<Command, String> {
             if words.len() != 2 {
                 return Err(bad());
             }
+            // How many profiles exist is firmware- and build-dependent, so the
+            // certified schema decides whether an index is in range (see
+            // `analyze`). Rejecting it here would make the selector malformed,
+            // which strands every following `set` in an indeterminate scope.
             let index = words[1].parse::<u8>().map_err(|_| bad())?;
-            if index > 5 || (words[0] == "profile" && index > 2) {
-                return Err("Profile index is outside supported Betaflight bounds".into());
-            }
             Ok(if words[0] == "profile" {
                 Command::Profile { index }
             } else {
@@ -79,9 +144,13 @@ pub fn parse_line(raw: &str) -> Result<Command, String> {
                 .iter()
                 .map(|v| v.parse::<u32>().map_err(|_| bad()))
                 .collect::<Result<Vec<_>, _>>()?;
+            // `auxChannelIndex` is a byte that `printAux` writes unclamped, so
+            // a value above the assignable channels is a state the firmware
+            // itself emits. `analyze` reports it; rejecting the line here would
+            // drop a mode the user actually has.
             if v[0] > 19
                 || v[1] > 255
-                || v[2] > 13
+                || v[2] > 255
                 || v[3] < 900
                 || v[4] > 2100
                 || v[3] > v[4]
@@ -194,6 +263,7 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
         },
         completeness: "partial".into(),
         parameters: BTreeMap::new(),
+        derived: BTreeMap::new(),
         syntax: Vec::new(),
         diagnostics: Vec::new(),
         ports: Vec::new(),
@@ -206,6 +276,7 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
     };
     let mut pid = None;
     let mut rate = None;
+    let mut baseline = None;
     let mut pids = BTreeSet::new();
     let mut rates = BTreeSet::new();
     let mut offset = 0;
@@ -228,6 +299,7 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
         };
         match &command {
             Command::Defaults => {
+                baseline = Some(line);
                 d.parameters.clear();
                 d.ports.clear();
                 d.modes.clear();
@@ -240,10 +312,32 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
                 rates.insert(0);
             }
             Command::Profile { index } => {
+                if let Some(limit) = pack.map(|p| p.profiles.pid) {
+                    if *index >= limit {
+                        d.diagnostics.push(Diagnostic {
+                            line: Some(line),
+                            severity: "warning".into(),
+                            message: format!(
+                                "Profile {index} is outside the {limit} PID profiles certified for this firmware. Its settings are attributed to it exactly as declared."
+                            ),
+                        });
+                    }
+                }
                 pid = Some(*index);
                 pids.insert(*index);
             }
             Command::Rateprofile { index } => {
+                if let Some(limit) = pack.map(|p| p.profiles.rate) {
+                    if *index >= limit {
+                        d.diagnostics.push(Diagnostic {
+                            line: Some(line),
+                            severity: "warning".into(),
+                            message: format!(
+                                "Rate profile {index} is outside the {limit} rate profiles certified for this firmware. Its settings are attributed to it exactly as declared."
+                            ),
+                        });
+                    }
+                }
                 rate = Some(*index);
                 rates.insert(*index);
             }
@@ -319,12 +413,23 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
                 logic,
                 linked,
             } => {
+                let channel_assigned = *channel < AUX_CHANNEL_COUNT;
+                if !channel_assigned {
+                    d.diagnostics.push(Diagnostic {
+                        line: Some(line),
+                        severity: "warning".into(),
+                        message: format!(
+                            "AUX channel {channel} is outside the {AUX_CHANNEL_COUNT} assignable channels, which is what Betaflight stores for a mode with no channel. The range is preserved as declared, but pasting this line back would make the firmware discard the whole mode."
+                        ),
+                    });
+                }
                 d.modes.retain(|m| m.index != *index);
                 d.modes.push(Mode {
                     index: *index,
                     mode_id: *mode,
                     name: mode_name(*mode),
                     channel: *channel,
+                    channel_assigned,
                     start: *start,
                     end: *end,
                     logic: *logic,
@@ -372,6 +477,9 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
     d.rate_profiles = rates.into_iter().collect();
     d.selected_pid = pid;
     d.selected_rate = rate;
+    if let Some(line) = baseline {
+        derive_defaults(&mut d, pack, line);
+    }
     Ok(Artifact::Config(Box::new(d)))
 }
 fn port_name(id: i32) -> String {

@@ -57,6 +57,23 @@ pub struct Parameter {
     pub unit: Option<String>,
     pub pack_id: Option<String>,
 }
+/// A value no source line declares, read back from the certified pack's reset
+/// table. A Betaflight dump prints only what differs from that reset, so on a
+/// document that declares `defaults` an omitted key provably still holds it.
+///
+/// Kept apart from `Parameter` on purpose: a derived value has no source line,
+/// must never be presented as a declared one, and is never exported.
+#[derive(Debug, Clone, Serialize, Deserialize, TS)]
+#[serde(rename_all = "camelCase")]
+pub struct Derived {
+    pub key: String,
+    pub scope: Scope,
+    pub value: Value,
+    pub raw_value: String,
+    /// The certified firmware line whose reset table supplied the value, which
+    /// is what stands in for a source line in the interface.
+    pub source_version: String,
+}
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct Diagnostic {
@@ -140,6 +157,10 @@ pub struct Mode {
     pub mode_id: u32,
     pub name: String,
     pub channel: u32,
+    /// Whether `channel` names one of the AUX channels Betaflight can assign.
+    /// The firmware prints the stored byte unclamped, so a dump can carry a
+    /// channel no build accepts; see `parser::AUX_CHANNEL_COUNT`.
+    pub channel_assigned: bool,
     pub start: u32,
     pub end: u32,
     pub logic: Option<u32>,
@@ -156,6 +177,10 @@ pub struct ConfigDocument {
     pub firmware: Firmware,
     pub completeness: String,
     pub parameters: BTreeMap<String, Parameter>,
+    /// Keyed like `parameters`, and disjoint from it: a key any source line
+    /// declares is never derived, so an invalid declared value stays unknown
+    /// rather than being quietly replaced by the default.
+    pub derived: BTreeMap<String, Derived>,
     pub syntax: Vec<SyntaxLine>,
     pub diagnostics: Vec<Diagnostic>,
     pub ports: Vec<Port>,
@@ -177,6 +202,19 @@ impl ConfigDocument {
     }
     pub fn text(&self, scope: &Scope, key: &str) -> Option<String> {
         Some(self.parameter(scope, key)?.value.cli())
+    }
+    pub fn derived_value(&self, scope: &Scope, key: &str) -> Option<&Derived> {
+        self.derived.get(&format!("{}:{key}", scope.key()))
+    }
+    /// A declared value, or the firmware default where the source omits the key
+    /// entirely. Callers that must distinguish the two ask `derived_value`.
+    pub fn number_or_default(&self, scope: &Scope, key: &str) -> Option<f64> {
+        self.number(scope, key)
+            .or_else(|| self.derived_value(scope, key)?.value.number())
+    }
+    pub fn text_or_default(&self, scope: &Scope, key: &str) -> Option<String> {
+        self.text(scope, key)
+            .or_else(|| Some(self.derived_value(scope, key)?.value.cli()))
     }
 }
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]

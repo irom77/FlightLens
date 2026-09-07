@@ -9,10 +9,31 @@ pub struct Schema {
     pub max: Option<i32>,
     pub values: Vec<String>,
 }
+/// Profile counts certified for a firmware line. Betaflight lowers these on
+/// flash-constrained targets, so the pack carries the widest definition on the
+/// line: the bound that accepts every legitimate dump from that firmware.
+#[derive(Debug, Deserialize)]
+pub struct Profiles {
+    pub pid: u8,
+    pub rate: u8,
+}
+/// The reset values a firmware line applies on `defaults`, extracted from the
+/// pinned tag by `tools/build_compatibility.py` and proven identical at every
+/// patch release on the line. Only `PG_CONTROL_RATE_PROFILES` is certified;
+/// other parameter groups move between minor releases and need their own pass.
+#[derive(Debug, Default, Deserialize)]
+pub struct Defaults {
+    pub reset_sha256: String,
+    /// CLI key to the value the CLI would print for it.
+    pub values: BTreeMap<String, String>,
+}
 #[derive(Debug, Deserialize)]
 pub struct Pack {
     pub id: String,
     pub version: String,
+    pub profiles: Profiles,
+    #[serde(default)]
+    pub defaults: Defaults,
     pub parameters: BTreeMap<String, Schema>,
 }
 pub fn packs() -> &'static [Pack; 3] {
@@ -47,6 +68,23 @@ pub fn pack(version: Option<&str>) -> Option<&'static Pack> {
         pack_parts.next().and_then(|v| v.parse::<u16>().ok()) == Some(major)
             && pack_parts.next().and_then(|v| v.parse::<u16>().ok()) == Some(minor)
     })
+}
+/// Whether a pack's default table may be read back for `version`.
+///
+/// `pack` deliberately falls back to the major/minor line, which is right for
+/// syntax and bounds: a vendor build does not invent settings. It is wrong for
+/// defaults, which a custom build is free to change with nothing in the dump to
+/// say whether it did. So a default is only ever applied to a plain
+/// `major.minor.patch` release, where the reset function is proven identical
+/// across the whole line.
+pub fn defaults_certified(version: &str) -> bool {
+    let mut parts = version.split('.');
+    let numeric = parts
+        .by_ref()
+        .take(3)
+        .filter(|p| !p.is_empty() && p.bytes().all(|b| b.is_ascii_digit()))
+        .count();
+    numeric == 3 && parts.next().is_none()
 }
 impl Schema {
     pub fn scope(&self, pid: Option<u8>, rate: Option<u8>) -> Scope {

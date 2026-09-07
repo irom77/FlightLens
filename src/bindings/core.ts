@@ -5,6 +5,13 @@ export type Scope = { "kind": "global" } | { "kind": "pid", "index": number } | 
 
 export type Parameter = { key: string, semanticKey: string, value: Value, rawValue: string, scope: Scope, line: number, valid: boolean, supported: boolean, unit: string | null, packId: string | null, };
 
+export type Derived = { key: string, scope: Scope, value: Value, rawValue: string, 
+/**
+ * The certified firmware line whose reset table supplied the value, which
+ * is what stands in for a source line in the interface.
+ */
+sourceVersion: string, };
+
 export type Diagnostic = { line: number | null, severity: string, message: string, };
 
 export type Command = { "kind": "set", key: string, value: string, } | { "kind": "profile", index: number, } | { "kind": "rateprofile", index: number, } | { "kind": "defaults" } | { "kind": "feature", name: string, enabled: boolean, } | { "kind": "serial", identifier: number, mask: number, baud: [number, number, number, number], } | { "kind": "aux", index: number, mode: number, channel: number, start: number, end: number, logic: number | null, linked: number | null, } | { "kind": "collection", name: string, operands: Array<string>, } | { "kind": "device" } | { "kind": "comment" } | { "kind": "blank" } | { "kind": "unsupported" } | { "kind": "malformed" };
@@ -15,9 +22,21 @@ export type Firmware = { family: string, version: string | null, header: string 
 
 export type Port = { identifier: number, name: string, mask: number, functions: Array<string>, baud: [number, number, number, number], line: number, };
 
-export type Mode = { index: number, modeId: number, name: string, channel: number, start: number, end: number, logic: number | null, linked: number | null, line: number, };
+export type Mode = { index: number, modeId: number, name: string, channel: number, 
+/**
+ * Whether `channel` names one of the AUX channels Betaflight can assign.
+ * The firmware prints the stored byte unclamped, so a dump can carry a
+ * channel no build accepts; see `parser::AUX_CHANNEL_COUNT`.
+ */
+channelAssigned: boolean, start: number, end: number, logic: number | null, linked: number | null, line: number, };
 
-export type ConfigDocument = { id: string, sourceId: string, title: string, hash: string, firmware: Firmware, completeness: string, parameters: { [key in string]?: Parameter }, syntax: Array<SyntaxLine>, diagnostics: Array<Diagnostic>, ports: Array<Port>, modes: Array<Mode>, features: { [key in string]?: boolean }, pidProfiles: Array<number>, rateProfiles: Array<number>, selectedPid: number | null, selectedRate: number | null, };
+export type ConfigDocument = { id: string, sourceId: string, title: string, hash: string, firmware: Firmware, completeness: string, parameters: { [key in string]?: Parameter }, 
+/**
+ * Keyed like `parameters`, and disjoint from it: a key any source line
+ * declares is never derived, so an invalid declared value stays unknown
+ * rather than being quietly replaced by the default.
+ */
+derived: { [key in string]?: Derived }, syntax: Array<SyntaxLine>, diagnostics: Array<Diagnostic>, ports: Array<Port>, modes: Array<Mode>, features: { [key in string]?: boolean }, pidProfiles: Array<number>, rateProfiles: Array<number>, selectedPid: number | null, selectedRate: number | null, };
 
 export type Artifact = { "kind": "config", "document": ConfigDocument } | { "kind": "recognized", "document": RecognizedArtifact };
 
@@ -27,7 +46,13 @@ export type SourceDescriptor = { id: string, label: string, };
 
 export type Point = { x: number, y: number, };
 
-export type Curve = { name: string, points: Array<Point>, reason: string | null, };
+export type Curve = { name: string, points: Array<Point>, reason: string | null, 
+/**
+ * Inputs this curve read back from the firmware's reset table because the
+ * source omits them, in the order the rate law consumes them. Empty when
+ * every input is declared.
+ */
+derivedInputs: Array<string>, };
 
 export type OsdElement = { key: string, packed: number, x: number, y: number, visibleProfiles: number, displayType: number, line: number, preview: string, };
 

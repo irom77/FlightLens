@@ -3,6 +3,7 @@ import { listen } from "@tauri-apps/api/event";
 import type {
   Artifact,
   ConfigDocument,
+  Derived,
   ExportRequest,
   Inspection,
   Parameter,
@@ -419,6 +420,21 @@ function Inspector({
     current.find(
       (p) => p.scope.kind === "rate" && p.key === `${axis}_${suffix}`,
     );
+  const derivedIn = (index: number, key: string) =>
+    d.derived[`rate:${index}:${key}`];
+  const derivedFor = (index: number) =>
+    Object.values(d.derived).filter(
+      (v): v is Derived =>
+        v !== undefined && v.scope.kind === "rate" && v.scope.index === index,
+    );
+  // A value read back from the firmware never renders like a declared one: it
+  // shows the release it came from where a declared value shows a source line.
+  const shown = (index: number, key: string) => {
+    const p = profileValue("rate", index, key);
+    if (p) return value(p);
+    const v = derivedIn(index, key);
+    return v ? `${v.value.value}` : null;
+  };
   const profile = (
     kind: "PID" | "Rate",
     values: number[],
@@ -526,25 +542,15 @@ function Inspector({
                       onClick={() => setRate(profileIndex)}
                     >
                       <strong>Profile {profileIndex + 1}</strong>
-                      <span>{values.length} explicit settings</span>
+                      <span>
+                        {values.length} explicit settings
+                        {derivedFor(profileIndex).length > 0 &&
+                          ` · ${derivedFor(profileIndex).length} from firmware defaults`}
+                      </span>
                       <span>{complete}/3 rate curves available</span>
                       <small>
-                        RC{" "}
-                        {profileValue("rate", profileIndex, "roll_rc_rate")
-                          ? value(
-                              profileValue(
-                                "rate",
-                                profileIndex,
-                                "roll_rc_rate",
-                              )!,
-                            )
-                          : "—"}
-                        {" · "}Super{" "}
-                        {profileValue("rate", profileIndex, "roll_srate")
-                          ? value(
-                              profileValue("rate", profileIndex, "roll_srate")!,
-                            )
-                          : "—"}
+                        RC {shown(profileIndex, "roll_rc_rate") ?? "—"}
+                        {" · "}Super {shown(profileIndex, "roll_srate") ?? "—"}
                       </small>
                     </button>
                   );
@@ -557,9 +563,12 @@ function Inspector({
             </p>
             <div className="stats">
               {inspection.rates.map((c) => {
-                const rc = rateSetting(c.name, "rc_rate");
-                const superRate = rateSetting(c.name, "srate");
-                const expo = rateSetting(c.name, "expo");
+                const input = (suffix: string) => {
+                  const declared = rateSetting(c.name, suffix);
+                  if (declared) return value(declared);
+                  const read = derivedIn(rate, `${c.name}_${suffix}`);
+                  return read ? `${read.value.value}*` : "unknown";
+                };
                 return (
                   <div className="stat" key={c.name}>
                     <span>{c.name.toUpperCase()}</span>
@@ -570,11 +579,15 @@ function Inspector({
                       {c.points.length > 0 && <small>°/s</small>}
                     </strong>
                     <small>
-                      RC {rc ? value(rc) : "unknown"} · Super{" "}
-                      {superRate ? value(superRate) : "unknown"} · Expo{" "}
-                      {expo ? value(expo) : "unknown"}
+                      RC {input("rc_rate")} · Super {input("srate")} · Expo{" "}
+                      {input("expo")}
                     </small>
-                    <small>{c.reason ?? "Full-stick static rate"}</small>
+                    <small>
+                      {c.reason ??
+                        (c.derivedInputs.length
+                          ? `Full-stick static rate · ${c.derivedInputs.length} input${c.derivedInputs.length === 1 ? "" : "s"} read back from firmware defaults`
+                          : "Full-stick static rate")}
+                    </small>
                   </div>
                 );
               })}
@@ -587,12 +600,16 @@ function Inspector({
             </div>
             <p className="notice">
               Static rate law before downstream rate limits, smoothing, and
-              camera-angle mixing. Missing inputs suppress the affected curve.
+              camera-angle mixing. Missing inputs suppress the affected curve. A
+              value marked <b>*</b> is not in this backup: the file resets the
+              configuration first, so a setting it never assigns still holds the
+              firmware default, listed below with the release it comes from.
             </p>
             <ParameterTable
               rows={current.filter((p) => p.scope.kind === "rate")}
               source={source}
             />
+            <DerivedTable rows={derivedFor(rate)} />
           </>
         )}
         {tab === "PID" && (
@@ -757,7 +774,11 @@ function Inspector({
                       {m.name}
                     </button>
                     <small>
-                      Slot {m.index} · AUX {m.channel + 1} ·{" "}
+                      Slot {m.index} ·{" "}
+                      {m.channelAssigned
+                        ? `AUX ${m.channel + 1}`
+                        : "no channel assigned"}{" "}
+                      ·{" "}
                       {m.logic === null
                         ? "logic unspecified"
                         : m.logic === 0
@@ -788,7 +809,9 @@ function Inspector({
             </div>
             <p className="notice">
               AUX numbering is displayed from 1; CLI channels are zero-based.
-              Inactive ranges and linked-mode relationships are preserved.
+              Inactive ranges and linked-mode relationships are preserved. A
+              mode with no channel assigned is shown as written; Betaflight
+              discards such a row if it is pasted back.
             </p>
           </>
         )}
@@ -905,6 +928,39 @@ function Inspector({
 }
 function Empty({ children }: { children: React.ReactNode }) {
   return <div className="empty">{children}</div>;
+}
+/// Values no source line declares. Kept out of the parameter table on purpose:
+/// these have no line to jump to, and must never read as though they do.
+function DerivedTable({ rows }: { rows: Derived[] }) {
+  if (!rows.length) return null;
+  return (
+    <div className="card parameter-table">
+      <div className="card-heading">
+        Read back from firmware defaults <span>{rows.length} settings</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Setting</th>
+            <th>Value</th>
+            <th>Origin</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((v) => (
+            <tr key={v.key}>
+              <td>{v.key}</td>
+              <td>{v.rawValue}</td>
+              <td className="muted">
+                Betaflight {v.sourceVersion} default · not declared, not
+                exported
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 function ParameterTable({
   rows,
@@ -1056,7 +1112,14 @@ function Filters({
         {points.length > 0 && (
           <Plot
             frequency
-            curves={[{ name: "Static lowpass", points, reason: null }]}
+            curves={[
+              {
+                name: "Static lowpass",
+                points,
+                reason: null,
+                derivedInputs: [],
+              },
+            ]}
           />
         )}
       </div>

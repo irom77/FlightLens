@@ -56,11 +56,11 @@ pub fn open_path(path: &Path, source_id: &str) -> Result<Artifact, String> {
     analyze(&text, &label, source_id)
 }
 pub fn is_blackbox(bytes: &[u8]) -> bool {
-    bytes.starts_with(b"H Product:Blackbox")
-        || bytes
-            .windows(19)
-            .take(65536)
-            .any(|w| w == b"H Product:Blackbox f")
+    const HEADER: &[u8] = b"H Product:Blackbox";
+    // Scan rather than testing byte 0 alone: a byte-order mark, leading junk, or
+    // a recovered partial first session pushes the header off the start of the
+    // file, and such a log must not be parsed as CLI text.
+    bytes.windows(HEADER.len()).take(65536).any(|w| w == HEADER)
 }
 pub fn read_stable(path: &Path) -> Result<String, String> {
     for _ in 0..2 {

@@ -13,6 +13,10 @@ pub struct Curve {
     pub name: String,
     pub points: Vec<Point>,
     pub reason: Option<String>,
+    /// Inputs this curve read back from the firmware's reset table because the
+    /// source omits them, in the order the rate law consumes them. Empty when
+    /// every input is declared.
+    pub derived_inputs: Vec<String>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]
 #[serde(rename_all = "camelCase")]
@@ -101,17 +105,26 @@ pub fn rates(d: &ConfigDocument, profile: u8) -> Vec<Curve> {
     ["roll", "pitch", "yaw"]
         .into_iter()
         .map(|axis| {
+            // Named before the curve is computed so the provenance is reported
+            // even for an axis that ends up suppressed for a different input.
+            let kind = d.text_or_default(&scope, "rates_type");
+            let derived_inputs = ["rates_type".to_string()]
+                .into_iter()
+                .chain(["rc_rate", "srate", "expo"].map(|s| format!("{axis}_{s}")))
+                .chain((kind.as_deref() == Some("QUICK")).then(|| "quickrates_rc_expo".to_string()))
+                .filter(|key| d.derived_value(&scope, key).is_some())
+                .collect();
             let compute = || -> Result<Vec<Point>, String> {
-                let kind = d.text(&scope, "rates_type").ok_or("Rate type is unknown")?;
+                let kind = kind.clone().ok_or("Rate type is unknown")?;
                 let number = |suffix: &str| {
-                    d.number(&scope, &format!("{axis}_{suffix}"))
+                    d.number_or_default(&scope, &format!("{axis}_{suffix}"))
                         .ok_or_else(|| format!("{axis}_{suffix} is unknown or invalid"))
                 };
                 let rc = number("rc_rate")?;
                 let sr = number("srate")?;
                 let e = number("expo")?;
                 let quick = if kind == "QUICK" {
-                    match d.text(&scope, "quickrates_rc_expo").as_deref() {
+                    match d.text_or_default(&scope, "quickrates_rc_expo").as_deref() {
                         Some("ON") => true,
                         Some("OFF") => false,
                         _ => return Err("quickrates_rc_expo is unknown".into()),
@@ -134,11 +147,13 @@ pub fn rates(d: &ConfigDocument, profile: u8) -> Vec<Curve> {
                     name: axis.into(),
                     points,
                     reason: None,
+                    derived_inputs,
                 },
                 Err(reason) => Curve {
                     name: axis.into(),
                     points: Vec::new(),
                     reason: Some(reason),
+                    derived_inputs,
                 },
             }
         })
@@ -290,7 +305,10 @@ fn audit(d: &ConfigDocument) -> Vec<RuleEvaluation> {
         .modes
         .iter()
         .filter(|a| {
+            // An unassignable channel cannot activate, so two such rows are not
+            // a real overlap however their ranges are declared.
             a.start < a.end
+                && a.channel_assigned
                 && d.modes.iter().any(|b| {
                     a.index != b.index
                         && a.channel == b.channel

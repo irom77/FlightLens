@@ -4,7 +4,14 @@ import { Plot } from "./Plots";
 it("keeps unknown curves absent and displays their reason", () => {
   const html = renderToStaticMarkup(
     <Plot
-      curves={[{ name: "roll", points: [], reason: "roll_expo is unknown" }]}
+      curves={[
+        {
+          name: "roll",
+          points: [],
+          derivedInputs: [],
+          reason: "roll_expo is unknown",
+        },
+      ]}
     />,
   );
   expect(html).toContain("roll_expo is unknown");
@@ -21,6 +28,7 @@ it("renders backend samples and escapes untrusted labels", () => {
             { x: 0, y: 0 },
             { x: 1, y: 800 },
           ],
+          derivedInputs: [],
           reason: null,
         },
       ]}
