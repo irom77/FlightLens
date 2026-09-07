@@ -14,7 +14,9 @@
     "bindings": "cargo run -p flightlens-core --bin bindings",
     "bindings:check": "cargo run -p flightlens-core --bin bindings -- --check",
     "test:ui": "playwright test",
-    "format:check": "prettier --check src vite.config.ts vitest.config.ts playwright.config.ts tests"
+    "screenshots": "playwright test --config playwright.screenshots.config.ts --update-snapshots",
+    "screenshots:check": "playwright test --config playwright.screenshots.config.ts",
+    "format:check": "prettier --check src vite.config.ts vitest.config.ts playwright.config.ts playwright.screenshots.config.ts tests tools/screenshots.spec.ts"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.0.0",

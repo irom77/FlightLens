@@ -20,6 +20,23 @@
 
 > **Required for complete inspection — use `dump all`:** In Betaflight Configurator, connect the configured flight controller, open the **CLI** tab, type `dump all`, press Enter, wait for the command to finish, and save or paste the **entire** output, including the firmware header and every profile. A `diff` or `diff all` backup is allowed, but it omits unchanged Rates, Expo, and PID values; those values will remain **Unknown**. Unknown does not mean zero. Do **not** run `defaults` or reset the controller just to use FlightLens. A complete dump still cannot make an unsupported firmware version compatible, and vendor builds may differ from certified defaults.
 
+## Screenshots
+
+The images below come from the built-in synthetic example (**Explore a synthetic example** on the start screen), not from a real aircraft backup. Use the **Dark mode / Light mode** button in the top bar to switch themes; the choice is remembered on the next launch.
+
+| Dark | Light |
+| --- | --- |
+| [![Rates view in dark mode](docs/screenshots/rates-dark.png)](docs/screenshots/rates-dark.png) | [![Rates view in light mode](docs/screenshots/rates-light.png)](docs/screenshots/rates-light.png) |
+| **Rates** — curves, per-axis summary, and profile selection. | The same view in light mode. |
+| [![PID view in dark mode](docs/screenshots/pid-dark.png)](docs/screenshots/pid-dark.png) | [![PID view in light mode](docs/screenshots/pid-light.png)](docs/screenshots/pid-light.png) |
+| **PID** — gains and feedforward, with unknown values kept unknown. | The same view in light mode. |
+| [![Filters view in dark mode](docs/screenshots/filters-dark.png)](docs/screenshots/filters-dark.png) | [![Filters view in light mode](docs/screenshots/filters-light.png)](docs/screenshots/filters-light.png) |
+| **Filters** — configured filter settings; a static response plot needs a verified sample rate. | The same view in light mode. |
+| [![Raw view in dark mode](docs/screenshots/raw-dark.png)](docs/screenshots/raw-dark.png) | [![Raw view in light mode](docs/screenshots/raw-light.png)](docs/screenshots/raw-light.png) |
+| **Raw** — the original CLI lines behind every value, with parser diagnostics. | The same view in light mode. |
+| [![Audit view in dark mode](docs/screenshots/audit-dark.png)](docs/screenshots/audit-dark.png) | [![Audit view in light mode](docs/screenshots/audit-light.png)](docs/screenshots/audit-light.png) |
+| **Audit** — findings plus the rules that could not run. | The same view in light mode. |
+
 ## Why FlightLens
 
 Flight controller backups are useful, but they are hard to read as raw CLI text. FlightLens turns a backup into a clear, navigable snapshot while keeping the source close at hand.
@@ -99,7 +116,7 @@ The `.msi` package is available for managed or enterprise deployment. Releases a
 
 ### Inspect a backup
 
-Open a Betaflight CLI backup and switch between Rates, PID, Filters, Ports, Modes, OSD, Raw, and Audit. Select independent PID and rate profiles, and click source-linked values to jump to the original line.
+Open a Betaflight CLI backup and switch between Rates, PID, Filters, Ports, Modes, OSD, Raw, and Audit. Select independent PID and rate profiles, and click source-linked values to jump to the original line. The interface has dark and light modes; the first launch follows the operating system setting, and the top-bar switch overrides it from then on.
 
 ### Understand rates and filters
 

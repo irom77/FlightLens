@@ -94,6 +94,24 @@ it does not certify that the desktop renders every backup correctly.
 
 The core checks do not need desktop GUI libraries. The last command does. Native picker, drag/drop, clipboard and packaged-app smoke checks need a graphical desktop; CI compilation is not a substitute for those checks.
 
+### README screenshots
+
+The PNGs in `docs/screenshots` are Playwright snapshot baselines as well as
+README images. Both commands run `tools/screenshots.spec.ts` through
+`playwright.screenshots.config.ts`, capturing the Rates, PID, Filters, Raw and
+Audit views in both themes from the synthetic example, using the same
+`preview_fixture` DTO as the renderer tests. No real backup is ever captured.
+
+```sh
+pnpm screenshots:check   # fail when the committed images no longer match the interface
+pnpm screenshots         # rewrite the committed images after an intended change
+```
+
+Both are deliberately excluded from `./test.sh` and from CI, so the images change
+only when a developer asks for it. The comparison allows a small pixel ratio,
+because font rasterization differs between machines; a different Chromium or font
+stack can still report a difference that is not a real interface change.
+
 ## External Betaflight backup corpus
 
 When additional real-world Betaflight coverage is useful, the local backup corpus is available at:
@@ -110,7 +128,8 @@ The corresponding source repository is [irom77/fpv_cli_dumps](https://github.com
 
 - `crates/flightlens-core`: immutable source reads, lossless syntax, normalization, bundled schemas, Rust calculations, audits, export and reference tests.
 - `src-tauri`: backend-authorized source registry, native dialog/drop entry points, bounded document repository and command boundary. The webview cannot grant itself arbitrary paths or write arbitrary text to disk.
-- `src`: React views, small Zustand navigation store, typed IPC wrappers and generated DTOs. Large parsed documents remain outside Zustand.
+- `src`: React views, small Zustand navigation store, typed IPC wrappers and generated DTOs. Large parsed documents remain outside Zustand. Colors live only in the `:root` and `:root[data-theme="light"]` token blocks of `src/styles.css`; components reference tokens through `var(--…)` so both themes stay in step. The OSD canvas keeps its dark video colors in both themes.
+- `docs/screenshots`: README images regenerated with `pnpm screenshots`.
 - `fixtures`: synthetic configurations, malformed inputs and pinned C rate reference vectors.
 
 GPL-3.0-or-later. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Signing, platform packages, and the first public release belong to Phase 2.
