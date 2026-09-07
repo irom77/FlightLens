@@ -18,6 +18,8 @@
 
 > **Betaflight compatibility:** FlightLens currently supports configuration backups from Betaflight **4.2, 4.3, 4.4, and 4.5** through bundled, versioned schemas. Vendor builds that append a suffix to a supported release (for example, `4.5.3.KAACK_V19`) use the matching major/minor schema. Other firmware versions may open as partial documents with unsupported values shown as unknown until a compatible schema is available.
 
+> **Required for complete inspection — use `dump all`:** In Betaflight Configurator, connect the configured flight controller, open the **CLI** tab, type `dump all`, press Enter, wait for the command to finish, and save or paste the **entire** output, including the firmware header and every profile. A `diff` or `diff all` backup is allowed, but it omits unchanged Rates, Expo, and PID values; those values will remain **Unknown**. Unknown does not mean zero. Do **not** run `defaults` or reset the controller just to use FlightLens. A complete dump still cannot make an unsupported firmware version compatible, and vendor builds may differ from certified defaults.
+
 ## Why FlightLens
 
 Flight controller backups are useful, but they are hard to read as raw CLI text. FlightLens turns a backup into a clear, navigable snapshot while keeping the source close at hand.
@@ -42,6 +44,8 @@ The Windows installer can install Microsoft Edge WebView2 when it is missing. Th
 ### 2. Open a backup
 
 Launch FlightLens and open a `.txt`, `.diff`, `.dump`, `.param`, `.parm`, `.bbl`, or `.bfl` file. You can also drop a file on the window or press **Ctrl/Cmd+Shift+V** to paste CLI text.
+
+For complete Rates and PID inspection, use the `dump all` procedure above. FlightLens warns when the imported text does not contain evidence of `dump all`; that warning is intentional. The app preserves missing values as unknown instead of filling them with guesses.
 
 Your original backup is read-only. FlightLens creates an immutable snapshot for inspection and never writes back to the source file.
 
@@ -111,7 +115,7 @@ Audits identify concrete conflicts and configuration facts, while showing when a
 
 ## Current support
 
-Bundled compatibility schemas cover Betaflight **4.2.0, 4.3.0, 4.4.0, and 4.5.0**. iNAV and recognizable ArduPilot parameter files are identified for future adapters. Blackbox files are recognized without treating binary data as CLI text; telemetry decoding is planned for a later phase.
+Bundled compatibility schemas cover Betaflight **4.2.0, 4.3.0, 4.4.0, and 4.5.0**. Patch releases use the matching major/minor schema only when their release is in the verified compatibility range; vendor suffixes do not certify that the vendor retained the same defaults. Rate defaults may be recovered for verified releases when the backup declares a reset, but PID defaults and target-specific baselines are not bundled. Therefore omitted PID gains remain unknown, even for a supported firmware version. iNAV and recognizable ArduPilot parameter files are identified for future adapters. Blackbox files are recognized without treating binary data as CLI text; telemetry decoding is planned for a later phase.
 
 FlightLens is an inspection and export assistant. It does not connect to a flight controller, flash firmware, apply tuning recommendations, replace a destination configuration, or certify a craft as flight-ready.
 
