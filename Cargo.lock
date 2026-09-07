@@ -809,7 +809,7 @@ dependencies = [
 
 [[package]]
 name = "flightlens"
-version = "0.1.12"
+version = "0.1.13"
 dependencies = [
  "flightlens-core",
  "serde",
@@ -820,7 +820,7 @@ dependencies = [
 
 [[package]]
 name = "flightlens-core"
-version = "0.1.12"
+version = "0.1.13"
 dependencies = [
  "serde",
  "serde_json",

@@ -314,3 +314,36 @@ for (const scenario of ["--vendor-missing-expo", "--zero-expo"]) {
     }
   });
 }
+
+for (const fullDump of [false, true]) {
+  test(`backup warning remains visible after file import; dump all: ${fullDump}`, async ({ page }) => {
+    const f = structuredClone(fixture);
+    if (fullDump) f.artifact.document.syntax.push({ raw: "# dump all" });
+    await page.addInitScript((data) => {
+      const win = window as unknown as Record<string, unknown>;
+      win.isTauri = true;
+      win.__TAURI_EVENT_PLUGIN_INTERNALS__ = { unregisterListener: () => {} };
+      win.__TAURI_INTERNALS__ = {
+        transformCallback: () => 1,
+        invoke: async (command: string) => {
+          if (command === "pending_sources") return [];
+          if (command === "choose_files") return [{ id: "synthetic", label: "Synthetic backup" }];
+          if (command === "open_source") return data.artifact;
+          if (command === "inspect_config") return data.inspection;
+          return 1;
+        },
+      };
+    }, f);
+    await page.goto("/");
+    const guidance = page.getByRole("region", { name: "Backup import warning" });
+    await expect(guidance).toBeVisible();
+    await expect(guidance).toContainText("dump all");
+    await page.getByRole("button", { name: "Open backups" }).click();
+    await expect(page.getByRole("heading", { name: "Rate curves" })).toBeVisible();
+    await expect(guidance).toBeVisible();
+    const warning = page.getByRole("alert", { name: "Incomplete backup warning" });
+    await expect(warning).toHaveCount(fullDump ? 0 : 1);
+    await page.getByRole("tab", { name: "PID", exact: true }).click();
+    await expect(warning).toHaveCount(fullDump ? 0 : 1);
+  });
+}
