@@ -347,3 +347,25 @@ for (const fullDump of [false, true]) {
     await expect(warning).toHaveCount(fullDump ? 0 : 1);
   });
 }
+
+test("theme switch applies immediately and is remembered", async ({ page }) => {
+  await page.goto("/");
+  const root = page.locator("html");
+  const chrome = page.locator('meta[name="theme-color"]');
+  const started = await root.getAttribute("data-theme");
+  const chromeBefore = await chrome.getAttribute("content");
+  expect(started === "dark" || started === "light").toBe(true);
+  const switched = started === "dark" ? "light" : "dark";
+  await page
+    .getByRole("button", { name: new RegExp(`Switch to ${switched} mode`) })
+    .click();
+  await expect(root).toHaveAttribute("data-theme", switched);
+  await expect(chrome).not.toHaveAttribute("content", chromeBefore ?? "");
+  await expect(
+    page.getByRole("button", {
+      name: new RegExp(`Switch to ${started} mode`),
+    }),
+  ).toBeVisible();
+  await page.reload();
+  await expect(root).toHaveAttribute("data-theme", switched);
+});

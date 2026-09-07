@@ -13,6 +13,7 @@ import type {
 } from "./bindings/core";
 import { api, desktopAvailable } from "./ipc/client";
 import { tabs, useWorkspace } from "./stores/workspace";
+import { useTheme } from "./stores/theme";
 import { Plot } from "./Plots";
 import { OsdGlyphs } from "./OsdGlyphs";
 import logo from "./assets/flightlens-logo.svg";
@@ -29,6 +30,7 @@ const message = (e: unknown) =>
 
 export default function App() {
   const workspace = useWorkspace();
+  const theme = useTheme();
   // Parsed documents stay outside Zustand; only tab and document metadata enter the UI store.
   const repository = useRef(new Map<string, Artifact>());
   const [revision, setRevision] = useState(0);
@@ -185,7 +187,19 @@ export default function App() {
             Workspace <span className="slash">/</span>{" "}
             {artifact?.document.title ?? "Overview"}
           </span>
-          <span className="pill">● Offline</span>
+          <div className="topbar-actions">
+            <button
+              className="theme-toggle"
+              onClick={theme.toggle}
+              aria-label={`${theme.theme === "dark" ? "Dark" : "Light"} mode. Switch to ${theme.theme === "dark" ? "light" : "dark"} mode.`}
+            >
+              <span aria-hidden="true">
+                {theme.theme === "dark" ? "☾" : "☀"}
+              </span>
+              {theme.theme === "dark" ? "Dark" : "Light"} mode
+            </button>
+            <span className="pill">● Offline</span>
+          </div>
         </header>
         {error && (
           <div className="error" role="alert">

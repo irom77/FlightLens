@@ -1,6 +1,5 @@
 import { useState } from "react";
 import type { Curve } from "./bindings/core";
-const colors = ["#72e4c0", "#84aefb", "#efa76e"];
 export function Plot({
   curves,
   frequency = false,
@@ -82,7 +81,7 @@ export function Plot({
               .map((p, j) => `${j ? "L" : "M"}${x(p.x)},${y(p.y)}`)
               .join(" ")}
             fill="none"
-            stroke={colors[i % 3]}
+            className={`series-${i % 3}`}
             strokeWidth="2.5"
             strokeDasharray={i === 1 ? "7 3" : i === 2 ? "2 3" : undefined}
           />
@@ -93,7 +92,7 @@ export function Plot({
             x2={x(hover)}
             y1="26"
             y2="314"
-            stroke="#dce8e4"
+            className="plot-cursor"
             strokeDasharray="3 4"
           />
         )}
@@ -110,7 +109,7 @@ export function Plot({
                   Math.abs(a.x - hover) < Math.abs(b.x - hover) ? a : b,
                 );
           return (
-            <span key={c.name} style={{ color: colors[i % 3] }}>
+            <span key={c.name} className={`series-${i % 3}`}>
               {c.name}{" "}
               {point ? `${point.y.toFixed(1)} ${frequency ? "dB" : "°/s"}` : ""}
             </span>
