@@ -471,8 +471,12 @@ kbd {
   color: #95b1a4;
 }
 .stat > small {
+  display: block;
   color: #76958a;
   font-size: 10px;
+}
+.stat > small + small {
+  margin-top: 4px;
 }
 .card {
   background: #162226;

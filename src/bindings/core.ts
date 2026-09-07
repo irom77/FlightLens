@@ -36,7 +36,13 @@ export type ConfigDocument = { id: string, sourceId: string, title: string, hash
  * declares is never derived, so an invalid declared value stays unknown
  * rather than being quietly replaced by the default.
  */
-derived: { [key in string]?: Derived }, syntax: Array<SyntaxLine>, diagnostics: Array<Diagnostic>, ports: Array<Port>, modes: Array<Mode>, features: { [key in string]?: boolean }, pidProfiles: Array<number>, rateProfiles: Array<number>, selectedPid: number | null, selectedRate: number | null, };
+derived: { [key in string]?: Derived }, 
+/**
+ * Why nothing was read back, when the firmware is one FlightLens has a
+ * reset table for but the document still does not qualify. `None` both
+ * when defaults were applied and when there is no table to apply.
+ */
+derivedNote: string | null, syntax: Array<SyntaxLine>, diagnostics: Array<Diagnostic>, ports: Array<Port>, modes: Array<Mode>, features: { [key in string]?: boolean }, pidProfiles: Array<number>, rateProfiles: Array<number>, selectedPid: number | null, selectedRate: number | null, };
 
 export type Artifact = { "kind": "config", "document": ConfigDocument } | { "kind": "recognized", "document": RecognizedArtifact };
 

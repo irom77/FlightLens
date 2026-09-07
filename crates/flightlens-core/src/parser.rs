@@ -14,16 +14,36 @@ pub const AUX_CHANNEL_COUNT: u32 = 14;
 /// inventing a value -- but only while the baseline itself is certain, so the
 /// pack must carry a proven reset table and the firmware must be a plain
 /// release on the certified line rather than a vendor build.
-fn derive_defaults(d: &mut ConfigDocument, pack: Option<&'static compatibility::Pack>, line: u32) {
+fn derive_defaults(
+    d: &mut ConfigDocument,
+    pack: Option<&'static compatibility::Pack>,
+    baseline: Option<u32>,
+) {
+    // Without a certified schema the interface already says so, and the reason
+    // is the same one it gives for every other semantic view.
     let Some(pack) = pack.filter(|p| !p.defaults.values.is_empty()) else {
         return;
     };
     let Some(version) = d.firmware.version.clone() else {
         return;
     };
+    let Some(line) = baseline else {
+        d.derived_note = Some(
+            "This backup does not reset the configuration before its settings, so a value it leaves out could be anything the flight controller happened to be holding. Only what the file declares is shown.".into(),
+        );
+        return;
+    };
     if !compatibility::defaults_certified(&version) {
-        d.diagnostics.push(Diagnostic{line:Some(line),severity:"info".into(),message:format!(
-            "This build reports {version}, which is not a plain release on a certified line. Values the source omits are left unknown rather than read back from the {} defaults, because a custom build may change any of them.", pack.version)});
+        let note = format!(
+            "This build reports {version}, which is not a plain release on a certified line. Values the source omits are left unknown rather than read back from the Betaflight {} defaults, because a custom build may change any of them and nothing in the backup says whether it did.",
+            pack.version
+        );
+        d.diagnostics.push(Diagnostic {
+            line: Some(line),
+            severity: "info".into(),
+            message: note.clone(),
+        });
+        d.derived_note = Some(note);
         return;
     }
     let mut count = 0;
@@ -264,6 +284,7 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
         completeness: "partial".into(),
         parameters: BTreeMap::new(),
         derived: BTreeMap::new(),
+        derived_note: None,
         syntax: Vec::new(),
         diagnostics: Vec::new(),
         ports: Vec::new(),
@@ -477,9 +498,7 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
     d.rate_profiles = rates.into_iter().collect();
     d.selected_pid = pid;
     d.selected_rate = rate;
-    if let Some(line) = baseline {
-        derive_defaults(&mut d, pack, line);
-    }
+    derive_defaults(&mut d, pack, baseline);
     Ok(Artifact::Config(Box::new(d)))
 }
 fn port_name(id: i32) -> String {

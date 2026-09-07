@@ -181,6 +181,10 @@ pub struct ConfigDocument {
     /// declares is never derived, so an invalid declared value stays unknown
     /// rather than being quietly replaced by the default.
     pub derived: BTreeMap<String, Derived>,
+    /// Why nothing was read back, when the firmware is one FlightLens has a
+    /// reset table for but the document still does not qualify. `None` both
+    /// when defaults were applied and when there is no table to apply.
+    pub derived_note: Option<String>,
     pub syntax: Vec<SyntaxLine>,
     pub diagnostics: Vec<Diagnostic>,
     pub ports: Vec<Port>,

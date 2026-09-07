@@ -610,3 +610,32 @@ fn export_never_emits_a_value_the_source_did_not_declare() {
     }
     assert!(snippet.text.contains("set roll_srate = 70"));
 }
+
+#[test]
+fn a_document_that_qualifies_for_no_defaults_says_why() {
+    // Silence is the one thing this must not do: the guard that withholds a
+    // default has to be as visible as the value it would have supplied.
+    let vendor =
+        config("# Betaflight / STM32F405 4.5.3.KAACK_V19\ndefaults nosave\nrateprofile 0\n");
+    assert!(vendor.derived.is_empty());
+    assert!(vendor
+        .derived_note
+        .as_deref()
+        .unwrap()
+        .contains("4.5.3.KAACK_V19"));
+
+    // A backup that never resets states no baseline, so an omission carries no
+    // information at all -- a different reason, and worth saying so.
+    let no_baseline = with("rateprofile 0\nset roll_rc_rate = 12\n");
+    assert!(no_baseline.derived.is_empty());
+    assert!(no_baseline
+        .derived_note
+        .as_deref()
+        .unwrap()
+        .contains("does not reset the configuration"));
+
+    // Nothing to explain when the values are actually there.
+    let applied = with("defaults nosave\nrateprofile 0\n");
+    assert!(!applied.derived.is_empty());
+    assert_eq!(applied.derived_note, None);
+}

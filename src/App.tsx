@@ -598,6 +598,11 @@ function Inspector({
               </div>
               <Plot curves={inspection.rates} />
             </div>
+            {d.derivedNote && (
+              <p className="notice">
+                <b>No firmware defaults were read back.</b> {d.derivedNote}
+              </p>
+            )}
             <p className="notice">
               Static rate law before downstream rate limits, smoothing, and
               camera-angle mixing. Missing inputs suppress the affected curve. A
