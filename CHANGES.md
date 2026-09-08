@@ -6,7 +6,7 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
-## Unreleased
+## 0.2.1 — 2026-09-08
 
 - Collapse the two backup-guidance notices by default: the "For complete Rates
   and PID inspection" note in the sidebar and the "No Betaflight CLI dump all
