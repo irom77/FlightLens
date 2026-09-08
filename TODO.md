@@ -7,6 +7,10 @@ file holds only what is actionable now.
 
 ## Next
 
+- Extend the angular velocity comparison with semantic parameter differences,
+  independent PID profile mapping, source-line links, and provenance badges.
+  Three-backup comparison and saved comparison selections remain outstanding.
+- Manually check the new comparison view in packaged Windows/macOS builds.
 - Complete native restore checks on Windows and macOS, including unreadable or
   disconnected sources, and check native picking, dropping, clipboard and snippet
   saving. Linux/WSL restore smoke checks passed with synthetic backups on
@@ -49,8 +53,9 @@ file holds only what is actionable now.
 ## Later
 
 - Remaining Phase 2 work follows the sequence in [ROADMAP.md](ROADMAP.md):
-  verify native restore, index workspaces, add two-way then baseline-based three-way
-  comparison, portable `.flightlens` sessions, and native file associations.
+  semantic differences, then baseline-based
+  three-way comparison, workspace indexing, portable `.flightlens` sessions, and
+  native file associations. Native restore validation continues alongside this work.
   Automatic restore and Windows/macOS installer packaging already exist; native
   integration smoke checks and CI gating before release publication remain open.
 

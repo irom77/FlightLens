@@ -14,6 +14,7 @@ import type {
 import { api, desktopAvailable } from "./ipc/client";
 import { savedActive, tabs, useWorkspace } from "./stores/workspace";
 import { useTheme } from "./stores/theme";
+import { Comparison } from "./Comparison";
 import { Plot } from "./Plots";
 import { OsdGlyphs } from "./OsdGlyphs";
 import logo from "./assets/flightlens-logo.svg";
@@ -34,6 +35,7 @@ export default function App() {
   // Parsed documents stay outside Zustand; only tab and document metadata enter the UI store.
   const repository = useRef(new Map<string, Artifact>());
   const [revision, setRevision] = useState(0);
+  const [comparing, setComparing] = useState(false);
   const [paste, setPaste] = useState(false);
   const [text, setText] = useState("");
   const [label, setLabel] = useState("Pasted config 1");
@@ -167,6 +169,9 @@ export default function App() {
         >
           Paste configuration <kbd>⇧ ⌘ V</kbd>
         </button>
+        <button onClick={() => setComparing(!comparing)} aria-pressed={comparing}>
+          {comparing ? "Back to inspector" : "Compare backups"}
+        </button>
         <div className="section-label">
           OPEN DOCUMENTS <span>{workspace.documents.length}</span>
         </div>
@@ -176,7 +181,12 @@ export default function App() {
               className={`document ${workspace.activeId === d.id ? "selected" : ""}`}
               key={d.id}
             >
-              <button onClick={() => workspace.activate(d.id)}>
+              <button
+                onClick={() => {
+                  setComparing(false);
+                  workspace.activate(d.id);
+                }}
+              >
                 <span className="file-icon">≡</span>
                 <span>
                   {d.title}
@@ -241,7 +251,13 @@ export default function App() {
             Processing locally…
           </div>
         )}
-        {!artifact ? (
+        {comparing ? (
+          <Comparison
+            documents={Array.from(repository.current.values()).flatMap((a) =>
+              a.kind === "config" ? [a.document] : [],
+            )}
+          />
+        ) : !artifact ? (
           <div className="welcome">
             <span className="eyebrow">YOUR BACKUPS, MADE READABLE</span>
             <h1>

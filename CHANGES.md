@@ -6,6 +6,17 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## 0.3.0 — 2026-09-08
+
+- Add a two-backup angular velocity comparison view with independent rate profiles,
+  shared scales for each axis, source/profile labels, hover values in °/s, and
+  explicit missing-data and firmware-default provenance messages. Closing a
+  selected backup clears its comparison until a replacement is selected.
+
+- Clarify Phase 2's planned multi-backup comparison, explicitly including calculated
+  angular velocity overlays and independent profile selection. Prioritize comparison
+  before workspace indexing; native platform validation continues alongside it.
+
 ## 0.2.2 — 2026-09-08
 
 - Closing a document now forgets every saved path to its imported content, so

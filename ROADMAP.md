@@ -24,29 +24,34 @@ version bump; follow the [release policy](docs/releases/README.md).
 Phase 2 builds on foundations already shipped:
 
 - [x] Multiple open documents with content-hash identity. Closing a document
-  removes every saved path associated with its imported content (fix in Unreleased).
+  removes every saved path associated with its imported content (fixed in 0.2.2).
 - [x] Automatic reopening of file-backed documents, with active-document and tab
   preferences; persisted light/dark theme selection.
 - [x] Windows and macOS installer packaging and tag-triggered release workflows.
 
+Comparison is the next feature priority; recursive indexing is not a prerequisite.
+Native installer validation continues alongside feature development.
+
 Remaining work, in implementation order:
 
-1. [ ] Verify native restore behavior for duplicate, changed, missing, and
-   unavailable sources without modifying existing snapshots. The duplicate-path
-   close regression is covered by core tests and Linux/WSL native smoke checks.
-   Linux restore also rereads changed files and reports/removes missing files;
-   unreadable files report an error and recover on restart after access returns.
-   Windows/macOS and disconnected sources remain to be checked.
-2. [ ] Add recursive workspace indexing and searchable explorer navigation, with
+1. [x] Add a comparison view where users select two imported backups, including
+   files opened together through the multi-file picker. Select each backup's rate
+   profile independently and overlay calculated roll, pitch, and yaw angular
+   velocity against stick input on shared scales (°/s). Label each source and
+   profile, show values at the same stick position, and explicitly report missing
+   or unsupported curves. These are configuration-derived responses, not measured
+   flight motion; Blackbox angular velocity remains in Phase 3.
+2. [ ] Extend the two-backup view with semantic parameter comparison, independent
+   PID/rate profile mapping, source-line links, and declared/derived/unknown
+   provenance badges. Distinguish unknown values from changes; compare versions
+   only where bundled compatibility data establishes equivalent semantics.
+3. [ ] Extend comparison to three selected configurations, including angular
+   velocity overlays. Use an explicitly selected baseline for semantic differences,
+   distinguishing changes on either side and conflicting changes. Comparison
+   remains read-only; it does not merge or apply configurations.
+4. [ ] Add recursive workspace indexing and searchable explorer navigation, with
    pagination, cancellation, bounded background work, and removable-media
    handling. Index metadata without keeping every backup open in memory.
-3. [ ] Add two-configuration semantic comparison with independent PID/rate profile
-   mapping, source-line links, and declared/derived/unknown provenance badges.
-   Distinguish unknown values from changes; compare versions only where bundled
-   compatibility data establishes equivalent semantics.
-4. [ ] Extend comparison to three configurations using an explicitly selected
-   baseline, distinguishing changes on either side and conflicting changes.
-   Comparison remains read-only; it does not merge or apply configurations.
 5. [ ] Add explicitly saved/opened `.flightlens` sessions for workspace locations,
    document references, comparison/profile selections, and layout preferences.
    Define format versioning, compatibility, relative-path resolution, and recovery
@@ -59,6 +64,8 @@ Remaining work, in implementation order:
    crate before release publication and record native smoke checks for picking,
    dropping, OS file opening, restore, clipboard, and snippet saving. Existing
    installer builds and browser tests do not replace native integration checks.
+   Linux/WSL restore checks cover duplicate, changed, missing, and unreadable
+   sources; Windows/macOS restore and disconnected sources remain to be checked.
 
 Signing and notarization remain a separate distribution decision tracked in
 [TODO.md](TODO.md); initial installer packaging is already delivered. Phase 2 is

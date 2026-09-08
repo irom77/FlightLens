@@ -8,7 +8,9 @@ export function Plot({
   frequency?: boolean;
 }) {
   const [hover, setHover] = useState<number | null>(null);
-  const valid = curves.filter((c) => c.points.length);
+  const valid = curves
+    .map((c, seriesIndex) => ({ ...c, seriesIndex }))
+    .filter((c) => c.points.length);
   const max = frequency
     ? 0
     : Math.max(
@@ -74,16 +76,22 @@ export function Plot({
             </text>
           </g>
         ))}
-        {valid.map((c, i) => (
+        {valid.map((c) => (
           <path
             key={c.name}
             d={c.points
               .map((p, j) => `${j ? "L" : "M"}${x(p.x)},${y(p.y)}`)
               .join(" ")}
             fill="none"
-            className={`series-${i % 3}`}
+            className={`series-${c.seriesIndex % 3}`}
             strokeWidth="2.5"
-            strokeDasharray={i === 1 ? "7 3" : i === 2 ? "2 3" : undefined}
+            strokeDasharray={
+              c.seriesIndex === 1
+                ? "7 3"
+                : c.seriesIndex === 2
+                  ? "2 3"
+                  : undefined
+            }
           />
         ))}
         {hover !== null && (
@@ -101,7 +109,7 @@ export function Plot({
         </text>
       </svg>
       <div className="legend">
-        {valid.map((c, i) => {
+        {valid.map((c) => {
           const point =
             hover === null
               ? null
@@ -109,7 +117,7 @@ export function Plot({
                   Math.abs(a.x - hover) < Math.abs(b.x - hover) ? a : b,
                 );
           return (
-            <span key={c.name} className={`series-${i % 3}`}>
+            <span key={c.name} className={`series-${c.seriesIndex % 3}`}>
               {c.name}{" "}
               {point ? `${point.y.toFixed(1)} ${frequency ? "dB" : "°/s"}` : ""}
             </span>

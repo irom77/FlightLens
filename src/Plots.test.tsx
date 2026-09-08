@@ -38,3 +38,20 @@ it("renders backend samples and escapes untrusted labels", () => {
   expect(html).not.toContain("<script>");
   expect(html).toContain("&lt;script&gt;");
 });
+it("preserves the second source style when the first curve is unavailable", () => {
+  const html = renderToStaticMarkup(
+    <Plot
+      curves={[
+        { name: "A", points: [], derivedInputs: [], reason: "Unknown" },
+        {
+          name: "B",
+          points: [{ x: 0, y: 0 }],
+          derivedInputs: [],
+          reason: null,
+        },
+      ]}
+    />,
+  );
+  expect(html).toContain('class="series-1"');
+  expect(html).toContain('stroke-dasharray="7 3"');
+});
