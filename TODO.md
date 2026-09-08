@@ -7,9 +7,6 @@ file holds only what is actionable now.
 
 ## Next
 
-- Cut release 0.1.15. The light/dark switch, the README screenshots and the
-  import guidance are on `main` with no `v*` tag, so no Windows or macOS
-  installers were built for them.
 - Decide what to do about `pnpm format:check`, which fails on `src/App.tsx` and
   `tests/inspector.spec.ts`. Both deviations predate the current work; either
   reformat them in a commit of their own or drop them from the check.

@@ -6,7 +6,7 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
-## Unreleased
+## 0.1.15 — 2026-09-07
 
 - Switch between light and dark modes from the top bar. The choice follows the
   operating system on first run and is remembered afterwards.
