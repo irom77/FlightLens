@@ -6,6 +6,19 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## 0.2.2 — 2026-09-08
+
+- Closing a document now forgets every saved path to its imported content, so
+  duplicate backups stay closed after restart. Recognized text artifacts also
+  close correctly when their identity differs from the native source identifier.
+
+- Mark the Betaflight inspection MVP (Phase 1) complete and revise Phase 2 to
+  distinguish delivered restore and packaging from remaining workspace, comparison,
+  portable-session, and native integration work. Align project status documentation
+  and record Linux/WSL native restore validation, including recovery after file
+  permissions are restored, native picking, X11 drag-and-drop, clipboard export
+  and snippet saving, plus remaining platform checks.
+
 ## 0.2.1 — 2026-09-08
 
 - Collapse the two backup-guidance notices by default: the "For complete Rates

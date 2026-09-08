@@ -14,6 +14,7 @@ pub fn hash(bytes: &[u8]) -> String {
 pub struct SourceRegistry {
     next: u64,
     files: BTreeMap<String, PathBuf>,
+    documents: BTreeMap<PathBuf, String>,
 }
 impl SourceRegistry {
     /// Only native dialogs/drop events may call this; no webview path grant command exists.
@@ -34,6 +35,18 @@ impl SourceRegistry {
         self.files.insert(id.clone(), path);
         Ok(SourceDescriptor { id, label })
     }
+    /// Associate a successfully opened file with the immutable artifact it produced.
+    pub fn remember_document(&mut self, source_id: &str, document_id: &str) -> Result<(), String> {
+        let path = self.path(source_id)?;
+        self.documents.insert(path, document_id.into());
+        Ok(())
+    }
+    /// Remove a closed document's file references from the saved session.
+    pub fn forget_document(&mut self, document_id: &str, session: &mut Vec<PathBuf>) {
+        session.retain(|path| self.documents.get(path).is_none_or(|id| id != document_id));
+        self.documents.retain(|_, id| id != document_id);
+    }
+
     pub fn path(&self, id: &str) -> Result<PathBuf, String> {
         self.files
             .get(id)

@@ -734,3 +734,78 @@ fn declared_board_name() {
         Some("SYNTHETIC")
     );
 }
+
+#[test]
+fn closing_duplicate_backups_removes_every_saved_path() {
+    let temp = tempfile::tempdir().unwrap();
+    let mut registry = SourceRegistry::default();
+    let mut session = Vec::new();
+    let mut duplicate_id = String::new();
+    for (name, craft) in [
+        ("a.dump", "same"),
+        ("b.dump", "same"),
+        ("other.dump", "other"),
+    ] {
+        let path = temp.path().join(name);
+        std::fs::write(&path, format!("{}\nset craft_name = {craft}\n", header())).unwrap();
+        let source = registry.register(path).unwrap();
+        let Artifact::Config(document) =
+            open_path(&registry.path(&source.id).unwrap(), &source.id).unwrap()
+        else {
+            panic!("expected config");
+        };
+        registry
+            .remember_document(&source.id, &document.id)
+            .unwrap();
+        session.push(registry.path(&source.id).unwrap());
+        if craft == "same" {
+            if !duplicate_id.is_empty() {
+                assert_eq!(duplicate_id, document.id);
+            }
+            duplicate_id = document.id.clone();
+        }
+    }
+    // Closing uses the imported identity even if a source disappears afterwards.
+    std::fs::remove_file(&session[0]).unwrap();
+    registry.forget_document(&duplicate_id, &mut session);
+    assert_eq!(
+        session,
+        vec![temp.path().join("other.dump").canonicalize().unwrap()]
+    );
+    registry.forget_document(&duplicate_id, &mut session);
+    assert_eq!(session.len(), 1);
+}
+
+#[test]
+fn session_identity_follows_successful_reimports_and_recognized_artifacts() {
+    let temp = tempfile::tempdir().unwrap();
+    let path = temp.path().join("backup.dump");
+    std::fs::write(&path, format!("{}\nset craft_name = first\n", header())).unwrap();
+    let mut registry = SourceRegistry::default();
+    let source = registry.register(path.clone()).unwrap();
+    let Artifact::Config(first) = open_path(&path, &source.id).unwrap() else {
+        panic!("expected config");
+    };
+    registry.remember_document(&source.id, &first.id).unwrap();
+    let mut session = vec![registry.path(&source.id).unwrap()];
+
+    // Reopening a changed path associates it with the new artifact. Closing
+    // the old immutable snapshot must not discard the newly opened file.
+    std::fs::write(&path, "# INAV / STM32F405 7.0.0\n").unwrap();
+    let reopened = registry.register(path.clone()).unwrap();
+    let Artifact::Recognized(second) = open_path(&path, &reopened.id).unwrap() else {
+        panic!("expected recognized artifact");
+    };
+    assert_ne!(second.id, reopened.id);
+    registry
+        .remember_document(&reopened.id, &second.id)
+        .unwrap();
+    registry.forget_document(&first.id, &mut session);
+    assert_eq!(session.len(), 1);
+    registry.forget_document(&second.id, &mut session);
+    assert!(session.is_empty());
+    assert_eq!(
+        std::fs::read_to_string(path).unwrap(),
+        "# INAV / STM32F405 7.0.0\n"
+    );
+}

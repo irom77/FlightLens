@@ -2,26 +2,68 @@
 
 FlightLens is developed as an offline-first inspection tool for flight controller backups. Each phase keeps imported files read-only, preserves source provenance, and adds support behind explicit capability and compatibility checks.
 
-## Phase 1 — Betaflight inspection MVP
+## Phase 1 — Betaflight inspection MVP — completed
 
-The first release provides the complete Betaflight configuration workflow:
+The inspection MVP is implemented as of 0.2.1:
 
-- Paste, file, and drag-and-drop ingestion into immutable snapshots.
-- Lossless CLI parsing with source-line diagnostics and explicit unknown values.
-- Versioned Betaflight 4.3, 4.4, and 4.5 compatibility data.
-- Rates, PID, filters, ports, modes, OSD, raw source, and audit views.
-- Semantic audits with insufficient-data results instead of unsafe assumptions.
-- Dependency-aware snippet export that reparses and validates before copy/save.
+- [x] Paste, file, and drag-and-drop ingestion into immutable snapshots.
+- [x] Lossless CLI parsing with source-line diagnostics and explicit unknown values.
+- [x] Versioned Betaflight 4.2, 4.3, 4.4, and 4.5 compatibility data.
+- [x] Rates, PID, filters, ports, modes, OSD, raw source, and audit views.
+- [x] Semantic audits with insufficient-data results instead of unsafe assumptions.
+- [x] Dependency-aware snippet export that reparses and validates before copy/save.
 
-## Phase 2 — Workspace and comparison
+Completion covers this feature scope, not every possible Betaflight command or
+native-platform validation. Unsupported semantics and missing dependencies remain
+explicitly unavailable. Desktop smoke checks and known defects remain tracked in
+[TODO.md](TODO.md). Phase completion does not imply 1.0 readiness or choose a
+version bump; follow the [release policy](docs/releases/README.md).
 
-Phase 2 expands the desktop workflow around multiple backups:
+## Phase 2 — Workspace and comparison — in progress
 
-- Recursive workspace indexing with pagination, search, cancellation, and removable-media handling.
-- Native file associations and searchable explorer navigation.
-- Two- and three-configuration semantic comparison with profile mapping and provenance badges.
-- Explicitly saved `.flightlens` sessions and layout preferences.
-- Packaged Windows and macOS releases with native integration smoke tests.
+Phase 2 builds on foundations already shipped:
+
+- [x] Multiple open documents with content-hash identity. Closing a document
+  removes every saved path associated with its imported content (fix in Unreleased).
+- [x] Automatic reopening of file-backed documents, with active-document and tab
+  preferences; persisted light/dark theme selection.
+- [x] Windows and macOS installer packaging and tag-triggered release workflows.
+
+Remaining work, in implementation order:
+
+1. [ ] Verify native restore behavior for duplicate, changed, missing, and
+   unavailable sources without modifying existing snapshots. The duplicate-path
+   close regression is covered by core tests and Linux/WSL native smoke checks.
+   Linux restore also rereads changed files and reports/removes missing files;
+   unreadable files report an error and recover on restart after access returns.
+   Windows/macOS and disconnected sources remain to be checked.
+2. [ ] Add recursive workspace indexing and searchable explorer navigation, with
+   pagination, cancellation, bounded background work, and removable-media
+   handling. Index metadata without keeping every backup open in memory.
+3. [ ] Add two-configuration semantic comparison with independent PID/rate profile
+   mapping, source-line links, and declared/derived/unknown provenance badges.
+   Distinguish unknown values from changes; compare versions only where bundled
+   compatibility data establishes equivalent semantics.
+4. [ ] Extend comparison to three configurations using an explicitly selected
+   baseline, distinguishing changes on either side and conflicting changes.
+   Comparison remains read-only; it does not merge or apply configurations.
+5. [ ] Add explicitly saved/opened `.flightlens` sessions for workspace locations,
+   document references, comparison/profile selections, and layout preferences.
+   Define format versioning, compatibility, relative-path resolution, and recovery
+   for moved or changed files. Automatic `session.json` restore is already present;
+   portable sessions are not.
+6. [ ] Add native file associations and OS open-file routing, including opening
+   files in an already-running app. Keep firmware and telemetry capability checks
+   explicit when a recognized format is not yet supported.
+7. [ ] Validate the desktop workflow on Windows and macOS: compile the desktop
+   crate before release publication and record native smoke checks for picking,
+   dropping, OS file opening, restore, clipboard, and snippet saving. Existing
+   installer builds and browser tests do not replace native integration checks.
+
+Signing and notarization remain a separate distribution decision tracked in
+[TODO.md](TODO.md); initial installer packaging is already delivered. Phase 2 is
+complete when the remaining workflow is implemented and verified, with saved-data
+compatibility and platform limitations documented.
 
 ## Phase 3 — Blackbox telemetry and diagnostics
 

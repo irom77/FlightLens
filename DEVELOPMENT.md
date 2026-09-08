@@ -34,7 +34,7 @@ The parser preserves original bytes of valid UTF-8 text, including BOM, CRLF, co
 
 Filter plots model an individual static lowpass stage, not a full chain or an in-flight dynamic-notch center. The OSD font and numeric samples are illustrative; unknown glyph layouts use a marker and unknown footprint. Audits expose evaluated, skipped, and insufficient-data rules. Initial checks cover configured motor poles, bidirectional DShot protocol consistency, mode overlaps, and declared arming ranges. UART sharing, failsafe prerequisites, deadband heuristics, and PID safety thresholds are not certified. No findings is never a “safe to fly” result.
 
-Blackbox files are recognized from their headers without parsing binary data as CLI. iNAV and recognizable ArduPilot parameter files are identified, with their adapters deferred to Phase 4. No telemetry decoding, workspace scanner, comparison, sessions, cloud provider, update service, or background network access is included in Phase 1; Blackbox decoding and diagnostics are planned for Phase 3.
+Blackbox files are recognized from their headers without parsing binary data as CLI. iNAV and recognizable ArduPilot parameter files are identified, with their adapters deferred to Phase 4. No telemetry decoding, workspace scanner, comparison, portable `.flightlens` sessions, cloud provider, update service, or background network access is included in Phase 1; Blackbox decoding and diagnostics are planned for Phase 3.
 
 Text imports are limited to 16 MiB and 100,000 lines. The open document repository is limited to 32 snapshots / 128 MiB of original text. These limits bound input size, not total process memory. File reads compare metadata before/after and retry once. Save As creates a new file and refuses to overwrite any existing file.
 
@@ -93,6 +93,64 @@ A non-strict corpus run measures coverage and can succeed with partial data;
 it does not certify that the desktop renders every backup correctly.
 
 The core checks do not need desktop GUI libraries. The last command does. Native picker, drag/drop, clipboard and packaged-app smoke checks need a graphical desktop; CI compilation is not a substitute for those checks.
+
+### Native restore validation
+
+On 2026-09-08, `pnpm build` and
+`cargo build -p flightlens --features tauri/custom-protocol` passed in Ubuntu
+24.04 WSL. The resulting executable ran with embedded frontend assets on Xvfb,
+using `dbus-run-session`, `GDK_BACKEND=x11`, and
+`WEBKIT_DISABLE_DMABUF_RENDERER=1`. A separate temporary directory supplied
+`XDG_DATA_HOME`, `XDG_CONFIG_HOME`, and `XDG_CACHE_HOME`; real app data and backups
+were not used. The initial launch using the inherited D-Bus session did not
+show a window; an isolated D-Bus session allowed the app to render.
+
+Smoke checks used temporary copies of the synthetic Betaflight 4.5 fixture and
+a seeded `org.flightlens.desktop/session.json` under the isolated data directory:
+
+- Restore two identical files at distinct paths. They appear as one document.
+  Click its close button: both paths disappear from the saved list. Restart:
+  the workspace remains empty.
+- Change the craft name in one temporary fixture while the app is stopped and
+  restore its path. The native UI shows the new craft name and content hash.
+- Include a nonexistent path alongside the valid file. The UI reports that file
+  could not be reopened, and the saved list retains only the valid path. Restart:
+  the valid document returns without repeating the missing-file warning.
+
+- Restore a readable file alongside a temporary copy with mode `000`. The
+  readable document opens and the UI reports `Cannot open selected source` for
+  the unreadable file. Both paths remain saved, allowing a later retry. Restore
+  mode `0600` and restart: both identical files import as one document with no
+  error. Only temporary fixture copies had their permissions changed.
+
+These checks exercised the native IPC and rendered UI without IPC mocks. They
+were manual smoke checks, not additions to `./test.sh`. Windows/macOS and
+disconnected sources remain unverified. No application code changed for this
+validation.
+
+A further Linux/WSL interaction smoke check on the same date used a fresh empty
+session and temporary synthetic fixtures in the same isolated desktop setup:
+
+- Open backups displayed the native GTK picker; selecting the synthetic file
+  imported it into the workspace.
+- Export → Validate & preview → Copy snippet placed the validated rate snippet
+  on the X11 clipboard. A separate GTK client read it and checked the rate type
+  and profile selector (377 bytes).
+- Save As wrote a new temporary file whose bytes exactly matched that clipboard
+  text. The input backup still matched the repository fixture byte for byte.
+- Opening Save As again and cancelling displayed `Save cancelled.`
+
+A Linux/WSL drag-and-drop check also passed on the same date. A separate GTK
+window offered a temporary synthetic backup as `text/uri-list`; XTest pointer
+movement dragged it onto FlightLens's empty workspace. The actual native drop
+handler imported the document and saved its canonical path in the session.
+The input remained byte-for-byte identical to the fixture. This exercised X11
+file drag-and-drop without injecting frontend events or mocking native IPC;
+Wayland and platform file-manager integrations remain unverified.
+
+These checks do not cover multi-selection, overwrite rejection, or packaged
+Windows/macOS dialogs. No IPC or clipboard mocks were used.
+
 
 ### README screenshots
 
@@ -164,7 +222,7 @@ The corresponding source repository is [irom77/fpv_cli_dumps](https://github.com
 - `TODO.md`, `CHANGES.md`, `docs/releases`: outstanding work, the user-visible change log, and the release policy and milestone release notes.
 - `fixtures`: synthetic configurations, malformed inputs and pinned C rate reference vectors.
 
-GPL-3.0-or-later. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Signing, platform packages, and the first public release belong to Phase 2.
+GPL-3.0-or-later. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Windows and macOS installer packaging is already delivered. Native integration validation remains in Phase 2; signing and notarization are tracked separately in [TODO.md](TODO.md).
 
 ### Capturing complete inspection input
 

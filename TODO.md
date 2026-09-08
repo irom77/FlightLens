@@ -7,28 +7,16 @@ file holds only what is actionable now.
 
 ## Next
 
-- Two copies of the same backup, opened from different paths, are one document
-  (the id is the content hash) but two entries in the saved session. Closing
-  that document drops only the path it was last opened from, so the other copy
-  reopens on the next run. Either key the session by document id or forget
-  every path that resolves to the closed document.
-- Compile `src-tauri` somewhere. Rechecked during 0.2.0 release preparation on
-  2026-09-08: `cargo check -p flightlens` still fails at `libdbus-sys` because
-  `pkg-config` is unavailable; the core-only `cargo check` passes.
-  The session persistence added to
-  `src-tauri/src/main.rs` has never been through a compiler: `cargo check -p
-  flightlens` cannot run in the WSL checkout, where none of the Tauri Linux
-  prerequisites in `DEVELOPMENT.md` are installed and `libdbus-sys` fails in its
-  build script for want of `pkg-config`. This is a Linux-only obstacle. The
-  desktop crate pulls 17 crates that need `pkg-config` and system headers on
-  `x86_64-unknown-linux-gnu` and none on `x86_64-pc-windows-msvc` or
-  `aarch64-apple-darwin`, because Tauri renders through WebKitGTK there and
-  through WebView2 and WKWebView on the platforms FlightLens actually ships.
-  Cheapest fix is to run the check on a Windows or macOS checkout, which needs
-  no installs; installing the Ubuntu prerequisites also buys `pnpm tauri dev`
-  for testing native picking, drop and restore by hand. Until one of those
-  happens the release workflows are the first thing to compile the crate, which
-  is late: a `v*` tag has already started publishing by then.
+- Complete native restore checks on Windows and macOS, including unreadable or
+  disconnected sources, and check native picking, dropping, clipboard and snippet
+  saving. Linux/WSL restore smoke checks passed with synthetic backups on
+  2026-09-08: duplicate paths stay closed after restart, changed files are reread,
+  and missing files are reported once and removed from the saved list. Unreadable
+  files report an error, stay saved, and reopen after permissions are restored.
+  Linux native picking, clipboard export, snippet saving and save cancellation
+  also passed, as did X11 file drag-and-drop from a GTK source. Wayland and
+  platform file-manager integrations remain unverified. See
+  [the validation record](DEVELOPMENT.md#native-restore-validation).
 - Decide what to do about `pnpm format:check`, which fails on `src/App.tsx` and
   `tests/inspector.spec.ts`. Both deviations predate the current work; either
   reformat them in a commit of their own or drop them from the check.
@@ -60,9 +48,11 @@ file holds only what is actionable now.
 
 ## Later
 
-- Phase 2 of the roadmap: workspace indexing, file associations, two- and
-  three-way comparison, saved `.flightlens` sessions.
-- Signing and platform packaging for the first public release.
+- Remaining Phase 2 work follows the sequence in [ROADMAP.md](ROADMAP.md):
+  verify native restore, index workspaces, add two-way then baseline-based three-way
+  comparison, portable `.flightlens` sessions, and native file associations.
+  Automatic restore and Windows/macOS installer packaging already exist; native
+  integration smoke checks and CI gating before release publication remain open.
 
 ## Accepted limitations
 

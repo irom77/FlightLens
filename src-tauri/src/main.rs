@@ -56,15 +56,20 @@ fn save_session(app: &tauri::AppHandle) {
 }
 /// Record a file-backed source as open, so the next run reopens it.
 ///
-/// A file opened twice appears once: the same path always parses to the same
-/// document, and the workspace deduplicates by content hash.
-fn remember(app: &tauri::AppHandle, source_id: &str) {
+/// A file opened twice appears once. Track its latest imported identity so
+/// closing a document can remove every path to that content.
+fn remember(app: &tauri::AppHandle, source_id: &str, document_id: &str) {
     let state = app.state::<AppState>();
     let Ok(path) = state
         .sources
         .lock()
         .map_err(|_| ())
-        .and_then(|registry| registry.path(source_id).map_err(|_| ()))
+        .and_then(|mut registry| {
+            registry
+                .remember_document(source_id, document_id)
+                .map_err(|_| ())?;
+            registry.path(source_id).map_err(|_| ())
+        })
     else {
         return;
     };
@@ -76,22 +81,15 @@ fn remember(app: &tauri::AppHandle, source_id: &str) {
     }
     save_session(app);
 }
-/// Drop a source from the saved session, so closing a document keeps it closed.
-fn forget(app: &tauri::AppHandle, source_id: &str) {
+/// Drop every file reference to a closed artifact, including duplicate content.
+fn forget(app: &tauri::AppHandle, document_id: &str) {
     let state = app.state::<AppState>();
-    let Ok(path) = state
-        .sources
-        .lock()
-        .map_err(|_| ())
-        .and_then(|registry| registry.path(source_id).map_err(|_| ()))
-    else {
-        return;
-    };
-    if let Ok(mut session) = state.session.lock() {
-        session.retain(|open| open != &path);
+    if let (Ok(mut registry), Ok(mut session)) = (state.sources.lock(), state.session.lock()) {
+        registry.forget_document(document_id, &mut session);
     }
     save_session(app);
 }
+
 fn keep(state: &AppState, artifact: Artifact) -> Result<Artifact, String> {
     if let Artifact::Config(d) = &artifact {
         let mut docs = state
@@ -182,7 +180,11 @@ async fn open_source(source_id: String, app: tauri::AppHandle) -> Result<Artifac
     tauri::async_runtime::spawn_blocking(move || {
         let artifact = source::open_path(&path, &source_id)?;
         let artifact = keep(&app.state::<AppState>(), artifact)?;
-        remember(&app, &source_id);
+        let document_id = match &artifact {
+            Artifact::Config(document) => &document.id,
+            Artifact::Recognized(document) => &document.id,
+        };
+        remember(&app, &source_id, document_id);
         Ok(artifact)
     })
     .await
@@ -217,9 +219,8 @@ async fn restore_session(app: tauri::AppHandle) -> Result<RestoredSession, Strin
                     .into_owned();
                 match registry.register(path) {
                     Ok(source) => {
-                        // The registry canonicalizes, and `forget` looks the
-                        // path back up through it, so the session holds the
-                        // canonical form rather than the one on file.
+                        // Keep canonical paths, matching the identity associations
+                        // recorded when open_source successfully imports each file.
                         if let Ok(path) = registry.path(&source.id) {
                             if !session.contains(&path) {
                                 session.push(path);
@@ -248,16 +249,12 @@ fn pending_sources(state: State<AppState>) -> Result<Vec<SourceDescriptor>, Stri
 #[tauri::command]
 fn close_document(config_id: String, app: tauri::AppHandle) -> Result<(), String> {
     let state = app.state::<AppState>();
-    let closed = state
+    state
         .documents
         .lock()
         .map_err(|_| "Document repository unavailable")?
         .remove(&config_id);
-    // A recognized artifact -- a Blackbox log, say -- is never kept in the
-    // document repository and carries its source id as its own, so the
-    // identifier the webview closed stands in for one.
-    let source_id = closed.map_or(config_id, |d| d.source_id);
-    forget(&app, &source_id);
+    forget(&app, &config_id);
     Ok(())
 }
 #[tauri::command]
