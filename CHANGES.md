@@ -6,8 +6,11 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
-## Unreleased
+## 0.2.0 — 2026-09-08
 
+- Document version bump criteria, compatibility commitments, and release cadence;
+  distinguish feature milestones from major versions and keep patch releases
+  unlimited. Align agent guidance and the release checklist with the policy.
 - Reopen the backups that were open when FlightLens last closed, and return to
   the document that was in front. Only the file list is saved; every backup is
   read from disk again, so one edited in the meantime is inspected as it now

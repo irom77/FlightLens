@@ -12,7 +12,10 @@ file holds only what is actionable now.
   that document drops only the path it was last opened from, so the other copy
   reopens on the next run. Either key the session by document id or forget
   every path that resolves to the closed document.
-- Compile `src-tauri` somewhere. The session persistence added to
+- Compile `src-tauri` somewhere. Rechecked during 0.2.0 release preparation on
+  2026-09-08: `cargo check -p flightlens` still fails at `libdbus-sys` because
+  `pkg-config` is unavailable; the core-only `cargo check` passes.
+  The session persistence added to
   `src-tauri/src/main.rs` has never been through a compiler: `cargo check -p
   flightlens` cannot run in the WSL checkout, where none of the Tauri Linux
   prerequisites in `DEVELOPMENT.md` are installed and `libdbus-sys` fails in its

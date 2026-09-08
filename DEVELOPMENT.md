@@ -120,7 +120,11 @@ that goes with it. `.github/workflows/windows-release.yml` and
 again on their own runner, build the bundles, and publish them to the GitHub
 release for the tag.
 
-Cutting a release:
+Before choosing a version or preparing release notes, follow the
+[release policy](docs/releases/README.md) for bump criteria, compatibility,
+cadence, and milestone-note requirements.
+
+Cutting a release (commit and push only when requested):
 
 ```sh
 ./test.sh                 # full local check suite
@@ -128,14 +132,16 @@ pnpm screenshots:check    # README images still match the interface
 # bump the version in package.json, src-tauri/tauri.conf.json and Cargo.toml
 cargo check               # refresh Cargo.lock with the new version
 # rename `## Unreleased` in CHANGES.md to the new version and today's date
-git commit -am "Release FlightLens <version>"
+# prepare docs/releases/v<version>.md when required by the release policy
+# stage only the intended release files, including any new release-note file
+git commit -m "Release FlightLens <version>"
 git tag v<version>
-git push origin main --follow-tags
+git push origin main refs/tags/v<version>
 ```
 
-An untagged commit on `main` builds nothing, so it reaches no user. A major
-release, meaning a new `X.Y.0` or the end of a `ROADMAP.md` phase, also gets
-release notes under `docs/releases`; see the README there.
+An untagged commit on `main` builds nothing, so it reaches no user. After both
+release workflows finish, publish any required milestone notes using the command
+in the [release policy](docs/releases/README.md#release-notes).
 
 ## External Betaflight backup corpus
 
@@ -155,7 +161,7 @@ The corresponding source repository is [irom77/fpv_cli_dumps](https://github.com
 - `src-tauri`: backend-authorized source registry, native dialog/drop entry points, bounded document repository, saved session and command boundary. The webview cannot grant itself arbitrary paths or write arbitrary text to disk; restoring a session replays only paths the backend itself registered from a native dialog or drop event.
 - `src`: React views, small Zustand navigation store, typed IPC wrappers and generated DTOs. Large parsed documents remain outside Zustand. Colors live only in the `:root` and `:root[data-theme="light"]` token blocks of `src/styles.css`; components reference tokens through `var(--…)` so both themes stay in step. The OSD canvas keeps its dark video colors in both themes.
 - `docs/screenshots`: README images regenerated with `pnpm screenshots`.
-- `TODO.md`, `CHANGES.md`, `docs/releases`: outstanding work, the user-visible change log, and release notes for major releases.
+- `TODO.md`, `CHANGES.md`, `docs/releases`: outstanding work, the user-visible change log, and the release policy and milestone release notes.
 - `fixtures`: synthetic configurations, malformed inputs and pinned C rate reference vectors.
 
 GPL-3.0-or-later. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Signing, platform packages, and the first public release belong to Phase 2.
