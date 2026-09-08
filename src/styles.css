@@ -731,6 +731,28 @@ kbd {
   font-size: 12px;
   margin: 16px 0 22px;
 }
+.notice-details > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+.notice-details > summary::-webkit-details-marker {
+  display: none;
+}
+.notice-details > summary::before {
+  content: "\25B8";
+  color: var(--notice-border);
+  font-size: 10px;
+  transition: transform 0.12s ease;
+}
+.notice-details[open] > summary::before {
+  transform: rotate(90deg);
+}
+.notice-details > :not(summary) {
+  margin-bottom: 0;
+}
 .error {
   margin: 18px 34px;
   background: var(--error-bg);

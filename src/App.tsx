@@ -144,8 +144,12 @@ export default function App() {
           </div>
         </div>
         <section className="notice" aria-label="Backup import warning">
-          <b>For complete Rates and PID inspection: Betaflight CLI <code>dump all</code></b>
-          <p>Save or paste the entire output, including the header and all profiles. Diff backups may omit Rates, Expo, and PID values.</p>
+          <details className="notice-details">
+            <summary>
+              <b>For complete Rates and PID inspection: Betaflight CLI <code>dump all</code></b>
+            </summary>
+            <p>Save or paste the entire output, including the header and all profiles. Diff backups may omit Rates, Expo, and PID values.</p>
+          </details>
         </section>
         <button
           className="primary import-button"
@@ -590,9 +594,13 @@ function Inspector({
       </section>
       {!d.syntax.some((line) => /^\s*(?:#\s*)?dump\s+all\s*$/i.test(line.raw)) && (
         <section className="notice" role="alert" aria-label="Incomplete backup warning">
-          <b>No Betaflight CLI dump all marker detected.</b>
-          <p>This may be a diff or a partial backup. Missing Rates, Expo, or PID values cannot be assumed to be zero.</p>
-          <p>For complete Rates and PID inspection, connect your configured flight controller to Betaflight Configurator, open the CLI, run <code>dump all</code>, wait for it to finish, and save or paste the entire output here. No reset or <code>defaults</code> command is needed.</p>
+          <details className="notice-details">
+            <summary>
+              <b>No Betaflight CLI dump all marker detected.</b>
+            </summary>
+            <p>This may be a diff or a partial backup. Missing Rates, Expo, or PID values cannot be assumed to be zero.</p>
+            <p>For complete Rates and PID inspection, connect your configured flight controller to Betaflight Configurator, open the CLI, run <code>dump all</code>, wait for it to finish, and save or paste the entire output here. No reset or <code>defaults</code> command is needed.</p>
+          </details>
         </section>
       )}
       <div className="tabbar" role="tablist" aria-label="Inspector views">
