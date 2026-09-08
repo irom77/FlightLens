@@ -6,6 +6,11 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## 0.4.1 — 2026-09-08
+
+- Fix comparison module resolution on case-insensitive filesystems, which blocked
+  Windows and macOS installer builds for 0.4.0.
+
 ## 0.4.0 — 2026-09-08
 
 - Add side-by-side parameter comparison for global settings and independently

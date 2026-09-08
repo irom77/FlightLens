@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ConfigDocument, Parameter } from "./bindings/core";
-import { compareParameters } from "./parameterComparison";
+import { compareParameters } from "./compareParameters";
 
 const parameter = (value: number, index = 0): Parameter => ({
   key: "p_roll",

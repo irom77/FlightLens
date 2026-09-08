@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ConfigDocument } from "./bindings/core";
-import { compareParameters, type ComparisonValue } from "./parameterComparison";
+import { compareParameters, type ComparisonValue } from "./compareParameters";
 
 function Cell({
   value,
