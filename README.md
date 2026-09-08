@@ -139,6 +139,8 @@ FlightLens is an inspection and export assistant. It does not connect to a fligh
 ## Project documentation
 
 - [Developer documentation](DEVELOPMENT.md) — architecture, implementation boundaries, checks, fixtures, and contributor workflows.
+- [Changes](CHANGES.md) — user-visible changes in each release.
+- [TODO](TODO.md) — outstanding work and accepted limitations.
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
 - [GPL-3.0-or-later license](LICENSE)
 

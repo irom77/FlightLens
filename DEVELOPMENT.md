@@ -112,6 +112,31 @@ only when a developer asks for it. The comparison allows a small pixel ratio,
 because font rasterization differs between machines; a different Chromium or font
 stack can still report a difference that is not a real interface change.
 
+## Releases
+
+Every push ships: the Windows and macOS installers are built from the `v*` tag
+that goes with it. `.github/workflows/windows-release.yml` and
+`.github/workflows/macos-release.yml` run the Rust, bindings and frontend checks
+again on their own runner, build the bundles, and publish them to the GitHub
+release for the tag.
+
+Cutting a release:
+
+```sh
+./test.sh                 # full local check suite
+pnpm screenshots:check    # README images still match the interface
+# bump the version in package.json, src-tauri/tauri.conf.json and Cargo.toml
+cargo check               # refresh Cargo.lock with the new version
+# rename `## Unreleased` in CHANGES.md to the new version and today's date
+git commit -am "Release FlightLens <version>"
+git tag v<version>
+git push origin main --follow-tags
+```
+
+An untagged commit on `main` builds nothing, so it reaches no user. A major
+release, meaning a new `X.Y.0` or the end of a `ROADMAP.md` phase, also gets
+release notes under `docs/releases`; see the README there.
+
 ## External Betaflight backup corpus
 
 When additional real-world Betaflight coverage is useful, the local backup corpus is available at:
@@ -130,6 +155,7 @@ The corresponding source repository is [irom77/fpv_cli_dumps](https://github.com
 - `src-tauri`: backend-authorized source registry, native dialog/drop entry points, bounded document repository and command boundary. The webview cannot grant itself arbitrary paths or write arbitrary text to disk.
 - `src`: React views, small Zustand navigation store, typed IPC wrappers and generated DTOs. Large parsed documents remain outside Zustand. Colors live only in the `:root` and `:root[data-theme="light"]` token blocks of `src/styles.css`; components reference tokens through `var(--…)` so both themes stay in step. The OSD canvas keeps its dark video colors in both themes.
 - `docs/screenshots`: README images regenerated with `pnpm screenshots`.
+- `TODO.md`, `CHANGES.md`, `docs/releases`: outstanding work, the user-visible change log, and release notes for major releases.
 - `fixtures`: synthetic configurations, malformed inputs and pinned C rate reference vectors.
 
 GPL-3.0-or-later. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Signing, platform packages, and the first public release belong to Phase 2.
