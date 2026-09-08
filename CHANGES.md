@@ -6,6 +6,23 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## Unreleased
+
+- Reopen the backups that were open when FlightLens last closed, and return to
+  the document that was in front. Only the file list is saved; every backup is
+  read from disk again, so one edited in the meantime is inspected as it now
+  stands. A file that has moved or been deleted since is reported by name and
+  dropped from the list. Closing a document with `×` keeps it closed.
+- Name the flashed target next to the firmware badge in the Configuration
+  Snapshot header, as `betaflight 4.3.1 · BETAFPVF4SX1280`, taken from the
+  backup's `board_name` line. Backups without one, such as headerless excerpts,
+  show the firmware alone.
+- Show the craft name and, where the firmware records one, the pilot name in
+  the Configuration Snapshot header. Betaflight 4.4 and later declare both as
+  settings; 4.2 and 4.3 dumps carry the craft name in their `# name:` header,
+  which is read instead. The OSD craft-name preview uses the same name, so it
+  is now correct on 4.2 and 4.3 backups as well.
+
 ## 0.1.15 — 2026-09-07
 
 - Switch between light and dark modes from the top bar. The choice follows the

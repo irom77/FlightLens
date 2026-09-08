@@ -529,6 +529,10 @@ kbd {
 .firmware {
   color: var(--text-secondary);
 }
+.declared-name b {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
 .unknown-badge {
   color: var(--warn-text);
   border: 1px solid var(--warn-border);

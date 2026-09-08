@@ -22,6 +22,8 @@ const openExample = async (page: Page, theme: "dark" | "light") => {
         invoke: async (command: string) => {
           if (command === "pending_sources" || command === "choose_files")
             return [];
+          if (command === "restore_session")
+            return { sources: [], unavailable: [] };
           if (command === "ingest_text") return f.fixture.artifact;
           if (command === "inspect_config") return f.fixture.inspection;
           if (command === "export_snippet") return f.fixture.snippet;

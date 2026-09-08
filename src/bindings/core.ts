@@ -18,7 +18,12 @@ export type Command = { "kind": "set", key: string, value: string, } | { "kind":
 
 export type SyntaxLine = { line: number, start: number, end: number, raw: string, command: Command, };
 
-export type Firmware = { family: string, version: string | null, header: string | null, packId: string | null, };
+export type Firmware = { family: string, version: string | null, 
+/**
+ * The flashed target the backup names on its `board_name` line. `None`
+ * when the source carries no such line, as a headerless excerpt does.
+ */
+boardName: string | null, header: string | null, packId: string | null, };
 
 export type Port = { identifier: number, name: string, mask: number, functions: Array<string>, baud: [number, number, number, number], line: number, };
 
@@ -30,7 +35,18 @@ export type Mode = { index: number, modeId: number, name: string, channel: numbe
  */
 channelAssigned: boolean, start: number, end: number, logic: number | null, linked: number | null, line: number, };
 
-export type ConfigDocument = { id: string, sourceId: string, title: string, hash: string, firmware: Firmware, completeness: string, parameters: { [key in string]?: Parameter }, 
+export type ConfigDocument = { id: string, sourceId: string, title: string, hash: string, firmware: Firmware, 
+/**
+ * The craft name the backup declares, from `set craft_name` where the
+ * firmware has that setting and from the `# name:` header a dump writes
+ * otherwise. `None` when the backup names no craft.
+ */
+craftName: string | null, 
+/**
+ * The pilot name the backup declares. Betaflight added `pilot_name` in
+ * 4.4, so a 4.2 or 4.3 dump never carries one.
+ */
+pilotName: string | null, completeness: string, parameters: { [key in string]?: Parameter }, 
 /**
  * Keyed like `parameters`, and disjoint from it: a key any source line
  * declares is never derived, so an invalid declared value stays unknown
@@ -49,6 +65,12 @@ export type Artifact = { "kind": "config", "document": ConfigDocument } | { "kin
 export type RecognizedArtifact = { id: string, title: string, family: string, message: string, };
 
 export type SourceDescriptor = { id: string, label: string, };
+
+export type RestoredSession = { sources: Array<SourceDescriptor>, 
+/**
+ * File names the saved session listed that can no longer be opened.
+ */
+unavailable: Array<string>, };
 
 export type Point = { x: number, y: number, };
 

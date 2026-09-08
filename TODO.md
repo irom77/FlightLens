@@ -7,6 +7,25 @@ file holds only what is actionable now.
 
 ## Next
 
+- Two copies of the same backup, opened from different paths, are one document
+  (the id is the content hash) but two entries in the saved session. Closing
+  that document drops only the path it was last opened from, so the other copy
+  reopens on the next run. Either key the session by document id or forget
+  every path that resolves to the closed document.
+- Compile `src-tauri` somewhere. The session persistence added to
+  `src-tauri/src/main.rs` has never been through a compiler: `cargo check -p
+  flightlens` cannot run in the WSL checkout, where none of the Tauri Linux
+  prerequisites in `DEVELOPMENT.md` are installed and `libdbus-sys` fails in its
+  build script for want of `pkg-config`. This is a Linux-only obstacle. The
+  desktop crate pulls 17 crates that need `pkg-config` and system headers on
+  `x86_64-unknown-linux-gnu` and none on `x86_64-pc-windows-msvc` or
+  `aarch64-apple-darwin`, because Tauri renders through WebKitGTK there and
+  through WebView2 and WKWebView on the platforms FlightLens actually ships.
+  Cheapest fix is to run the check on a Windows or macOS checkout, which needs
+  no installs; installing the Ubuntu prerequisites also buys `pnpm tauri dev`
+  for testing native picking, drop and restore by hand. Until one of those
+  happens the release workflows are the first thing to compile the crate, which
+  is late: a `v*` tag has already started publishing by then.
 - Decide what to do about `pnpm format:check`, which fails on `src/App.tsx` and
   `tests/inspector.spec.ts`. Both deviations predate the current work; either
   reformat them in a commit of their own or drop them from the check.

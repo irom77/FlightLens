@@ -12,7 +12,7 @@ import type {
   ValidatedSnippet,
 } from "./bindings/core";
 import { api, desktopAvailable } from "./ipc/client";
-import { tabs, useWorkspace } from "./stores/workspace";
+import { savedActive, tabs, useWorkspace } from "./stores/workspace";
 import { useTheme } from "./stores/theme";
 import { Plot } from "./Plots";
 import { OsdGlyphs } from "./OsdGlyphs";
@@ -63,8 +63,10 @@ export default function App() {
       setBusy(false);
     }
   };
-  const openSources = async (sources: SourceDescriptor[]) => {
-    const failures: string[] = [];
+  const openSources = async (
+    sources: SourceDescriptor[],
+    failures: string[] = [],
+  ) => {
     for (const source of sources) {
       try {
         add(await api.open(source.id));
@@ -73,6 +75,27 @@ export default function App() {
       }
     }
     if (failures.length) setError(failures.join("\n"));
+  };
+  // Reopen the backups the previous run left open, then whatever was dropped on
+  // the application while it was starting. The backend keeps the file list; the
+  // documents themselves are parsed again from disk, so an edited backup is
+  // restored as it now stands.
+  const restore = async () => {
+    const session = await api.restore();
+    await openSources(
+      session.sources,
+      session.unavailable.map(
+        (name) =>
+          `${name}: this backup could not be reopened. It may have been moved, renamed, or deleted.`,
+      ),
+    );
+    const previous = savedActive();
+    if (
+      previous &&
+      useWorkspace.getState().documents.some((d) => d.id === previous)
+    )
+      workspace.activate(previous);
+    await openSources(await api.pending());
   };
   useEffect(() => {
     let saved: string | null = null;
@@ -99,7 +122,7 @@ export default function App() {
       }),
       listen<string>("source-error", (e) => setError(e.payload)),
     ];
-    void run(async () => openSources(await api.pending()));
+    void run(restore);
     return () => {
       disposed = true;
       window.removeEventListener("keydown", shortcut);
@@ -544,7 +567,18 @@ function Inspector({
           <div className="metadata">
             <span className="firmware">
               {d.firmware.family} {d.firmware.version ?? "unknown version"}
+              {d.firmware.boardName && ` · ${d.firmware.boardName}`}
             </span>
+            {d.craftName && (
+              <span className="declared-name">
+                Craft <b>{d.craftName}</b>
+              </span>
+            )}
+            {d.pilotName && (
+              <span className="declared-name">
+                Pilot <b>{d.pilotName}</b>
+              </span>
+            )}
             <span>SHA-256 {d.hash.slice(0, 12)}</span>
             <span>{d.syntax.length} lines</span>
             <span className="unknown-badge">Partial · defaults unknown</span>

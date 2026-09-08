@@ -14,6 +14,15 @@ describe("Rust command boundary", () => {
     await api.open("source-7");
     expect(seen).toHaveBeenCalledWith("open_source", { sourceId: "source-7" });
   });
+  it("asks the backend to restore a session without naming a path", async () => {
+    const seen = vi.fn();
+    mockIPC((cmd, args) => {
+      seen(cmd, args);
+      return { sources: [], unavailable: [] };
+    });
+    await api.restore();
+    expect(seen).toHaveBeenCalledWith("restore_session", {});
+  });
   it("serializes independent profile and export controls", async () => {
     const seen = vi.fn();
     mockIPC((cmd, args) => {

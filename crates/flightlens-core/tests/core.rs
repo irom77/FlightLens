@@ -691,3 +691,46 @@ fn betaflight_42_defaults_require_verified_release_and_reset() {
     let d = config("# Betaflight / STM32F405 4.2.11\nrateprofile 0\n");
     assert!(d.derived.is_empty());
 }
+#[test]
+fn declared_craft_and_pilot_names() {
+    let d = with("set craft_name = Green Hornet V3\nset pilot_name = papfpv\n");
+    assert_eq!(d.craft_name.as_deref(), Some("Green Hornet V3"));
+    assert_eq!(d.pilot_name.as_deref(), Some("papfpv"));
+    // Betaflight 4.2 and 4.3 have no craft_name setting and print the name
+    // only in the dump header, which every supported line writes.
+    let d = config("# Betaflight / STM32F745 4.2.11\r\n# name: FLYWOOF7NANO\r\n");
+    assert_eq!(d.craft_name.as_deref(), Some("FLYWOOF7NANO"));
+    assert_eq!(d.pilot_name, None);
+    // A declared setting outranks the header it follows.
+    let d = with("# name: Header\nset craft_name = Declared\n");
+    assert_eq!(d.craft_name.as_deref(), Some("Declared"));
+    // An unset name is absent, not empty, and a reset clears a declared one.
+    let d = with("set craft_name = \nset pilot_name =  \n");
+    assert_eq!(d.craft_name, None);
+    assert_eq!(d.pilot_name, None);
+    let d = with("set craft_name = Cleared\ndefaults nosave\n");
+    assert_eq!(d.craft_name, None);
+    assert_eq!(
+        fixture("4.3.0").craft_name.as_deref(),
+        Some("FlightLens example")
+    );
+}
+#[test]
+fn declared_board_name() {
+    let d = with("board_name BETAFPVF4SX1280\n");
+    assert_eq!(d.firmware.board_name.as_deref(), Some("BETAFPVF4SX1280"));
+    // The `# config:` comment repeats the target, truncated in at least one
+    // real backup, and is never read in place of the command line.
+    let d = with("# config: manufacturer_id: HOWI, board_name: HOBBYWING_XROTORF7CO\n");
+    assert_eq!(d.firmware.board_name, None);
+    // A reset does not erase which board the backup came off.
+    let d = with("board_name SYNTHETIC\ndefaults nosave\n");
+    assert_eq!(d.firmware.board_name.as_deref(), Some("SYNTHETIC"));
+    // A longer command that merely starts with the same letters is not one.
+    let d = with("board_names FOO\nboard_name\n");
+    assert_eq!(d.firmware.board_name, None);
+    assert_eq!(
+        fixture("4.3.0").firmware.board_name.as_deref(),
+        Some("SYNTHETIC")
+    );
+}

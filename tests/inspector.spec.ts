@@ -33,6 +33,8 @@ test("offline renderer covers all views with the actual Rust DTO fixture", async
       ) => {
         if (command === "pending_sources" || command === "choose_files")
           return [];
+        if (command === "restore_session")
+          return { sources: [], unavailable: [] };
         if (command === "ingest_text") return f.artifact;
         if (command === "inspect_config") {
           if (
@@ -56,6 +58,15 @@ test("offline renderer covers all views with the actual Rust DTO fixture", async
     page.getByRole("heading", { name: "Rate curves" }),
   ).toBeVisible();
   await expect(page.getByRole("img", { name: /Rate curves/ })).toBeVisible();
+  // The snapshot header names the craft the backup declares alongside the
+  // filename and the firmware badge.
+  await expect(page.locator(".document-heading .metadata")).toContainText(
+    "Craft FlightLens example",
+  );
+  // The firmware badge carries the flashed target the backup names.
+  await expect(page.locator(".document-heading .firmware")).toHaveText(
+    "betaflight 4.5.0 · SYNTHETIC",
+  );
   await page.screenshot({ path: "test-results/rates.png", fullPage: true });
   for (const tab of [
     "PID",

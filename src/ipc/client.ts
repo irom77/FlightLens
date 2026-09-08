@@ -4,6 +4,7 @@ import type {
   ExportRequest,
   Inspection,
   Point,
+  RestoredSession,
   Scope,
   SourceDescriptor,
   ValidatedSnippet,
@@ -15,6 +16,7 @@ export const api = {
   chooseFiles: () => invoke<SourceDescriptor[]>("choose_files"),
   open: (sourceId: string) => invoke<Artifact>("open_source", { sourceId }),
   pending: () => invoke<SourceDescriptor[]>("pending_sources"),
+  restore: () => invoke<RestoredSession>("restore_session"),
   close: (configId: string) => invoke<void>("close_document", { configId }),
   inspect: (configId: string, rateProfile: number) =>
     invoke<Inspection>("inspect_config", { configId, rateProfile }),

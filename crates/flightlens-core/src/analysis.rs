@@ -201,7 +201,8 @@ pub fn inspect(d: &ConfigDocument, profile: u8) -> Inspection {
                     "osd_vbat_pos" => "16.8V".into(),
                     "osd_rssi_pos" => "99%".into(),
                     "osd_craft_name_pos" => d
-                        .text(&Scope::Global, "craft_name")
+                        .craft_name
+                        .clone()
                         .unwrap_or("CRAFT".into())
                         .to_uppercase(),
                     "osd_altitude_pos" => "10M".into(),

@@ -85,6 +85,76 @@ fn derive_defaults(
             "This line resets the configuration, so the {count} rate-profile settings the source never assigns still hold their Betaflight {} defaults. They are shown as read back from the firmware, never as declared, and are not exported.", pack.version)});
     }
 }
+/// A declared name, or `None` when the backup leaves it unset.
+///
+/// Betaflight prints an unset string setting as an empty value, and the CLI
+/// stores names with the surrounding whitespace stripped, so neither an empty
+/// nor a whitespace-only value names anything.
+fn declared(value: &str) -> Option<String> {
+    let value = value.trim();
+    (!value.is_empty()).then(|| value.to_owned())
+}
+/// The craft and pilot names the source declares.
+///
+/// Betaflight 4.4 added `craft_name` and `pilot_name` as settings, so a dump
+/// from 4.4 or later carries them as `set` lines. Earlier lines have no such
+/// setting and print the craft name only in the `# name:` header the dump
+/// writes, which is read as a fallback and never in preference to a declared
+/// line. A `defaults` line resets the settings, exactly as it does every other
+/// one; it does not erase a header the dump has already printed.
+fn declared_names(syntax: &[SyntaxLine]) -> (Option<String>, Option<String>) {
+    let (mut craft, mut pilot, mut header) = (None, None, None);
+    for line in syntax {
+        match &line.command {
+            Command::Defaults => {
+                craft = None;
+                pilot = None;
+            }
+            Command::Set { key, value } => match key.as_str() {
+                "craft_name" => craft = declared(value),
+                "pilot_name" => pilot = declared(value),
+                _ => {}
+            },
+            Command::Comment => {
+                if let Some(name) = line
+                    .raw
+                    .trim_start_matches('\u{feff}')
+                    .trim_start()
+                    .strip_prefix("# name:")
+                {
+                    header = declared(name);
+                }
+            }
+            _ => {}
+        }
+    }
+    (craft.or(header), pilot)
+}
+/// The flashed target the source names.
+///
+/// Betaflight prints `board_name <target>` as a bare command, which the parser
+/// keeps as an unsupported line because it identifies the hardware rather than
+/// setting anything. The `# config:` comment a dump also carries repeats the
+/// target, but at least one real backup truncates it there while the command
+/// line holds it in full, so the comment is never read as a substitute. A
+/// `defaults` line does not clear it: the board a backup came off is a fact
+/// about the file, not a setting the reset restores.
+fn declared_board(syntax: &[SyntaxLine]) -> Option<String> {
+    let mut board = None;
+    for line in syntax {
+        if !matches!(line.command, Command::Unsupported) {
+            continue;
+        }
+        let text = line.raw.trim_start_matches('\u{feff}').trim_start();
+        if let Some(target) = text
+            .strip_prefix("board_name")
+            .filter(|target| target.starts_with(char::is_whitespace))
+        {
+            board = declared(target);
+        }
+    }
+    board
+}
 pub fn parse_line(raw: &str) -> Result<Command, String> {
     let text = raw.trim_start_matches('\u{feff}').trim();
     if text.is_empty() {
@@ -278,9 +348,12 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
         firmware: Firmware {
             family: family.into(),
             version,
+            board_name: None,
             header: header.map(str::to_owned),
             pack_id: pack.map(|p| p.id.clone()),
         },
+        craft_name: None,
+        pilot_name: None,
         completeness: "partial".into(),
         parameters: BTreeMap::new(),
         derived: BTreeMap::new(),
@@ -498,6 +571,8 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
     d.rate_profiles = rates.into_iter().collect();
     d.selected_pid = pid;
     d.selected_rate = rate;
+    (d.craft_name, d.pilot_name) = declared_names(&d.syntax);
+    d.firmware.board_name = declared_board(&d.syntax);
     derive_defaults(&mut d, pack, baseline);
     Ok(Artifact::Config(Box::new(d)))
 }

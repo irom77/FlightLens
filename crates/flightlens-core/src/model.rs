@@ -137,6 +137,9 @@ pub struct SyntaxLine {
 pub struct Firmware {
     pub family: String,
     pub version: Option<String>,
+    /// The flashed target the backup names on its `board_name` line. `None`
+    /// when the source carries no such line, as a headerless excerpt does.
+    pub board_name: Option<String>,
     pub header: Option<String>,
     pub pack_id: Option<String>,
 }
@@ -175,6 +178,13 @@ pub struct ConfigDocument {
     pub title: String,
     pub hash: String,
     pub firmware: Firmware,
+    /// The craft name the backup declares, from `set craft_name` where the
+    /// firmware has that setting and from the `# name:` header a dump writes
+    /// otherwise. `None` when the backup names no craft.
+    pub craft_name: Option<String>,
+    /// The pilot name the backup declares. Betaflight added `pilot_name` in
+    /// 4.4, so a 4.2 or 4.3 dump never carries one.
+    pub pilot_name: Option<String>,
     pub completeness: String,
     pub parameters: BTreeMap<String, Parameter>,
     /// Keyed like `parameters`, and disjoint from it: a key any source line
@@ -240,4 +250,16 @@ pub struct RecognizedArtifact {
 pub struct SourceDescriptor {
     pub id: String,
     pub label: String,
+}
+/// The result of reopening the sources a previous run left open.
+///
+/// The saved session holds paths the backend itself registered, so restoring
+/// grants the webview nothing it did not already have. A file that moved or
+/// was deleted since is reported by name rather than dropped in silence.
+#[derive(Debug, Clone, Default, Serialize, Deserialize, TS)]
+#[serde(rename_all = "camelCase")]
+pub struct RestoredSession {
+    pub sources: Vec<SourceDescriptor>,
+    /// File names the saved session listed that can no longer be opened.
+    pub unavailable: Vec<String>,
 }

@@ -16,6 +16,7 @@ fn main() {
         Artifact::decl(),
         RecognizedArtifact::decl(),
         SourceDescriptor::decl(),
+        RestoredSession::decl(),
         Point::decl(),
         Curve::decl(),
         OsdElement::decl(),
