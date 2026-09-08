@@ -45,6 +45,8 @@ Remaining work, in implementation order:
    PID/rate profile mapping, source-line links, and declared/derived/unknown
    provenance badges. Distinguish unknown values from changes; compare versions
    only where bundled compatibility data establishes equivalent semantics.
+   Same-version parameter comparison, independent profiles, source declarations,
+   and provenance are implemented; cross-version equivalence mappings remain.
 3. [ ] Extend comparison to three selected configurations, including angular
    velocity overlays. Use an explicitly selected baseline for semantic differences,
    distinguishing changes on either side and conflicting changes. Comparison

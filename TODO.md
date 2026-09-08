@@ -7,9 +7,9 @@ file holds only what is actionable now.
 
 ## Next
 
-- Extend the angular velocity comparison with semantic parameter differences,
-  independent PID profile mapping, source-line links, and provenance badges.
-  Three-backup comparison and saved comparison selections remain outstanding.
+- Add certified cross-version parameter equivalence mappings; current parameter
+  comparison only classifies changes within the same supported firmware version.
+  CLI collections, three-backup comparison and saved selections remain outstanding.
 - Manually check the new comparison view in packaged Windows/macOS builds.
 - Complete native restore checks on Windows and macOS, including unreadable or
   disconnected sources, and check native picking, dropping, clipboard and snippet

@@ -6,6 +6,15 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## 0.4.0 — 2026-09-08
+
+- Add side-by-side parameter comparison for global settings and independently
+  selected PID/rate profiles, with changed-value highlighting, filtering, and
+  declared/derived/unknown provenance. Expand a source-line link to see the
+  original declaration. Missing or invalid values remain unknown; different
+  firmware versions are displayed without asserting semantic equivalence.
+  CLI collection commands are not included in this comparison.
+
 ## 0.3.0 — 2026-09-08
 
 - Add a two-backup angular velocity comparison view with independent rate profiles,

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { ConfigDocument, Inspection } from "./bindings/core";
 import { api } from "./ipc/client";
 import { Plot } from "./Plots";
+import { ParameterComparison } from "./ParameterComparison";
 
 function useRates(document: ConfigDocument | undefined, profile: number) {
   const key = document ? `${document.id}:${profile}` : "";
@@ -31,7 +32,7 @@ export function Comparison({ documents }: { documents: ConfigDocument[] }) {
   const b = documents.find((d) => d.id === right);
   return (
     <section className="content">
-      <h1>Compare angular velocity</h1>
+      <h1>Compare backups</h1>
       <p>
         Calculated angular velocity (°/s) versus stick input, not measured
         flight motion. Choose two backups and a rate profile for each. Hover a
@@ -119,6 +120,7 @@ function RateComparison({ a, b }: { a?: ConfigDocument; b?: ConfigDocument }) {
             ),
         )}
       </div>
+      {a && b && <ParameterComparison a={a} b={b} rateA={pa} rateB={pb} />}
       {a && b ? (
         ["roll", "pitch", "yaw"].map((axis) => (
           <section key={axis} aria-label={`${axis} comparison`}>

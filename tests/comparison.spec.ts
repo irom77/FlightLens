@@ -1,7 +1,11 @@
 import { test, expect } from "@playwright/test";
 import { execFileSync } from "node:child_process";
 
-const fixtures = [[], ["--zero-expo"], ["--vendor-missing-expo"]].map((flags) =>
+const fixtures = [
+  ["--explicit-only"],
+  ["--explicit-only", "--zero-expo"],
+  ["--vendor-missing-expo"],
+].map((flags) =>
   JSON.parse(
     execFileSync(
       process.env.FLIGHTLENS_CARGO ?? "cargo",
@@ -59,6 +63,28 @@ test("compares backend curves, independent profiles, unknown inputs and closed d
   await page
     .getByRole("button", { name: "Compare backups", exact: true })
     .click();
+  const parameters = page.getByRole("region", {
+    name: "Parameter comparison",
+    exact: true,
+  });
+  await expect(parameters).toBeVisible();
+  await parameters.getByLabel("Filter compared parameters").fill("roll_expo");
+  const expo = parameters.getByRole("row").filter({ hasText: "roll_expo" });
+  await expect(expo).toContainText("Changed");
+  await expo.getByText(/^A: Line/).click();
+  await expect(expo.locator("pre").first()).toContainText("set roll_expo");
+  await page.getByLabel("PID profile A", { exact: true }).selectOption("1");
+  await expect(page.getByLabel("PID profile B", { exact: true })).toHaveValue(
+    "0",
+  );
+  await expect(page.getByLabel("Rate profile A", { exact: true })).toHaveValue(
+    "0",
+  );
+  await parameters.getByLabel("Filter compared parameters").fill("p_roll");
+  await expect(
+    parameters.getByRole("row").filter({ hasText: "p_roll" }),
+  ).toContainText("Unknown");
+  await parameters.getByLabel("Filter compared parameters").fill("");
   const roll = page.getByRole("region", {
     name: "roll comparison",
     exact: true,
