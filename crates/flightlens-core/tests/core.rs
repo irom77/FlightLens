@@ -33,6 +33,29 @@ fn firmware_versions_preserve_prerelease_and_build_suffixes() {
 fn with(body: &str) -> ConfigDocument {
     config(&format!("{}\n{body}", header()))
 }
+#[test]
+fn numeric_feature_names_are_valid_and_last_command_wins() {
+    let d = with("feature 3D\nfeature -3D\nfeature OSD\n");
+    assert!(!d.diagnostics.iter().any(|x| x.severity == "error"));
+    assert_eq!(d.features.get("3D"), Some(&false));
+    let d = with("feature -3D\nfeature 3D\n");
+    assert_eq!(d.features.get("3D"), Some(&true));
+    let base = std::fs::read_to_string("../../fixtures/configs/betaflight-4.5.0.dump").unwrap();
+    for command in ["feature 3D", "feature -3D"] {
+        let d = config(&format!("{base}{command}\n"));
+        for group in ["osd", "serial"] {
+            assert!(export(&d, &request(&d, &[group])).is_ok(), "{group}");
+        }
+    }
+    for line in [
+        "feature --3D",
+        "feature -",
+        "feature 3D extra",
+        "feature bad!",
+    ] {
+        assert!(parse_line(line).is_err(), "{line}");
+    }
+}
 fn fixture(version: &str) -> ConfigDocument {
     config(
         &std::fs::read_to_string(format!("../../fixtures/configs/betaflight-{version}.dump"))
@@ -499,7 +522,7 @@ fn export_gate_still_blocks_what_the_snippet_depends_on() {
     assert!(export(&d, &request(&d, &["rates"])).is_ok());
     // Features are emitted for the OSD and serial groups, so a malformed
     // feature line blocks both and nothing else.
-    let d = config(&format!("{base}feature 3D\n"));
+    let d = config(&format!("{base}feature OSD extra\n"));
     assert!(export(&d, &request(&d, &["osd"])).is_err());
     assert!(export(&d, &request(&d, &["serial"])).is_err());
     assert!(export(&d, &request(&d, &["rates"])).is_ok());

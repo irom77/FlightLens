@@ -12,10 +12,10 @@ file holds only what is actionable now.
   masks, and unsigned 32-bit settings. The current integer model is signed 32-bit;
   source values outside it remain raw and cannot be exported. Hardware-specific
   schema entries and arrays also remain outside certified export coverage.
-- Resolve the remaining feature syntax and schema validation diagnostics in the
-  Windows DUMP_ALL corpus: the current 14-file run reports 30 errors and no
-  smoke-check failures. The 15 serial syntax errors in the original two year-based
-  backups are resolved. Enabling the 2025.12 schema exposed two additional
+- Resolve the remaining schema validation diagnostics in the Windows DUMP_ALL
+  corpus: the current 14-file run reports 16 errors and no smoke-check failures.
+  All 14 false 3D feature errors and the 15 serial syntax errors in the original
+  two year-based backups are resolved. Enabling the 2025.12 schema exposed two additional
   validation errors previously unchecked; all 14 selected rate profiles are now
   complete and all 52 observed PID profiles have complete gains.
 - Add certified cross-version parameter equivalence mappings; current parameter

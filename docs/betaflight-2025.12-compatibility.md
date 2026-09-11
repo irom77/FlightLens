@@ -63,6 +63,11 @@ exposed two previously unchecked validation errors.
 
 ## Next checkpoint
 
-Resolve the remaining feature syntax and schema validation diagnostics recorded
+The subsequent feature parser checkpoint accepts digits in names and only one
+optional disable prefix. Synthetic regression coverage verifies `3D` enable/disable
+state, last-command precedence, malformed commands, and OSD/serial export. This
+removes all 14 feature syntax errors, reducing the corpus total from 30 to 16.
+
+Resolve the remaining schema validation diagnostics recorded
 in TODO.md. Extend the explicitly deferred bound/value-model coverage separately;
 do not substitute a guessed target build for conditional definitions.

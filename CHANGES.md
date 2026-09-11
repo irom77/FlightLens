@@ -6,7 +6,10 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
-## Unreleased
+## 0.5.0 — 2026-09-11
+
+- Recognize `feature 3D` and `feature -3D` as valid CLI commands, removing false
+  syntax errors and the resulting OSD/serial snippet export blocks.
 
 - Add bundled Betaflight 2025.12 schema and rate support, including named-port
   snippet export. Verify upstream schema inputs, rate functions, and rate defaults

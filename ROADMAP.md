@@ -35,7 +35,10 @@ version bump; follow the [release policy](docs/releases/README.md).
   inputs, rate vectors, and reset defaults are verified across 2025.12.1–2025.12.5;
   custom-build defaults remain uncertified. Supported-version guidance is updated.
   Twelve settings with unresolved bounds remain excluded from export (see TODO).
-- [ ] Resolve the remaining feature syntax and schema validation diagnostics
+- [x] Accept numeric feature names such as `3D`, including disable commands.
+  Removes all 14 feature syntax errors in the Windows corpus and their false
+  OSD/serial export blocks.
+- [ ] Resolve the remaining 16 schema validation diagnostics
   tracked in [TODO.md](TODO.md).
 
 ## Phase 2 — Workspace and comparison — in progress

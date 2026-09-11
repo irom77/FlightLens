@@ -202,8 +202,12 @@ pub fn parse_line(raw: &str) -> Result<Command, String> {
             if words.len() != 2 {
                 return Err(bad());
             }
-            let name = words[1].trim_start_matches('-');
-            if name.is_empty() || !name.bytes().all(|b| b.is_ascii_uppercase() || b == b'_') {
+            let name = words[1].strip_prefix('-').unwrap_or(words[1]);
+            if name.is_empty()
+                || !name
+                    .bytes()
+                    .all(|b| b.is_ascii_uppercase() || b.is_ascii_digit() || b == b'_')
+            {
                 return Err(bad());
             }
             Ok(Command::Feature {
