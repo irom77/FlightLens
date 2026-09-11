@@ -5,7 +5,7 @@
 - Read the relevant code and repository configuration before making changes. Follow existing conventions.
 - Keep changes scoped to the requested task; avoid unrelated refactors and new dependencies unless needed.
 - Preserve existing user changes. Do not overwrite unrelated work or run destructive Git commands without explicit authorization.
-- Treat flight controller backups as read-only inputs unless the user explicitly requests modification. Keep backup contents and secrets out of logs and external services.
+- Treat flight controller backups as read-only inputs unless the user explicitly requests modification. Keep backup contents and secrets out of logs and external services. Feedback may place a redacted configuration on the user's clipboard for them to submit themselves; that is the user's action, not transmission by the app.
 - Run the checks relevant to the change using the repository's documented commands or configuration. Report any checks that could not run.
 - Summarize what changed, how it was verified, and any remaining limitations. Commit or push only when requested.
 - Keep `TODO.md` and `CHANGES.md` current as part of the work, not as a cleanup pass afterwards. Move an item out of `TODO.md` when it ships, and add what the work uncovered but did not fix.

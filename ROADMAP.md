@@ -103,15 +103,13 @@ compatibility and platform limitations documented.
 Phase 2.5 collects user-facing improvements that do not depend on the Phase 3
 telemetry pipeline. Items are independent and may ship in any order.
 
-1. [ ] Add a feedback button that submits a subject, a body, and the current
-   configuration. Route submissions to an external notification channel; the
-   channel is not fixed and any delivery target is open for consideration,
-   Discord and Gmail being examples. A maintainer reviews each submission and
-   files the GitHub issue; no issue is created automatically. Resist spam
-   structurally rather than by classification: require a parseable configuration
-   and complete fields, apply proof-of-work or a captcha, and rate-limit per
-   reporter. Sending is opt-in per report, the payload is redacted and shown
-   before transmission, and endpoint credentials stay server-side.
+1. [ ] Add a feedback button that collects a subject, a body, and optionally the
+   current configuration. The app opens a prefilled GitHub issue in the browser
+   and places a redacted configuration on the clipboard for the reporter to
+   paste, so FlightLens never transmits backup contents itself and needs no
+   server, credentials, or captcha. The reporter files the issue and maintainers
+   triage it on GitHub. Require complete fields before submitting, make the
+   configuration opt-in, and show the redacted payload before it leaves the app.
 2. [ ] Add a Throttle Curve Preview to the Rate Profile tab, alongside the
    existing Rates Preview, with Throttle Limit, Throttle MID, and Throttle EXPO
    controls, so pilots can visualize throttle response next to stick rates.
