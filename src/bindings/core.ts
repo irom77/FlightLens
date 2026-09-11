@@ -91,3 +91,50 @@ export type Inspection = { rates: Array<Curve>, osd: Array<OsdElement>, audits: 
 export type ExportRequest = { groups: Array<string>, pidProfile: number, rateProfile: number, destinationHeader: string, includeSave: boolean, };
 
 export type ValidatedSnippet = { text: string, warnings: Array<string>, additions: Array<string>, };
+
+export type Category = "identity" | "link_secret";
+
+export type Redaction = { 
+/**
+ * The setting whose value was removed, or `name` for the dump header.
+ */
+key: string, line: number, category: Category, };
+
+export type ReportKind = "bug" | "feature";
+
+export type FeedbackRequest = { kind: ReportKind, subject: string, body: string, 
+/**
+ * Whether the reporter chose to attach the open backup. Attaching is
+ * always the reporter's decision, never a default.
+ */
+includeConfig: boolean, 
+/**
+ * The running FlightLens version and host platform. The core cannot
+ * observe either, so the shell supplies both.
+ */
+appVersion: string, platform: string, };
+
+export type FeedbackReport = { 
+/**
+ * The prefilled issue URL to open in the reporter's browser.
+ */
+url: string, 
+/**
+ * The issue body as it will arrive prefilled, so the dialog can show what
+ * the browser is about to be handed.
+ */
+issueBody: string, 
+/**
+ * The redacted backup to place on the clipboard, and the same text the
+ * dialog shows for review. `None` when no configuration was attached.
+ */
+clipboard: string | null, 
+/**
+ * Every value redaction removed, so the reporter sees what is missing
+ * from what they are about to publish.
+ */
+removed: Array<Redaction>, 
+/**
+ * Whether the redacted backup is too large to paste into an issue body.
+ */
+oversized: boolean, };

@@ -195,3 +195,243 @@ pub fn redact(document: &ConfigDocument) -> RedactedConfig {
         removed,
     }
 }
+
+/// Where a report is filed. The reporter opens this in their own browser and
+/// submits it themselves, so FlightLens needs no credentials and sends nothing.
+const REPOSITORY: &str = "https://github.com/irom77/FlightLens";
+
+/// How long the prefilled issue URL may get. GitHub itself accepts a little
+/// more, but browsers and the intermediate sign-in redirect do not agree on a
+/// limit, and a URL that is silently truncated files a report missing the half
+/// that mattered. Refusing early is visible; truncation is not.
+const URL_LIMIT: usize = 8_000;
+
+/// How long a subject and a description may be. Both are bounded so the
+/// assembled URL has a chance of fitting; `URL_LIMIT` is still checked, because
+/// a description of accented or non-Latin text encodes to several times its
+/// length.
+const SUBJECT_LIMIT: usize = 120;
+const BODY_LIMIT: usize = 2_000;
+
+/// The shortest description worth filing. Not spam resistance -- nothing here
+/// reaches a server -- but a report of "broken" costs a maintainer a round trip
+/// the reporter can spare them.
+const BODY_MINIMUM: usize = 20;
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, TS, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum ReportKind {
+    Bug,
+    Feature,
+}
+
+impl ReportKind {
+    /// The GitHub label the prefilled issue carries. Maintainers retriage on
+    /// GitHub; this only saves the first sort.
+    fn label(self) -> &'static str {
+        match self {
+            ReportKind::Bug => "bug",
+            ReportKind::Feature => "enhancement",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, TS)]
+#[serde(rename_all = "camelCase")]
+pub struct FeedbackRequest {
+    pub kind: ReportKind,
+    pub subject: String,
+    pub body: String,
+    /// Whether the reporter chose to attach the open backup. Attaching is
+    /// always the reporter's decision, never a default.
+    pub include_config: bool,
+    /// The running FlightLens version and host platform. The core cannot
+    /// observe either, so the shell supplies both.
+    pub app_version: String,
+    pub platform: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, TS)]
+#[serde(rename_all = "camelCase")]
+pub struct FeedbackReport {
+    /// The prefilled issue URL to open in the reporter's browser.
+    pub url: String,
+    /// The issue body as it will arrive prefilled, so the dialog can show what
+    /// the browser is about to be handed.
+    pub issue_body: String,
+    /// The redacted backup to place on the clipboard, and the same text the
+    /// dialog shows for review. `None` when no configuration was attached.
+    pub clipboard: Option<String>,
+    /// Every value redaction removed, so the reporter sees what is missing
+    /// from what they are about to publish.
+    pub removed: Vec<Redaction>,
+    /// Whether the redacted backup is too large to paste into an issue body.
+    pub oversized: bool,
+}
+
+/// Percent-encodes a query parameter value.
+///
+/// Everything outside the unreserved set is encoded, so a description
+/// containing `&`, `#`, or a newline cannot end the parameter early and drop
+/// the rest of the report.
+fn encode(value: &str) -> String {
+    let mut encoded = String::with_capacity(value.len());
+    for byte in value.bytes() {
+        match byte {
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'.' | b'_' | b'~' => {
+                encoded.push(byte as char)
+            }
+            _ => encoded.push_str(&format!("%{byte:02X}")),
+        }
+    }
+    encoded
+}
+
+/// Why the report cannot be filed as it stands, in the order the dialog shows
+/// its fields. Empty means it can.
+///
+/// Returned as reasons rather than a bare boolean so the dialog can say why the
+/// submit button is disabled instead of leaving the reporter to guess.
+pub fn problems(request: &FeedbackRequest, has_document: bool) -> Vec<String> {
+    let subject = request.subject.trim().chars().count();
+    let body = request.body.trim().chars().count();
+    let mut problems = Vec::new();
+    if subject == 0 {
+        problems.push("Enter a subject.".into());
+    } else if subject > SUBJECT_LIMIT {
+        problems.push(format!(
+            "Shorten the subject to {SUBJECT_LIMIT} characters."
+        ));
+    }
+    if body < BODY_MINIMUM {
+        problems.push(format!(
+            "Describe the report in at least {BODY_MINIMUM} characters."
+        ));
+    } else if body > BODY_LIMIT {
+        problems.push(format!(
+            "Shorten the description to {BODY_LIMIT} characters."
+        ));
+    }
+    if request.include_config && !has_document {
+        problems.push("Open a backup, or do not attach a configuration.".into());
+    }
+    problems
+}
+
+fn counted(n: usize, one: &str, many: &str) -> String {
+    format!("{n} {}", if n == 1 { one } else { many })
+}
+
+/// A one-line summary of what redaction removed, for the maintainer reading
+/// the issue. The absent values are otherwise indistinguishable from settings
+/// the firmware never wrote.
+fn removal_note(removed: &[Redaction]) -> String {
+    let identity = removed
+        .iter()
+        .filter(|r| r.category == Category::Identity)
+        .count();
+    let secrets = removed.len() - identity;
+    format!(
+        "FlightLens replaced {} and {} with `{PLACEHOLDER}` before copying.",
+        counted(identity, "name value", "name values"),
+        counted(secrets, "radio link identity", "radio link identities")
+    )
+}
+
+/// The environment lines a maintainer needs to place the report: what was
+/// running, and what it was reading.
+fn environment(request: &FeedbackRequest, document: Option<&ConfigDocument>) -> String {
+    let mut lines = format!(
+        "- FlightLens {} on {}\n",
+        request.app_version.trim(),
+        request.platform.trim()
+    );
+    match document {
+        Some(d) => {
+            // The firmware header the backup declares, in preference to the
+            // parsed family and version: it also names the target the build was
+            // made for, and it is the line a maintainer will ask for anyway.
+            lines.push_str(&match d.firmware.header.as_deref() {
+                Some(header) => format!("- {}\n", header.trim_start_matches('#').trim()),
+                None => format!(
+                    "- {} {}\n",
+                    d.firmware.family,
+                    d.firmware.version.as_deref().unwrap_or("(no version)")
+                ),
+            });
+            if let Some(board) = &d.firmware.board_name {
+                lines.push_str(&format!("- Board {board}\n"));
+            }
+        }
+        None => lines.push_str("- No backup was open.\n"),
+    }
+    lines
+}
+
+/// The issue body as GitHub will receive it prefilled.
+fn issue_body(
+    request: &FeedbackRequest,
+    document: Option<&ConfigDocument>,
+    redacted: Option<&RedactedConfig>,
+) -> String {
+    let mut text = format!(
+        "### Description\n\n{}\n\n### Environment\n\n{}",
+        request.body.trim(),
+        environment(request, document)
+    );
+    text.push_str("\n### Configuration\n\n");
+    match redacted {
+        Some(r) if r.oversized => text.push_str(&format!(
+            "The reporter's redacted backup is {} characters, over the {ISSUE_BODY_LIMIT} \
+             an issue body holds. {} Attach it as a file instead of pasting it.\n",
+            r.text.chars().count(),
+            removal_note(&r.removed)
+        )),
+        Some(r) => text.push_str(&format!(
+            "{} Paste it from the clipboard between the lines below.\n\n```\n\n```\n",
+            removal_note(&r.removed)
+        )),
+        None => text.push_str("The reporter did not attach a configuration.\n"),
+    }
+    text
+}
+
+/// The prefilled issue URL and the clipboard text that goes with it.
+///
+/// Nothing here contacts GitHub. The URL is opened in the reporter's browser
+/// and the configuration is placed on their clipboard, so the report is filed
+/// by the reporter, under their own account, after they have read it.
+pub fn build_report(
+    request: &FeedbackRequest,
+    document: Option<&ConfigDocument>,
+) -> Result<FeedbackReport, String> {
+    let problems = problems(request, document.is_some());
+    if let Some(first) = problems.first() {
+        return Err(first.clone());
+    }
+    let redacted = request.include_config.then(|| {
+        redact(
+            document
+                .expect("problems() rejects an attached configuration without an open document"),
+        )
+    });
+    let body = issue_body(request, document, redacted.as_ref());
+    let url = format!(
+        "{REPOSITORY}/issues/new?labels={}&title={}&body={}",
+        encode(request.kind.label()),
+        encode(request.subject.trim()),
+        encode(&body)
+    );
+    if url.len() > URL_LIMIT {
+        return Err(format!(
+            "This report is too long to prefill. Shorten the description to under {BODY_LIMIT} characters."
+        ));
+    }
+    Ok(FeedbackReport {
+        url,
+        issue_body: body,
+        oversized: redacted.as_ref().is_some_and(|r| r.oversized),
+        clipboard: redacted.as_ref().map(|r| r.text.clone()),
+        removed: redacted.map(|r| r.removed).unwrap_or_default(),
+    })
+}

@@ -1017,3 +1017,115 @@ fn redaction_covers_the_names_older_firmware_spells_differently() {
         ["name", "display_name", "box_user_1_name"]
     );
 }
+
+fn report_request(kind: feedback::ReportKind, include_config: bool) -> feedback::FeedbackRequest {
+    feedback::FeedbackRequest {
+        kind,
+        subject: "Rates preview is blank".into(),
+        body: "The rates preview stays blank after importing this backup.".into(),
+        include_config,
+        app_version: "0.5.0".into(),
+        platform: "Windows 11".into(),
+    }
+}
+
+#[test]
+fn feedback_report_prefills_an_issue_without_attaching_a_backup() {
+    let d = config(&format!("{}\nset motor_poles = 14\n", header()));
+    let r = feedback::build_report(&report_request(feedback::ReportKind::Bug, false), Some(&d))
+        .unwrap();
+    assert!(r
+        .url
+        .starts_with("https://github.com/irom77/FlightLens/issues/new?labels=bug&title="));
+    assert!(r.url.contains("Rates%20preview%20is%20blank"));
+    assert!(r.issue_body.contains("stays blank after importing"));
+    // The environment names what was running and what it was reading, because
+    // a report that fits neither is one a maintainer cannot place.
+    assert!(r.issue_body.contains("- FlightLens 0.5.0 on Windows 11"));
+    assert!(r.issue_body.contains("- Betaflight / STM32F405 4.5.0"));
+    assert!(r.issue_body.contains("did not attach a configuration"));
+    assert_eq!(r.clipboard, None);
+    assert!(r.removed.is_empty() && !r.oversized);
+}
+
+#[test]
+fn feedback_report_attaches_a_redacted_backup_only_when_asked() {
+    let d = config(&format!(
+        "{}\nset craft_name = Night Hawk\nset motor_poles = 14\n",
+        header()
+    ));
+    let r =
+        feedback::build_report(&report_request(feedback::ReportKind::Bug, true), Some(&d)).unwrap();
+    let clipboard = r.clipboard.expect("configuration attached");
+    assert!(!clipboard.contains("Night Hawk"));
+    assert!(clipboard.contains("set motor_poles = 14"));
+    // The backup travels on the clipboard, never in the URL the app opens.
+    assert!(!r.url.contains("motor_poles"));
+    assert_eq!(
+        r.removed.iter().map(|x| x.key.as_str()).collect::<Vec<_>>(),
+        ["craft_name"]
+    );
+    assert!(r
+        .issue_body
+        .contains("replaced 1 name value and 0 radio link identities"));
+}
+
+#[test]
+fn feedback_report_requires_complete_fields() {
+    let d = config(&format!("{}\n", header()));
+    let mut request = report_request(feedback::ReportKind::Feature, false);
+    request.subject = "   ".into();
+    request.body = "broken".into();
+    assert_eq!(
+        feedback::problems(&request, true),
+        [
+            "Enter a subject.",
+            "Describe the report in at least 20 characters."
+        ]
+    );
+    assert!(feedback::build_report(&request, Some(&d)).is_err());
+}
+
+#[test]
+fn feedback_report_refuses_a_configuration_with_no_backup_open() {
+    let request = report_request(feedback::ReportKind::Bug, true);
+    assert_eq!(
+        feedback::problems(&request, false),
+        ["Open a backup, or do not attach a configuration."]
+    );
+    assert!(feedback::build_report(&request, None).is_err());
+    // The same report without the attachment is filed from an empty workspace.
+    assert!(
+        feedback::build_report(&report_request(feedback::ReportKind::Bug, false), None)
+            .unwrap()
+            .issue_body
+            .contains("No backup was open.")
+    );
+}
+
+#[test]
+fn feedback_report_encodes_characters_that_would_truncate_the_url() {
+    let mut request = report_request(feedback::ReportKind::Feature, false);
+    request.body = "Throttle & rates #2 break\non the second line.".into();
+    let r = feedback::build_report(&request, None).unwrap();
+    // An unencoded & would end the body parameter and a # would end the URL,
+    // filing a report missing everything after it.
+    assert!(!r.url.contains('&') || r.url.matches('&').count() == 2);
+    assert!(!r.url.contains('#'));
+    assert!(r.url.contains("%26") && r.url.contains("%23") && r.url.contains("%0A"));
+    assert!(r.url.contains("labels=enhancement"));
+}
+
+#[test]
+fn feedback_report_directs_an_oversized_backup_to_a_file_attachment() {
+    let filler = "set motor_poles = 14\n".repeat(4000);
+    let d = config(&format!("{}\n{filler}", header()));
+    let r =
+        feedback::build_report(&report_request(feedback::ReportKind::Bug, true), Some(&d)).unwrap();
+    assert!(r.oversized);
+    assert!(r.issue_body.contains("Attach it as a file"));
+    assert!(r.url.len() < 8000);
+    // The text is still offered, because the reporter may attach the copy the
+    // clipboard holds rather than retyping anything.
+    assert!(r.clipboard.is_some());
+}
