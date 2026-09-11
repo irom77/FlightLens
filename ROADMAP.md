@@ -98,6 +98,27 @@ Signing and notarization remain a separate distribution decision tracked in
 complete when the remaining workflow is implemented and verified, with saved-data
 compatibility and platform limitations documented.
 
+## Phase 2.5 — Feedback and inspection improvements
+
+Phase 2.5 collects user-facing improvements that do not depend on the Phase 3
+telemetry pipeline. Items are independent and may ship in any order.
+
+1. [ ] Add a feedback button that submits a subject, a body, and the current
+   configuration. Route submissions to an external notification channel; the
+   channel is not fixed and any delivery target is open for consideration,
+   Discord and Gmail being examples. A maintainer reviews each submission and
+   files the GitHub issue; no issue is created automatically. Resist spam
+   structurally rather than by classification: require a parseable configuration
+   and complete fields, apply proof-of-work or a captcha, and rate-limit per
+   reporter. Sending is opt-in per report, the payload is redacted and shown
+   before transmission, and endpoint credentials stay server-side.
+2. [ ] Add a Throttle Curve Preview to the Rate Profile tab, alongside the
+   existing Rates Preview, with Throttle Limit, Throttle MID, and Throttle EXPO
+   controls, so pilots can visualize throttle response next to stick rates.
+   The preview is read-only and derived from imported `thr_mid`, `thr_expo`,
+   `throttle_limit_type`, and `throttle_limit_percent` values; versions without a
+   verified throttle mapping report the preview as unavailable.
+
 ## Phase 3 — Blackbox telemetry and diagnostics
 
 Phase 3 adds the telemetry pipeline before expanding configuration adapters:
