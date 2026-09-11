@@ -2,6 +2,8 @@ import { invoke, isTauri } from "@tauri-apps/api/core";
 import type {
   Artifact,
   ExportRequest,
+  FeedbackReport,
+  FeedbackRequest,
   Inspection,
   Point,
   RestoredSession,
@@ -26,4 +28,11 @@ export const api = {
     invoke<ValidatedSnippet>("export_snippet", { configId, request }),
   save: (configId: string, request: ExportRequest) =>
     invoke<boolean>("save_snippet", { configId, request }),
+  // The report is assembled in Rust so the dialog can show exactly what the
+  // browser and the clipboard will receive, and filing rebuilds it there from
+  // the same fields rather than opening a URL the page supplies.
+  feedbackReport: (configId: string | null, request: FeedbackRequest) =>
+    invoke<FeedbackReport>("feedback_report", { configId, request }),
+  fileFeedback: (configId: string | null, request: FeedbackRequest) =>
+    invoke<void>("file_feedback_report", { configId, request }),
 };

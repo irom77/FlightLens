@@ -22,6 +22,10 @@ file holds only what is actionable now.
   comparison only classifies changes within the same supported firmware version.
   CLI collections, three-backup comparison and saved selections remain outstanding.
 - Manually check the new comparison view in packaged Windows/macOS builds.
+- Manually check the feedback hand-off in packaged Windows/macOS builds: the
+  prefilled issue must open in the default browser and the redacted
+  configuration must reach the system clipboard. Only the Linux/WSL path has
+  been exercised.
 - Complete native restore checks on Windows and macOS, including unreadable or
   disconnected sources, and check native picking, dropping, clipboard and snippet
   saving. Linux/WSL restore smoke checks passed with synthetic backups on

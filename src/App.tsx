@@ -15,6 +15,7 @@ import { api, desktopAvailable } from "./ipc/client";
 import { savedActive, tabs, useWorkspace } from "./stores/workspace";
 import { useTheme } from "./stores/theme";
 import { Comparison } from "./Comparison";
+import { Feedback } from "./Feedback";
 import { Plot } from "./Plots";
 import { OsdGlyphs } from "./OsdGlyphs";
 import logo from "./assets/flightlens-logo.svg";
@@ -37,6 +38,7 @@ export default function App() {
   const [revision, setRevision] = useState(0);
   const [comparing, setComparing] = useState(false);
   const [paste, setPaste] = useState(false);
+  const [feedback, setFeedback] = useState(false);
   const [text, setText] = useState("");
   const [label, setLabel] = useState("Pasted config 1");
   const [busy, setBusy] = useState(false);
@@ -235,6 +237,12 @@ export default function App() {
               </span>
               {theme.theme === "dark" ? "Dark" : "Light"} mode
             </button>
+            <button
+              disabled={!desktop || busy}
+              onClick={() => setFeedback(true)}
+            >
+              Send feedback
+            </button>
             <span className="pill">● Offline</span>
           </div>
         </header>
@@ -341,6 +349,13 @@ export default function App() {
           />
         )}
       </main>
+      {feedback && (
+        <Feedback
+          configId={artifact?.kind === "config" ? artifact.document.id : null}
+          documentTitle={artifact?.document.title ?? null}
+          onClose={() => setFeedback(false)}
+        />
+      )}
       {paste && (
         <div className="modal-backdrop">
           <section

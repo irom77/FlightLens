@@ -1060,6 +1060,72 @@ summary {
 .modal .actions {
   justify-content: flex-end;
 }
+.feedback-kind {
+  display: flex;
+  gap: 20px;
+  border: 0;
+  padding: 0;
+  margin: 0 0 17px;
+}
+.feedback-kind legend {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-bottom: 7px;
+}
+.feedback-kind label {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.feedback-kind input {
+  accent-color: var(--accent-strong);
+}
+.modal .feedback-description textarea {
+  height: 130px;
+}
+.feedback-preview {
+  margin-bottom: 20px;
+}
+.feedback-preview > summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.feedback-preview h3 {
+  font-size: 11px;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  margin: 16px 0 8px;
+}
+/* The review panes scroll rather than grow: a dump is thousands of lines, and
+   a dialog that cannot be scrolled past hides the button that files the
+   report. */
+.feedback-preview pre {
+  max-height: 210px;
+  overflow: auto;
+  white-space: pre-wrap;
+  padding: 14px;
+  background: var(--snippet-bg);
+  color: var(--snippet-text);
+  border: 1px solid var(--snippet-border);
+  border-radius: 6px;
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+}
+.feedback-removed {
+  max-height: 120px;
+  overflow: auto;
+  margin: 0 0 10px;
+  padding-left: 18px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.feedback-status {
+  margin-right: auto;
+  font-size: 12px;
+  color: var(--text-muted);
+}
 .invalid {
   color: var(--error-strong) !important;
 }

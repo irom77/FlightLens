@@ -2,6 +2,7 @@
 use flightlens_core::{
     analysis::{self, Inspection, Point},
     export::{self, ExportRequest, ValidatedSnippet},
+    feedback::{self, FeedbackReport, FeedbackRequest},
     source::{self, SourceRegistry},
     Artifact, ConfigDocument, RestoredSession, SourceDescriptor,
 };
@@ -13,6 +14,7 @@ use std::{
 };
 use tauri::{Emitter, Manager, State};
 use tauri_plugin_dialog::DialogExt;
+use tauri_plugin_opener::OpenerExt;
 /// How many backups a saved session may reopen. The document repository caps
 /// an open workspace at 32, so a session that grew past it could never restore
 /// in full anyway.
@@ -329,9 +331,55 @@ async fn save_snippet(
     .await
     .map_err(|_| "Save worker failed")?
 }
+/// The open backup a report attaches, or `None` when the reporter attached
+/// nothing. A report can always be filed from an empty workspace.
+fn reported_document(
+    state: &AppState,
+    config_id: Option<String>,
+) -> Result<Option<ConfigDocument>, String> {
+    config_id.map(|id| document(state, &id)).transpose()
+}
+/// Stamp the environment the report records, overwriting whatever the webview
+/// sent. The running binary knows its own version and host; a report is worth
+/// less if either can be misreported from the page.
+fn stamped(mut request: FeedbackRequest) -> FeedbackRequest {
+    request.app_version = env!("CARGO_PKG_VERSION").into();
+    request.platform = format!("{} {}", std::env::consts::OS, std::env::consts::ARCH);
+    request
+}
+/// The report the dialog shows for review: the issue body, and the redacted
+/// backup with the list of what redaction removed.
+#[tauri::command]
+fn feedback_report(
+    config_id: Option<String>,
+    request: FeedbackRequest,
+    state: State<AppState>,
+) -> Result<FeedbackReport, String> {
+    let document = reported_document(&state, config_id)?;
+    feedback::build_report(&stamped(request), document.as_ref())
+}
+/// Open the prefilled issue in the reporter's browser.
+///
+/// The report is assembled here from the fields the reporter typed rather than
+/// from a URL the webview supplies, so the webview cannot ask the browser to
+/// open an address of its own choosing. Filing the issue remains the reporter's
+/// action on GitHub; FlightLens sends nothing.
+#[tauri::command]
+fn file_feedback_report(
+    config_id: Option<String>,
+    request: FeedbackRequest,
+    app: tauri::AppHandle,
+) -> Result<(), String> {
+    let document = reported_document(&app.state::<AppState>(), config_id)?;
+    let report = feedback::build_report(&stamped(request), document.as_ref())?;
+    app.opener()
+        .open_url(report.url, None::<&str>)
+        .map_err(|_| "Cannot open a browser for the report".into())
+}
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_opener::init())
         .manage(AppState::default())
         .on_window_event(|window, event| {
             if let tauri::WindowEvent::DragDrop(tauri::DragDropEvent::Drop { paths, .. }) = event {
@@ -361,7 +409,9 @@ fn main() {
             inspect_config,
             filter_plot,
             export_snippet,
-            save_snippet
+            save_snippet,
+            feedback_report,
+            file_feedback_report
         ])
         .run(tauri::generate_context!())
         .expect("FlightLens could not start");

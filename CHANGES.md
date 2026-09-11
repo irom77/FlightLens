@@ -6,6 +6,15 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## Unreleased
+
+- Send feedback from inside the app: a subject, a description, and optionally
+  the open configuration. FlightLens opens a prefilled GitHub issue in your
+  browser and copies the configuration to your clipboard for you to paste; it
+  transmits nothing itself and needs no account or server. Names and radio link
+  identities are replaced before copying, and everything that leaves the app is
+  shown for review first.
+
 ## 0.5.0 — 2026-09-11
 
 - Recognize `feature 3D` and `feature -3D` as valid CLI commands, removing false
