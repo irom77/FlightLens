@@ -930,3 +930,90 @@ fn year_based_schema_defaults_and_bounds_are_verified() {
         assert!(!pack.parameters[key].exportable(), "{key}");
     }
 }
+
+#[test]
+fn redaction_removes_identifying_and_link_secret_values() {
+    let d = config(&format!(
+        "{}\n# name: Night Hawk\nset craft_name = Night Hawk\nset pilot_name = Alex\n\
+         set expresslrs_uid = 123,45,67,89,10,11\nset srxl2_unit_id = 3\nset motor_poles = 14\n",
+        header()
+    ));
+    let r = feedback::redact(&d);
+    for secret in ["Night Hawk", "Alex", "123,45,67,89,10,11"] {
+        assert!(!r.text.contains(secret), "{secret} survived redaction");
+    }
+    // A link identity and an ordinary numeric setting can hold the same value,
+    // so the listed key must be removed while the unlisted one is preserved.
+    assert!(r.text.contains("set srxl2_unit_id = <redacted>"));
+    assert!(r.text.contains("set motor_poles = 14"));
+    assert_eq!(
+        r.removed
+            .iter()
+            .map(|x| (x.key.as_str(), x.category))
+            .collect::<Vec<_>>(),
+        [
+            ("name", feedback::Category::Identity),
+            ("craft_name", feedback::Category::Identity),
+            ("pilot_name", feedback::Category::Identity),
+            ("expresslrs_uid", feedback::Category::LinkSecret),
+            ("srxl2_unit_id", feedback::Category::LinkSecret),
+        ]
+    );
+    assert!(!r.oversized);
+}
+
+#[test]
+fn redaction_preserves_every_line_and_its_number() {
+    let text = format!(
+        "{}\nset craft_name = Hawk\n\n# a comment\nset motor_poles = 14\nnonsense line\n",
+        header()
+    );
+    let d = config(&text);
+    let r = feedback::redact(&d);
+    assert_eq!(r.text.lines().count(), text.lines().count());
+    // A line the parser rejected is the defect a report is most likely about,
+    // so it has to survive verbatim.
+    assert!(r.text.contains("nonsense line"));
+    for x in &r.removed {
+        assert_eq!(
+            r.text.lines().nth(x.line as usize - 1).unwrap().trim(),
+            "set craft_name = <redacted>"
+        );
+    }
+}
+
+#[test]
+fn redaction_leaves_a_document_without_secrets_unchanged() {
+    let text = format!("{}\nset motor_poles = 14\nfeature OSD\n", header());
+    let r = feedback::redact(&config(&text));
+    assert_eq!(r.text, text);
+    assert!(r.removed.is_empty());
+}
+
+#[test]
+fn redaction_reports_a_backup_too_large_for_an_issue_body() {
+    let filler = "set motor_poles = 14\n".repeat(4000);
+    let d = config(&format!("{}\n{filler}", header()));
+    assert!(d.syntax.len() > 4000);
+    assert!(feedback::redact(&d).oversized);
+}
+
+#[test]
+fn redaction_covers_the_names_older_firmware_spells_differently() {
+    // Betaflight 4.2 and 4.3 write `name` and `display_name` where 4.4 and
+    // later write `craft_name` and `pilot_name`, and only 4.2 has the
+    // `box_user_*_name` labels. A list built from the newest schema alone
+    // leaves the craft name in plain sight in an older backup.
+    let d = config(
+        "# Betaflight / STM32F405 4.2.0\nset name = Night Hawk\n\
+         set display_name = Alex\nset box_user_1_name = Mine\n",
+    );
+    let r = feedback::redact(&d);
+    for secret in ["Night Hawk", "Alex", "Mine"] {
+        assert!(!r.text.contains(secret), "{secret} survived redaction");
+    }
+    assert_eq!(
+        r.removed.iter().map(|x| x.key.as_str()).collect::<Vec<_>>(),
+        ["name", "display_name", "box_user_1_name"]
+    );
+}

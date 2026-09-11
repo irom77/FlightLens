@@ -2,6 +2,7 @@
 pub mod analysis;
 pub mod compatibility;
 pub mod export;
+pub mod feedback;
 pub mod model;
 pub mod parser;
 pub mod source;
