@@ -192,7 +192,7 @@ fn hash_identity_and_read_only() {
 }
 #[test]
 fn pinned_versions_and_rate_reference() {
-    for v in ["4.3.0", "4.4.0", "4.5.0"] {
+    for v in ["4.3.0", "4.4.0", "4.5.0", "2025.12.1"] {
         let d = fixture(v);
         assert_eq!(d.firmware.version.as_deref(), Some(v));
         assert!(d.firmware.pack_id.is_some());
@@ -359,7 +359,7 @@ fn vtx_export_requires_a_complete_explicit_table() {
 }
 #[test]
 fn all_export_groups_reparse_for_each_certified_tag() {
-    for v in ["4.3.0", "4.4.0", "4.5.0"] {
+    for v in ["4.3.0", "4.4.0", "4.5.0", "2025.12.1"] {
         let d = fixture(v);
         for group in ["rates", "pids_filters", "modes", "serial", "osd"] {
             assert!(
@@ -849,9 +849,10 @@ fn named_serial_ports_and_numeric_aliases_preserve_identity() {
     assert_eq!(d.ports[1].name, "UART 1");
     assert_eq!(d.ports[1].functions, vec!["Gimbal"]);
     assert!(!d.diagnostics.iter().any(|d| d.severity == "error"));
-    assert!(export(&d, &request(&d, &["serial"]))
-        .unwrap_err()
-        .contains("compatibility pack"));
+    let snippet = export(&d, &request(&d, &["serial"])).unwrap();
+    assert!(snippet.text.contains("serial UART0 1"));
+    assert!(snippet.text.contains("serial UART1 262144"));
+    assert_eq!(config(&snippet.text).ports.len(), 4);
     for token in ["UART11", "UART01", "SOFT0", "PIOUART10", "unknown"] {
         assert!(parse_line(&format!("serial {token} 1 115200 0 0 0")).is_err());
     }
@@ -864,4 +865,45 @@ fn named_serial_ports_and_numeric_aliases_preserve_identity() {
         .contains("serial 0 64"));
     let invalid_old = with("serial UART0 1 115200 0 0 0\n");
     assert!(export(&invalid_old, &request(&invalid_old, &["serial"])).is_err());
+}
+
+#[test]
+fn year_based_schema_defaults_and_bounds_are_verified() {
+    for patch in 1..=5 {
+        let version = format!("2025.12.{patch}");
+        let d = config(&format!(
+            "# Betaflight / STM32F405 {version}\ndefaults nosave\nrateprofile 0\n"
+        ));
+        assert!(compatibility::defaults_certified(&version));
+        assert_eq!(d.derived["rate:0:thr_hover"].value.cli(), "50");
+        assert!(rates(&d, 0).iter().all(|c| c.reason.is_none()));
+    }
+    for version in [
+        "2025.12.3-alpha.KAACK_V19",
+        "2025.12.99",
+        "2025.12.1+custom",
+    ] {
+        let d = config(&format!(
+            "# Betaflight / STM32F405 {version}\ndefaults nosave\nrateprofile 0\n"
+        ));
+        assert!(d.firmware.pack_id.is_some());
+        assert!(!compatibility::defaults_certified(version));
+        assert!(d.derived.is_empty());
+        assert!(rates(&d, 0).iter().all(|c| c.points.is_empty()));
+    }
+    let pack = compatibility::pack(Some("2025.12.3")).unwrap();
+    for (key, valid, invalid) in [
+        ("align_board_roll", "-180", "-181"),
+        ("f_roll", "1000", "1001"),
+        ("vtx_channel", "8", "9"),
+        ("gps_lap_timer_gate_lat", "-900000000", "900000001"),
+        ("ledstrip_race_color", "WHITE", "NOT_A_COLOR"),
+    ] {
+        let schema = &pack.parameters[key];
+        assert!(schema.parse(valid).1, "{key}");
+        assert!(!schema.parse(invalid).1, "{key}");
+    }
+    for key in ["osd_warn_bitmask", "osd_profile", "tpa_low_rate"] {
+        assert!(!pack.parameters[key].exportable(), "{key}");
+    }
 }

@@ -1,0 +1,6712 @@
+{
+  "baseline": null,
+  "defaults": {
+    "reset_sha256": "aa019675df66f7c5d90f31166a4027b7ea5fee2629ef498b5d5dbe5d7cd48e34",
+    "source": "fc/controlrate_profile.c pgResetFn_controlRateProfiles",
+    "values": {
+      "pitch_expo": "0",
+      "pitch_rate_limit": "1998",
+      "pitch_rc_rate": "7",
+      "pitch_srate": "67",
+      "quickrates_rc_expo": "OFF",
+      "rates_type": "ACTUAL",
+      "roll_expo": "0",
+      "roll_rate_limit": "1998",
+      "roll_rc_rate": "7",
+      "roll_srate": "67",
+      "thr_expo": "0",
+      "thr_hover": "50",
+      "thr_mid": "50",
+      "throttle_limit_percent": "100",
+      "throttle_limit_type": "OFF",
+      "yaw_expo": "0",
+      "yaw_rate_limit": "1998",
+      "yaw_rc_rate": "7",
+      "yaw_srate": "67"
+    },
+    "verified": [
+      {
+        "sha256": "81885ec3ae55e5dbfc7f50bd27fec4b9e67ec63002dae34e7aba204dcb80174e",
+        "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/fc/controlrate_profile.c",
+        "version": "2025.12.1"
+      },
+      {
+        "sha256": "81885ec3ae55e5dbfc7f50bd27fec4b9e67ec63002dae34e7aba204dcb80174e",
+        "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/fc/controlrate_profile.c",
+        "version": "2025.12.2"
+      },
+      {
+        "sha256": "81885ec3ae55e5dbfc7f50bd27fec4b9e67ec63002dae34e7aba204dcb80174e",
+        "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/fc/controlrate_profile.c",
+        "version": "2025.12.3"
+      },
+      {
+        "sha256": "81885ec3ae55e5dbfc7f50bd27fec4b9e67ec63002dae34e7aba204dcb80174e",
+        "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/fc/controlrate_profile.c",
+        "version": "2025.12.4"
+      },
+      {
+        "sha256": "81885ec3ae55e5dbfc7f50bd27fec4b9e67ec63002dae34e7aba204dcb80174e",
+        "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/fc/controlrate_profile.c",
+        "version": "2025.12.5"
+      }
+    ]
+  },
+  "id": "betaflight-2025.12.1-schema-1",
+  "notice": "Schema does not certify build features or defaults. GPL-3.0-or-later; derived from Betaflight.",
+  "parameters": {
+    "3d_deadband_high": {
+      "kind": "integer",
+      "max": 2250,
+      "min": 1500,
+      "scope": "global",
+      "values": []
+    },
+    "3d_deadband_low": {
+      "kind": "integer",
+      "max": 1500,
+      "min": 750,
+      "scope": "global",
+      "values": []
+    },
+    "3d_deadband_throttle": {
+      "kind": "integer",
+      "max": 100,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "3d_limit_high": {
+      "kind": "integer",
+      "max": 2250,
+      "min": 1500,
+      "scope": "global",
+      "values": []
+    },
+    "3d_limit_low": {
+      "kind": "integer",
+      "max": 1500,
+      "min": 750,
+      "scope": "global",
+      "values": []
+    },
+    "3d_neutral": {
+      "kind": "integer",
+      "max": 2250,
+      "min": 750,
+      "scope": "global",
+      "values": []
+    },
+    "3d_switched_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "abs_control_cutoff": {
+      "kind": "integer",
+      "max": 45,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "abs_control_error_limit": {
+      "kind": "integer",
+      "max": 45,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "abs_control_gain": {
+      "kind": "integer",
+      "max": 20,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "abs_control_limit": {
+      "kind": "integer",
+      "max": 255,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "acc_calibration": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "acc_hardware": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AUTO",
+        "NONE",
+        "MPU6050",
+        "MPU6000",
+        "MPU6500",
+        "MPU9250",
+        "ICM20601",
+        "ICM20602",
+        "ICM20608G",
+        "ICM20649",
+        "ICM20689",
+        "ICM42605",
+        "ICM42688P",
+        "BMI160",
+        "BMI270",
+        "LSM6DSO",
+        "LSM6DSV16X",
+        "IIM42653",
+        "ICM45605",
+        "ICM45686",
+        "ICM40609D",
+        "IIM42652",
+        "VIRTUAL"
+      ]
+    },
+    "acc_high_range": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "acc_limit": {
+      "kind": "integer",
+      "max": 500,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "acc_limit_yaw": {
+      "kind": "integer",
+      "max": 500,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "acc_lpf_hz": {
+      "kind": "integer",
+      "max": 500,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "acc_trim_pitch": {
+      "kind": "integer",
+      "max": 300,
+      "min": -300,
+      "scope": "global",
+      "values": []
+    },
+    "acc_trim_roll": {
+      "kind": "integer",
+      "max": 300,
+      "min": -300,
+      "scope": "global",
+      "values": []
+    },
+    "acro_trainer_angle_limit": {
+      "kind": "integer",
+      "max": 80,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "acro_trainer_debug_axis": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "ROLL",
+        "PITCH"
+      ]
+    },
+    "acro_trainer_gain": {
+      "kind": "integer",
+      "max": 255,
+      "min": 25,
+      "scope": "pid",
+      "values": []
+    },
+    "acro_trainer_lookahead_ms": {
+      "kind": "integer",
+      "max": 200,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "adc_tempsensor_calibration110": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "adc_tempsensor_calibration30": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "adc_vrefint_calibration": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "airmode_start_throttle_percent": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "align_board_pitch": {
+      "kind": "integer",
+      "max": 360,
+      "min": -180,
+      "scope": "global",
+      "values": []
+    },
+    "align_board_roll": {
+      "kind": "integer",
+      "max": 360,
+      "min": -180,
+      "scope": "global",
+      "values": []
+    },
+    "align_board_yaw": {
+      "kind": "integer",
+      "max": 360,
+      "min": -180,
+      "scope": "global",
+      "values": []
+    },
+    "alt_hold_climb_rate": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "alt_hold_deadband": {
+      "kind": "integer",
+      "max": 70,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "altitude_d_lpf": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 10,
+      "scope": "global",
+      "values": []
+    },
+    "altitude_lpf": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 10,
+      "scope": "global",
+      "values": []
+    },
+    "altitude_prefer_baro": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "altitude_source": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "DEFAULT",
+        "BARO_ONLY",
+        "GPS_ONLY"
+      ]
+    },
+    "angle_earth_ref": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "angle_feedforward": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "angle_feedforward_smoothing_ms": {
+      "kind": "integer",
+      "max": 250,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "angle_limit": {
+      "kind": "integer",
+      "max": 80,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "angle_p_gain": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "angle_pitch_offset": {
+      "kind": "integer",
+      "max": 450,
+      "min": -450,
+      "scope": "pid",
+      "values": []
+    },
+    "anti_gravity_cutoff_hz": {
+      "kind": "integer",
+      "max": 50,
+      "min": 2,
+      "scope": "pid",
+      "values": []
+    },
+    "anti_gravity_gain": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "anti_gravity_p_gain": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "ap_altitude_d": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ap_altitude_f": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ap_altitude_i": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ap_altitude_p": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ap_hover_throttle": {
+      "kind": "integer",
+      "max": 1700,
+      "min": 1100,
+      "scope": "global",
+      "values": []
+    },
+    "ap_landing_altitude_m": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ap_max_angle": {
+      "kind": "integer",
+      "max": 70,
+      "min": 10,
+      "scope": "global",
+      "values": []
+    },
+    "ap_position_a": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ap_position_cutoff": {
+      "kind": "integer",
+      "max": 250,
+      "min": 10,
+      "scope": "global",
+      "values": []
+    },
+    "ap_position_d": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ap_position_i": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ap_position_p": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ap_throttle_max": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 1400,
+      "scope": "global",
+      "values": []
+    },
+    "ap_throttle_min": {
+      "kind": "integer",
+      "max": 1400,
+      "min": 1050,
+      "scope": "global",
+      "values": []
+    },
+    "auto_disarm_delay": {
+      "kind": "integer",
+      "max": 60,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "auto_profile_cell_count": {
+      "kind": "integer",
+      "max": 8,
+      "min": -1,
+      "scope": "pid",
+      "values": []
+    },
+    "baro_hardware": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AUTO",
+        "NONE",
+        "BMP085",
+        "MS5611",
+        "BMP280",
+        "LPS",
+        "QMP6988",
+        "BMP388",
+        "DPS310",
+        "2SMPB_02B",
+        "LPS22DF",
+        "VIRTUAL"
+      ]
+    },
+    "bat_capacity": {
+      "kind": "integer",
+      "max": 20000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "battery_continue": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "beeper_dshot_beacon_tone": {
+      "kind": "integer",
+      "max": 5,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "blackbox_disable_acc": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_disable_alt": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_disable_attitude": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_disable_bat": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_disable_debug": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_disable_gps": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_disable_gyro": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_disable_gyrounfilt": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_disable_mag": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_disable_motors": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_disable_pids": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_disable_rc": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_disable_rpm": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_disable_rssi": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_disable_servos": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_disable_setpoint": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_high_resolution": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "blackbox_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "NORMAL",
+        "MOTOR_TEST",
+        "ALWAYS"
+      ]
+    },
+    "blackbox_sample_rate": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "1/1",
+        "1/2",
+        "1/4",
+        "1/8",
+        "1/16"
+      ]
+    },
+    "camera_control_button_resistance": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "camera_control_internal_resistance": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 10,
+      "scope": "global",
+      "values": []
+    },
+    "camera_control_inverted": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "camera_control_key_delay": {
+      "kind": "integer",
+      "max": 500,
+      "min": 100,
+      "scope": "global",
+      "values": []
+    },
+    "camera_control_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "HARDWARE_PWM",
+        "SOFTWARE_PWM",
+        "DAC"
+      ]
+    },
+    "camera_control_ref_voltage": {
+      "kind": "integer",
+      "max": 400,
+      "min": 200,
+      "scope": "global",
+      "values": []
+    },
+    "cbat_alert_percent": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "channel_forwarding_start": {
+      "kind": "integer",
+      "max": 18,
+      "min": 4,
+      "scope": "global",
+      "values": []
+    },
+    "chirp_amplitude_pitch": {
+      "kind": "integer",
+      "max": 500,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "chirp_amplitude_roll": {
+      "kind": "integer",
+      "max": 500,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "chirp_amplitude_yaw": {
+      "kind": "integer",
+      "max": 500,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "chirp_frequency_end_deci_hz": {
+      "kind": "integer",
+      "max": 10000,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "chirp_frequency_start_deci_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "chirp_lag_freq_hz": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "chirp_lead_freq_hz": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "chirp_time_seconds": {
+      "kind": "integer",
+      "max": 255,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "cpu_late_limit_permille": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "cpu_overclock": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "192MHZ",
+        "216MHZ",
+        "240MHZ",
+        "108MHZ",
+        "120MHZ",
+        "240MHZ",
+        "192MHZ",
+        "216MHZ",
+        "240MHZ"
+      ]
+    },
+    "craft_name": {
+      "kind": "string",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "crash_delay": {
+      "kind": "integer",
+      "max": 500,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "crash_dthreshold": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "crash_gthreshold": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 100,
+      "scope": "pid",
+      "values": []
+    },
+    "crash_limit_yaw": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "crash_recovery": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON",
+        "BEEP",
+        "DISARM"
+      ]
+    },
+    "crash_recovery_angle": {
+      "kind": "integer",
+      "max": 30,
+      "min": 5,
+      "scope": "pid",
+      "values": []
+    },
+    "crash_recovery_rate": {
+      "kind": "integer",
+      "max": 255,
+      "min": 50,
+      "scope": "pid",
+      "values": []
+    },
+    "crash_setpoint_threshold": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 50,
+      "scope": "pid",
+      "values": []
+    },
+    "crash_time": {
+      "kind": "integer",
+      "max": 5000,
+      "min": 100,
+      "scope": "pid",
+      "values": []
+    },
+    "crashflip_auto_rearm": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "crashflip_motor_percent": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "crashflip_rate": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "crsf_use_negotiated_baud": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "d_max_advance": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "d_max_gain": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "d_max_pitch": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "d_max_roll": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "d_max_yaw": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "d_pitch": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "d_roll": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "d_yaw": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "deadband": {
+      "kind": "integer",
+      "max": 32,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "debug_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "NONE",
+        "CYCLETIME",
+        "BATTERY",
+        "GYRO_FILTERED",
+        "ACCELEROMETER",
+        "PIDLOOP",
+        "RC_INTERPOLATION",
+        "ANGLERATE",
+        "ESC_SENSOR",
+        "SCHEDULER",
+        "STACK",
+        "ESC_SENSOR_RPM",
+        "ESC_SENSOR_TMP",
+        "ALTITUDE",
+        "FFT",
+        "FFT_TIME",
+        "FFT_FREQ",
+        "RX_FRSKY_SPI",
+        "RX_SFHSS_SPI",
+        "GYRO_RAW",
+        "MULTI_GYRO_RAW",
+        "MULTI_GYRO_DIFF",
+        "MAX7456_SIGNAL",
+        "MAX7456_SPICLOCK",
+        "SBUS",
+        "FPORT",
+        "RANGEFINDER",
+        "RANGEFINDER_QUALITY",
+        "OPTICALFLOW",
+        "LIDAR_TF",
+        "ADC_INTERNAL",
+        "RUNAWAY_TAKEOFF",
+        "SDIO",
+        "CURRENT_SENSOR",
+        "USB",
+        "SMARTAUDIO",
+        "RTH",
+        "ITERM_RELAX",
+        "ACRO_TRAINER",
+        "RC_SMOOTHING",
+        "RX_SIGNAL_LOSS",
+        "RC_SMOOTHING_RATE",
+        "ANTI_GRAVITY",
+        "DYN_LPF",
+        "RX_SPEKTRUM_SPI",
+        "DSHOT_RPM_TELEMETRY",
+        "RPM_FILTER",
+        "D_MAX",
+        "AC_CORRECTION",
+        "AC_ERROR",
+        "MULTI_GYRO_SCALED",
+        "DSHOT_RPM_ERRORS",
+        "CRSF_LINK_STATISTICS_UPLINK",
+        "CRSF_LINK_STATISTICS_PWR",
+        "CRSF_LINK_STATISTICS_DOWN",
+        "BARO",
+        "AUTOPILOT_ALTITUDE",
+        "DYN_IDLE",
+        "FEEDFORWARD_LIMIT",
+        "FEEDFORWARD",
+        "BLACKBOX_OUTPUT",
+        "GYRO_SAMPLE",
+        "RX_TIMING",
+        "D_LPF",
+        "VTX_TRAMP",
+        "GHST",
+        "GHST_MSP",
+        "SCHEDULER_DETERMINISM",
+        "TIMING_ACCURACY",
+        "RX_EXPRESSLRS_SPI",
+        "RX_EXPRESSLRS_PHASELOCK",
+        "RX_STATE_TIME",
+        "GPS_RESCUE_VELOCITY",
+        "GPS_RESCUE_HEADING",
+        "GPS_RESCUE_TRACKING",
+        "GPS_CONNECTION",
+        "ATTITUDE",
+        "VTX_MSP",
+        "GPS_DOP",
+        "FAILSAFE",
+        "GYRO_CALIBRATION",
+        "ANGLE_MODE",
+        "ANGLE_TARGET",
+        "CURRENT_ANGLE",
+        "DSHOT_TELEMETRY_COUNTS",
+        "RPM_LIMIT",
+        "RC_STATS",
+        "MAG_CALIB",
+        "MAG_TASK_RATE",
+        "EZLANDING",
+        "TPA",
+        "S_TERM",
+        "SPA",
+        "TASK",
+        "GIMBAL",
+        "WING_SETPOINT",
+        "AUTOPILOT_POSITION",
+        "CHIRP",
+        "FLASH_TEST_PRBS",
+        "MAVLINK_TELEMETRY"
+      ]
+    },
+    "displayport_max7456_blk": {
+      "kind": "integer",
+      "max": 3,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "displayport_max7456_col_adjust": {
+      "kind": "integer",
+      "max": 0,
+      "min": -6,
+      "scope": "global",
+      "values": []
+    },
+    "displayport_max7456_inv": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "displayport_max7456_row_adjust": {
+      "kind": "integer",
+      "max": 0,
+      "min": -3,
+      "scope": "global",
+      "values": []
+    },
+    "displayport_max7456_wht": {
+      "kind": "integer",
+      "max": 3,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "displayport_msp_col_adjust": {
+      "kind": "integer",
+      "max": 0,
+      "min": -6,
+      "scope": "global",
+      "values": []
+    },
+    "displayport_msp_fonts": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "displayport_msp_row_adjust": {
+      "kind": "integer",
+      "max": 0,
+      "min": -3,
+      "scope": "global",
+      "values": []
+    },
+    "displayport_msp_use_device_blink": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "dshot_bidir": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "dshot_edt": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON",
+        "FORCE"
+      ]
+    },
+    "dterm_lpf1_dyn_expo": {
+      "kind": "integer",
+      "max": 10,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dterm_lpf1_dyn_max_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dterm_lpf1_dyn_min_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dterm_lpf1_static_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dterm_lpf1_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "PT1",
+        "BIQUAD",
+        "PT2",
+        "PT3"
+      ]
+    },
+    "dterm_lpf2_static_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dterm_lpf2_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "PT1",
+        "BIQUAD",
+        "PT2",
+        "PT3"
+      ]
+    },
+    "dterm_notch_cutoff": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dterm_notch_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dyn_idle_d_gain": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dyn_idle_i_gain": {
+      "kind": "integer",
+      "max": 250,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "dyn_idle_max_increase": {
+      "kind": "integer",
+      "max": 255,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "dyn_idle_min_rpm": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "dyn_idle_p_gain": {
+      "kind": "integer",
+      "max": 250,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "dyn_notch_count": {
+      "kind": "integer",
+      "max": 7,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "dyn_notch_max_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 200,
+      "scope": "global",
+      "values": []
+    },
+    "dyn_notch_min_hz": {
+      "kind": "integer",
+      "max": 250,
+      "min": 20,
+      "scope": "global",
+      "values": []
+    },
+    "dyn_notch_q": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "enable_stick_arming": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "esc_sensor_current_offset": {
+      "kind": "integer",
+      "max": 16000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "esc_sensor_halfduplex": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "expresslrs_domain": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AU433",
+        "AU915",
+        "EU433",
+        "EU868",
+        "IN866",
+        "FCC915",
+        "ISM2400",
+        "CE2400",
+        "NONE"
+      ]
+    },
+    "expresslrs_model_id": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "expresslrs_uid": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "ez_landing_limit": {
+      "kind": "integer",
+      "max": 75,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "ez_landing_speed": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "ez_landing_threshold": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "f_pitch": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "f_roll": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "f_yaw": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "failsafe_delay": {
+      "kind": "integer",
+      "max": 200,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "failsafe_landing_time": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "failsafe_procedure": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AUTO-LAND",
+        "DROP",
+        "GPS-RESCUE"
+      ]
+    },
+    "failsafe_recovery_delay": {
+      "kind": "integer",
+      "max": 200,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "failsafe_stick_threshold": {
+      "kind": "integer",
+      "max": 50,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "failsafe_switch_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "STAGE1",
+        "KILL",
+        "STAGE2"
+      ]
+    },
+    "failsafe_throttle": {
+      "kind": "integer",
+      "max": 2250,
+      "min": 750,
+      "scope": "global",
+      "values": []
+    },
+    "failsafe_throttle_low_delay": {
+      "kind": "integer",
+      "max": 300,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "feedforward_averaging": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "2_POINT",
+        "3_POINT",
+        "4_POINT"
+      ]
+    },
+    "feedforward_boost": {
+      "kind": "integer",
+      "max": 50,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "feedforward_jitter_factor": {
+      "kind": "integer",
+      "max": 20,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "feedforward_max_rate_limit": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "feedforward_smooth_factor": {
+      "kind": "integer",
+      "max": 95,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "feedforward_transition": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "feedforward_yaw_hold_gain": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "feedforward_yaw_hold_time": {
+      "kind": "integer",
+      "max": 250,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "flysky_spi_rf_channels": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "flysky_spi_tx_id": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "force_battery_cell_count": {
+      "kind": "integer",
+      "max": 24,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "fpv_mix_degrees": {
+      "kind": "integer",
+      "max": 90,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_default_lat": {
+      "kind": "integer",
+      "max": 9000,
+      "min": -9000,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_default_long": {
+      "kind": "integer",
+      "max": 18000,
+      "min": -18000,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_gps_format": {
+      "kind": "integer",
+      "max": 1,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_spi_a1_source": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "VBAT",
+        "EXTADC",
+        "CONST"
+      ]
+    },
+    "frsky_spi_autobind": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "frsky_spi_bind_hop_data": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_spi_offset": {
+      "kind": "integer",
+      "max": 127,
+      "min": -127,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_spi_tx_id": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_unit": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "IMPERIAL",
+        "METRIC",
+        "BRITISH"
+      ]
+    },
+    "frsky_vfas_precision": {
+      "kind": "integer",
+      "max": 1,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "frsky_x_rx_num": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "NORMAL",
+        "MIXTILT"
+      ]
+    },
+    "gimbal_pitch_gain": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_pitch_high_limit": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_pitch_low_limit": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_pitch_offset": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_pitch_rc_high_gain": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_pitch_rc_low_gain": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_pitch_rc_thr_gain": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_roll_gain": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_roll_limit": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_roll_offset": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_roll_rc_gain": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_sensitivity": {
+      "kind": "integer",
+      "max": 15,
+      "min": -16,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_stabilisation": {
+      "kind": "integer",
+      "max": 7,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_yaw_gain": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_yaw_limit": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_yaw_offset": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "gimbal_yaw_rc_gain": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "gps_auto_baud": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gps_auto_config": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gps_lap_timer_gate_lat": {
+      "kind": "integer",
+      "max": 900000000,
+      "min": -900000000,
+      "scope": "global",
+      "values": []
+    },
+    "gps_lap_timer_gate_lon": {
+      "kind": "integer",
+      "max": 1800000000,
+      "min": -1800000000,
+      "scope": "global",
+      "values": []
+    },
+    "gps_lap_timer_gate_tolerance_m": {
+      "kind": "integer",
+      "max": 100,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "gps_lap_timer_min_lap_time_s": {
+      "kind": "integer",
+      "max": 3000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_nmea_custom_commands": {
+      "kind": "string",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "gps_provider": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "NMEA",
+        "UBLOX",
+        "MSP",
+        "VIRTUAL"
+      ]
+    },
+    "gps_rescue_allow_arming_without_fix": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gps_rescue_alt_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "MAX_ALT",
+        "FIXED_ALT",
+        "CURRENT_ALT"
+      ]
+    },
+    "gps_rescue_ascend_rate": {
+      "kind": "integer",
+      "max": 2500,
+      "min": 50,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_descend_rate": {
+      "kind": "integer",
+      "max": 500,
+      "min": 25,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_descent_dist": {
+      "kind": "integer",
+      "max": 500,
+      "min": 10,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_disarm_threshold": {
+      "kind": "integer",
+      "max": 250,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_ground_speed": {
+      "kind": "integer",
+      "max": 3000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_imu_yaw_gain": {
+      "kind": "integer",
+      "max": 20,
+      "min": 5,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_initial_climb": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_max_angle": {
+      "kind": "integer",
+      "max": 60,
+      "min": 30,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_min_sats": {
+      "kind": "integer",
+      "max": 50,
+      "min": 5,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_min_start_dist": {
+      "kind": "integer",
+      "max": 30,
+      "min": 10,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_pitch_cutoff": {
+      "kind": "integer",
+      "max": 255,
+      "min": 10,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_return_alt": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 5,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_roll_mix": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_sanity_checks": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "RESCUE_SANITY_OFF",
+        "RESCUE_SANITY_ON",
+        "RESCUE_SANITY_FS_ONLY"
+      ]
+    },
+    "gps_rescue_use_mag": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gps_rescue_velocity_d": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_velocity_i": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_velocity_p": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_rescue_yaw_p": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gps_sbas_integrity": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gps_sbas_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AUTO",
+        "EGNOS",
+        "WAAS",
+        "MSAS",
+        "GAGAN",
+        "NONE"
+      ]
+    },
+    "gps_set_home_point_once": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gps_ublox_acquire_model": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "PORTABLE",
+        "STATIONARY",
+        "PEDESTRIAN",
+        "AUTOMOTIVE",
+        "AT_SEA",
+        "AIRBORNE_1G",
+        "AIRBORNE_2G",
+        "AIRBORNE_4G"
+      ]
+    },
+    "gps_ublox_flight_model": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "PORTABLE",
+        "STATIONARY",
+        "PEDESTRIAN",
+        "AUTOMOTIVE",
+        "AT_SEA",
+        "AIRBORNE_1G",
+        "AIRBORNE_2G",
+        "AIRBORNE_4G"
+      ]
+    },
+    "gps_ublox_use_galileo": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gps_ublox_utc_standard": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AUTO",
+        "USNO",
+        "EU",
+        "SU",
+        "NTSC"
+      ]
+    },
+    "gps_update_rate_hz": {
+      "kind": "integer",
+      "max": 20,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "gps_use_3d_speed": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gyro_cal_on_first_arm": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gyro_calib_duration": {
+      "kind": "integer",
+      "max": 3000,
+      "min": 50,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_calib_noise_limit": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_filter_debug_axis": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "ROLL",
+        "PITCH",
+        "YAW"
+      ]
+    },
+    "gyro_hardware_lpf": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "NORMAL",
+        "OPTION_1",
+        "OPTION_2",
+        "EXPERIMENTAL"
+      ]
+    },
+    "gyro_high_range": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "gyro_lpf1_dyn_expo": {
+      "kind": "integer",
+      "max": 10,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_lpf1_dyn_max_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_lpf1_dyn_min_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_lpf1_static_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_lpf1_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "PT1",
+        "BIQUAD",
+        "PT2",
+        "PT3"
+      ]
+    },
+    "gyro_lpf2_static_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_lpf2_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "PT1",
+        "BIQUAD",
+        "PT2",
+        "PT3"
+      ]
+    },
+    "gyro_notch1_cutoff": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_notch1_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_notch2_cutoff": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_notch2_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_offset_yaw": {
+      "kind": "integer",
+      "max": 1000,
+      "min": -1000,
+      "scope": "global",
+      "values": []
+    },
+    "gyro_overflow_detect": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "YAW",
+        "ALL"
+      ]
+    },
+    "horizon_delay_ms": {
+      "kind": "integer",
+      "max": 5000,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "horizon_ignore_sticks": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "horizon_level_strength": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "horizon_limit_degrees": {
+      "kind": "integer",
+      "max": 250,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "horizon_limit_sticks": {
+      "kind": "integer",
+      "max": 200,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "hott_alarm_int": {
+      "kind": "integer",
+      "max": 120,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "i_pitch": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "i_roll": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "i_yaw": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "ibat_lpf_period": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ibata_offset": {
+      "kind": "integer",
+      "max": 32000,
+      "min": -32000,
+      "scope": "global",
+      "values": []
+    },
+    "ibatv_offset": {
+      "kind": "integer",
+      "max": 16000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ibatv_scale": {
+      "kind": "integer",
+      "max": 16000,
+      "min": -16000,
+      "scope": "global",
+      "values": []
+    },
+    "ibus_sensor": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "imu_dcm_ki": {
+      "kind": "integer",
+      "max": 32000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "imu_dcm_kp": {
+      "kind": "integer",
+      "max": 32000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "imu_process_denom": {
+      "kind": "integer",
+      "max": 4,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "input_filtering_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "integrated_yaw_relax": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "iterm_relax": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "RP",
+        "RPY",
+        "RP_INC",
+        "RPY_INC"
+      ]
+    },
+    "iterm_relax_cutoff": {
+      "kind": "integer",
+      "max": 50,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "iterm_relax_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "GYRO",
+        "SETPOINT"
+      ]
+    },
+    "iterm_rotation": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "iterm_windup": {
+      "kind": "integer",
+      "max": 100,
+      "min": 20,
+      "scope": "pid",
+      "values": []
+    },
+    "landing_disarm_threshold": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "launch_angle_limit": {
+      "kind": "integer",
+      "max": 80,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "launch_control_gain": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "launch_control_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "NORMAL",
+        "PITCHONLY",
+        "FULL"
+      ]
+    },
+    "launch_trigger_allow_reset": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "launch_trigger_throttle_percent": {
+      "kind": "integer",
+      "max": 90,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "ledstrip_beacon_armed_only": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "ledstrip_beacon_color": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "BLACK",
+        "WHITE",
+        "RED",
+        "ORANGE",
+        "YELLOW",
+        "LIME_GREEN",
+        "GREEN",
+        "MINT_GREEN",
+        "CYAN",
+        "LIGHT_BLUE",
+        "BLUE",
+        "DARK_VIOLET",
+        "MAGENTA",
+        "DEEP_PINK"
+      ]
+    },
+    "ledstrip_beacon_percent": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ledstrip_beacon_period_ms": {
+      "kind": "integer",
+      "max": 10000,
+      "min": 50,
+      "scope": "global",
+      "values": []
+    },
+    "ledstrip_brightness": {
+      "kind": "integer",
+      "max": 100,
+      "min": 5,
+      "scope": "global",
+      "values": []
+    },
+    "ledstrip_grb_rgb": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "GRB",
+        "RGB",
+        "GRBW"
+      ]
+    },
+    "ledstrip_profile": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "RACE",
+        "BEACON"
+      ]
+    },
+    "ledstrip_race_color": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "BLACK",
+        "WHITE",
+        "RED",
+        "ORANGE",
+        "YELLOW",
+        "LIME_GREEN",
+        "GREEN",
+        "MINT_GREEN",
+        "CYAN",
+        "LIGHT_BLUE",
+        "BLUE",
+        "DARK_VIOLET",
+        "MAGENTA",
+        "DEEP_PINK"
+      ]
+    },
+    "ledstrip_rainbow_delta": {
+      "kind": "integer",
+      "max": 359,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "ledstrip_rainbow_freq": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "ledstrip_visual_beeper": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "ledstrip_visual_beeper_color": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "BLACK",
+        "WHITE",
+        "RED",
+        "ORANGE",
+        "YELLOW",
+        "LIME_GREEN",
+        "GREEN",
+        "MINT_GREEN",
+        "CYAN",
+        "LIGHT_BLUE",
+        "BLUE",
+        "DARK_VIOLET",
+        "MAGENTA",
+        "DEEP_PINK"
+      ]
+    },
+    "level_race_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "mag_calibration": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "mag_declination": {
+      "kind": "integer",
+      "max": 300,
+      "min": -300,
+      "scope": "global",
+      "values": []
+    },
+    "mag_hardware": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AUTO",
+        "NONE",
+        "HMC5883",
+        "AK8975",
+        "AK8963",
+        "QMC5883",
+        "LIS2MDL",
+        "LIS3MDL",
+        "MPU925X_AK8963",
+        "IST8310"
+      ]
+    },
+    "mavlink_ext_status_rate": {
+      "kind": "integer",
+      "max": 50,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "mavlink_extra1_rate": {
+      "kind": "integer",
+      "max": 50,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "mavlink_extra2_rate": {
+      "kind": "integer",
+      "max": 50,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "mavlink_extra3_rate": {
+      "kind": "integer",
+      "max": 50,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "mavlink_mah_as_heading_divisor": {
+      "kind": "integer",
+      "max": 30000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "mavlink_min_txbuff": {
+      "kind": "integer",
+      "max": 100,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "mavlink_pos_rate": {
+      "kind": "integer",
+      "max": 50,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "mavlink_rc_chan_rate": {
+      "kind": "integer",
+      "max": 50,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "max_aux_channels": {
+      "kind": "integer",
+      "max": 14,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "max_check": {
+      "kind": "integer",
+      "max": 2250,
+      "min": 750,
+      "scope": "global",
+      "values": []
+    },
+    "max_throttle": {
+      "kind": "integer",
+      "max": 2250,
+      "min": 750,
+      "scope": "global",
+      "values": []
+    },
+    "mid_rc": {
+      "kind": "integer",
+      "max": 1700,
+      "min": 1200,
+      "scope": "global",
+      "values": []
+    },
+    "min_check": {
+      "kind": "integer",
+      "max": 2250,
+      "min": 750,
+      "scope": "global",
+      "values": []
+    },
+    "min_command": {
+      "kind": "integer",
+      "max": 2250,
+      "min": 750,
+      "scope": "global",
+      "values": []
+    },
+    "mixer_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "LEGACY",
+        "LINEAR",
+        "DYNAMIC",
+        "EZLANDING"
+      ]
+    },
+    "motor_idle": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "motor_output_limit": {
+      "kind": "integer",
+      "max": 100,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "motor_output_reordering": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "motor_poles": {
+      "kind": "integer",
+      "max": 255,
+      "min": 4,
+      "scope": "global",
+      "values": []
+    },
+    "motor_pwm_inversion": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "motor_pwm_protocol": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "PWM",
+        "ONESHOT125",
+        "ONESHOT42",
+        "MULTISHOT",
+        "BRUSHED",
+        "DSHOT150",
+        "DSHOT300",
+        "DSHOT600",
+        "PROSHOT1000",
+        "DISABLED"
+      ]
+    },
+    "motor_pwm_rate": {
+      "kind": "integer",
+      "max": 32000,
+      "min": 200,
+      "scope": "global",
+      "values": []
+    },
+    "msp_override_channels_mask": {
+      "kind": "integer",
+      "max": 262143,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "opticalflow_flip_x": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "opticalflow_hardware": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "NONE",
+        "MT"
+      ]
+    },
+    "opticalflow_lpf": {
+      "kind": "integer",
+      "max": 10000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "opticalflow_rotation": {
+      "kind": "integer",
+      "max": 359,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_adjustment_range_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_ah_invert": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "osd_ah_max_pit": {
+      "kind": "integer",
+      "max": 90,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_ah_max_rol": {
+      "kind": "integer",
+      "max": 90,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_ah_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_ah_sbar_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_alt_alarm": {
+      "kind": "integer",
+      "max": 10000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_altitude_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_anti_gravity_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_arming_logo": {
+      "kind": "integer",
+      "max": 3,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_aux_channel": {
+      "kind": "integer",
+      "max": 18,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "osd_aux_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_aux_scale": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "osd_aux_symbol": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_avg_cell_voltage_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_battery_usage_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_camera_frame_height": {
+      "kind": "integer",
+      "max": 16,
+      "min": 2,
+      "scope": "global",
+      "values": []
+    },
+    "osd_camera_frame_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_camera_frame_width": {
+      "kind": "integer",
+      "max": 30,
+      "min": 2,
+      "scope": "global",
+      "values": []
+    },
+    "osd_canvas_height": {
+      "kind": "integer",
+      "max": 31,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_canvas_width": {
+      "kind": "integer",
+      "max": 63,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_cap_alarm": {
+      "kind": "integer",
+      "max": 20000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_compass_bar_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_core_temp_alarm": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_core_temp_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_craft_name_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_craftname_msgs": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "osd_crosshairs_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_current_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_debug2_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_debug_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_disarmed_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_displayport_device": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "NONE",
+        "AUTO",
+        "MAX7456",
+        "MSP",
+        "FRSKYOSD"
+      ]
+    },
+    "osd_distance_alarm": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_efficiency_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_esc_current_alarm": {
+      "kind": "integer",
+      "max": 32767,
+      "min": -1,
+      "scope": "global",
+      "values": []
+    },
+    "osd_esc_rpm_alarm": {
+      "kind": "integer",
+      "max": 32767,
+      "min": -1,
+      "scope": "global",
+      "values": []
+    },
+    "osd_esc_rpm_freq_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_esc_rpm_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_esc_temp_alarm": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_esc_tmp_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_flight_dist_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_flip_arrow_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_flymode_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_framerate_hz": {
+      "kind": "integer",
+      "max": 60,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "osd_g_force_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_gps_lap_best3_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_gps_lap_curr_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_gps_lap_prev_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_gps_lat_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_gps_lon_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_gps_sats_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_gps_sats_show_pdop": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "osd_gps_speed_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_home_dir_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_home_dist_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_lidar_dist_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_link_quality_alarm": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_link_quality_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_link_tx_power_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_log_status_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_logo_on_arming": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON",
+        "FIRST_ARMING"
+      ]
+    },
+    "osd_logo_on_arming_duration": {
+      "kind": "integer",
+      "max": 50,
+      "min": 5,
+      "scope": "global",
+      "values": []
+    },
+    "osd_mah_drawn_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_menu_background": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "TRANSPARENT",
+        "BLACK",
+        "GRAY",
+        "LIGHT_GRAY"
+      ]
+    },
+    "osd_motor_diag_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_nheading_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_nvario_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_pid_pitch_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_pid_profile_name_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_pid_roll_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_pid_yaw_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_pidrate_profile_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_pilot_name_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_pit_ang_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_power_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_profile": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_profile_1_name": {
+      "kind": "string",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_profile_2_name": {
+      "kind": "string",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_profile_3_name": {
+      "kind": "string",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_profile_name_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rate_profile_name_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rcchannels": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rcchannels_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_ready_mode_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_remaining_time_estimate_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rol_ang_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rsnr_alarm": {
+      "kind": "integer",
+      "max": 20,
+      "min": -30,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rsnr_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rssi_alarm": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rssi_dbm_alarm": {
+      "kind": "integer",
+      "max": 0,
+      "min": -130,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rssi_dbm_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rssi_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_rtc_date_time_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_show_spec_prearm": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "osd_stat_avg_cell_value": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "osd_stat_bitmask": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_stick_overlay_left_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_stick_overlay_radio_mode": {
+      "kind": "integer",
+      "max": 4,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "osd_stick_overlay_right_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_bitrate_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_delay_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_distance_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_fan_speed_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_goggle_dvr_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_goggle_voltage_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_lq_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_vtx_dvr_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_vtx_temp_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_vtx_voltage_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_sys_warnings_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_throttle_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_tim1": {
+      "kind": "integer",
+      "max": 32767,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_tim2": {
+      "kind": "integer",
+      "max": 32767,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_tim_1_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_tim_2_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_total_flights_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_units": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "IMPERIAL",
+        "METRIC",
+        "BRITISH"
+      ]
+    },
+    "osd_up_down_reference_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_use_quick_menu": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "osd_vbat_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_vtx_channel_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_warn_bitmask": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "osd_warnings_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "osd_wh_drawn_pos": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "p_pitch": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "p_roll": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "p_yaw": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "pid_at_min_throttle": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "pid_in_tlm": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "pid_process_denom": {
+      "kind": "integer",
+      "max": 16,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "pidsum_limit": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 100,
+      "scope": "pid",
+      "values": []
+    },
+    "pidsum_limit_yaw": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 100,
+      "scope": "pid",
+      "values": []
+    },
+    "pilot_name": {
+      "kind": "string",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "pitch_expo": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "pitch_rate_limit": {
+      "kind": "integer",
+      "max": 1998,
+      "min": 200,
+      "scope": "rate",
+      "values": []
+    },
+    "pitch_rc_rate": {
+      "kind": "integer",
+      "max": 255,
+      "min": 1,
+      "scope": "rate",
+      "values": []
+    },
+    "pitch_srate": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "pos_hold_deadband": {
+      "kind": "integer",
+      "max": 50,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "pos_hold_without_mag": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "prearm_allow_rearm": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "profile_name": {
+      "kind": "string",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "pwr_on_arm_grace": {
+      "kind": "integer",
+      "max": 30,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "quickrates_rc_expo": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "rate",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "rangefinder_hardware": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "NONE",
+        "HCSR04",
+        "TFMINI",
+        "TF02",
+        "MTF01",
+        "MTF02",
+        "MTF01P",
+        "MTF02P",
+        "TFNOVA"
+      ]
+    },
+    "rate_6pos_switch": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "rateprofile_name": {
+      "kind": "string",
+      "max": null,
+      "min": null,
+      "scope": "rate",
+      "values": []
+    },
+    "rates_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "rate",
+      "values": [
+        "BETAFLIGHT",
+        "RACEFLIGHT",
+        "KISS",
+        "ACTUAL",
+        "QUICK"
+      ]
+    },
+    "rc_smoothing": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "rc_smoothing_auto_factor": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rc_smoothing_auto_factor_throttle": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rc_smoothing_debug_axis": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "ROLL",
+        "PITCH",
+        "YAW",
+        "THROTTLE"
+      ]
+    },
+    "rc_smoothing_setpoint_cutoff": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rc_smoothing_throttle_cutoff": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rcdevice_feature": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rcdevice_init_dev_attempt_interval": {
+      "kind": "integer",
+      "max": 5000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rcdevice_init_dev_attempts": {
+      "kind": "integer",
+      "max": 10,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rcdevice_protocol_version": {
+      "kind": "integer",
+      "max": 1,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "reboot_character": {
+      "kind": "integer",
+      "max": 126,
+      "min": 48,
+      "scope": "global",
+      "values": []
+    },
+    "report_cell_voltage": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "roll_expo": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "roll_rate_limit": {
+      "kind": "integer",
+      "max": 1998,
+      "min": 200,
+      "scope": "rate",
+      "values": []
+    },
+    "roll_rc_rate": {
+      "kind": "integer",
+      "max": 255,
+      "min": 1,
+      "scope": "rate",
+      "values": []
+    },
+    "roll_srate": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "rpm_filter_fade_range_hz": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rpm_filter_harmonics": {
+      "kind": "integer",
+      "max": 3,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rpm_filter_lpf_hz": {
+      "kind": "integer",
+      "max": 500,
+      "min": 100,
+      "scope": "global",
+      "values": []
+    },
+    "rpm_filter_min_hz": {
+      "kind": "integer",
+      "max": 200,
+      "min": 30,
+      "scope": "global",
+      "values": []
+    },
+    "rpm_filter_q": {
+      "kind": "integer",
+      "max": 3000,
+      "min": 250,
+      "scope": "global",
+      "values": []
+    },
+    "rpm_filter_weights": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "rpm_limit": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "rpm_limit_d": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rpm_limit_i": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rpm_limit_p": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rpm_limit_value": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "rssi_channel": {
+      "kind": "integer",
+      "max": 18,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rssi_invert": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "rssi_offset": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "global",
+      "values": []
+    },
+    "rssi_scale": {
+      "kind": "integer",
+      "max": 255,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "rssi_smoothing": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rssi_src_frame_errors": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "rssi_src_frame_lpf_period": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "runaway_takeoff_deactivate_delay": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 100,
+      "scope": "global",
+      "values": []
+    },
+    "runaway_takeoff_deactivate_throttle_percent": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "rx_max_usec": {
+      "kind": "integer",
+      "max": 2250,
+      "min": 750,
+      "scope": "global",
+      "values": []
+    },
+    "rx_min_usec": {
+      "kind": "integer",
+      "max": 2250,
+      "min": 750,
+      "scope": "global",
+      "values": []
+    },
+    "s_pitch": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "s_roll": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "s_yaw": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "sbus_baud_fast": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "serial_update_rate_hz": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 100,
+      "scope": "global",
+      "values": []
+    },
+    "serialmsp_halfduplex": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "serialrx_halfduplex": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "serialrx_inverted": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "serialrx_provider": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "NONE",
+        "SPEK2048",
+        "SBUS",
+        "SUMD",
+        "SUMH",
+        "XB-B",
+        "XB-B-RJ01",
+        "IBUS",
+        "JETIEXBUS",
+        "CRSF",
+        "SRXL",
+        "CUSTOM",
+        "FPORT",
+        "SRXL2",
+        "GHST",
+        "SPEK1024",
+        "MAVLINK"
+      ]
+    },
+    "servo_center_pulse": {
+      "kind": "integer",
+      "max": 2250,
+      "min": 750,
+      "scope": "global",
+      "values": []
+    },
+    "servo_lowpass_hz": {
+      "kind": "integer",
+      "max": 400,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "servo_pwm_rate": {
+      "kind": "integer",
+      "max": 498,
+      "min": 50,
+      "scope": "global",
+      "values": []
+    },
+    "simplified_d_gain": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_d_max_gain": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_dterm_filter": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "simplified_dterm_filter_multiplier": {
+      "kind": "integer",
+      "max": 200,
+      "min": 10,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_feedforward_gain": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_gyro_filter": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "simplified_gyro_filter_multiplier": {
+      "kind": "integer",
+      "max": 200,
+      "min": 10,
+      "scope": "global",
+      "values": []
+    },
+    "simplified_i_gain": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_master_multiplier": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_pi_gain": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_pids_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "RP",
+        "RPY"
+      ]
+    },
+    "simplified_pitch_d_gain": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "simplified_pitch_pi_gain": {
+      "kind": "integer",
+      "max": 200,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "small_angle": {
+      "kind": "integer",
+      "max": 180,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "spa_pitch_center": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "spa_pitch_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "I_FREEZE",
+        "I",
+        "PID",
+        "PD_I_FREEZE"
+      ]
+    },
+    "spa_pitch_width": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "spa_roll_center": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "spa_roll_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "I_FREEZE",
+        "I",
+        "PID",
+        "PD_I_FREEZE"
+      ]
+    },
+    "spa_roll_width": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "spa_yaw_center": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "spa_yaw_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "I_FREEZE",
+        "I",
+        "PID",
+        "PD_I_FREEZE"
+      ]
+    },
+    "spa_yaw_width": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "spektrum_sat_bind": {
+      "kind": "integer",
+      "max": 10,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "spektrum_sat_bind_autoreset": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "spektrum_spi_mfg_id": {
+      "kind": "array",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "spektrum_spi_num_channels": {
+      "kind": "integer",
+      "max": 12,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "spektrum_spi_protocol": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "srxl2_baud_fast": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "srxl2_unit_id": {
+      "kind": "integer",
+      "max": 15,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "stats_mah_used": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "stats_min_armed_time_s": {
+      "kind": "integer",
+      "max": 127,
+      "min": -1,
+      "scope": "global",
+      "values": []
+    },
+    "stats_save_move_limit": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "stats_total_dist_m": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "stats_total_flights": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "stats_total_time_s": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "task_statistics": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_acc_x": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_acc_y": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_acc_z": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_altitude": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_cap_used": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_current": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_distance": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_esc_current": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_esc_rpm": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_esc_temperature": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_esc_voltage": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_fuel": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_ground_speed": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_heading": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_lat_long": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_pitch": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_roll": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_sensors": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "telemetry_disabled_temperature": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_vario": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "telemetry_disabled_voltage": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "thr_corr_angle": {
+      "kind": "integer",
+      "max": 900,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "thr_corr_value": {
+      "kind": "integer",
+      "max": 150,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "thr_expo": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "thr_hover": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "thr_mid": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "throttle_boost": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "throttle_boost_cutoff": {
+      "kind": "integer",
+      "max": 50,
+      "min": 5,
+      "scope": "pid",
+      "values": []
+    },
+    "throttle_limit_percent": {
+      "kind": "integer",
+      "max": 100,
+      "min": 25,
+      "scope": "rate",
+      "values": []
+    },
+    "throttle_limit_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "rate",
+      "values": [
+        "OFF",
+        "SCALE",
+        "CLIP"
+      ]
+    },
+    "thrust_linear": {
+      "kind": "integer",
+      "max": 150,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "timezone_offset_minutes": {
+      "kind": "integer",
+      "max": 780,
+      "min": -780,
+      "scope": "global",
+      "values": []
+    },
+    "tlm_halfduplex": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "tlm_inverted": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "tpa_breakpoint": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 1000,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_curve_expo": {
+      "kind": "integer",
+      "max": 100,
+      "min": -100,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_curve_pid_thr0": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_curve_pid_thr100": {
+      "kind": "integer",
+      "max": 1000,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_curve_stall_throttle": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_curve_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "CLASSIC",
+        "HYPERBOLIC"
+      ]
+    },
+    "tpa_low_always": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "tpa_low_breakpoint": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 1000,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_low_rate": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_mode": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "PD",
+        "D",
+        "PDS"
+      ]
+    },
+    "tpa_rate": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_speed_adv_drag_k": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_speed_adv_mass": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_speed_adv_prop_pitch": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_speed_adv_thrust": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_speed_basic_delay": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_speed_basic_gravity": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 1,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_speed_max_voltage": {
+      "kind": "integer",
+      "max": 65535,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_speed_pitch_offset": {
+      "kind": "integer",
+      "max": 32767,
+      "min": -32768,
+      "scope": "pid",
+      "values": []
+    },
+    "tpa_speed_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "BASIC",
+        "ADVANCED"
+      ]
+    },
+    "transient_throttle_limit": {
+      "kind": "integer",
+      "max": 30,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "tri_unarmed_servo": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "usb_hid_cdc": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "use_cbat_alerts": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "use_integrated_yaw": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "pid",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "use_unsynced_pwm": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "use_vbat_alerts": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "vbat_cutoff_percent": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_detect_cell_voltage": {
+      "kind": "integer",
+      "max": 2000,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_display_lpf_period": {
+      "kind": "integer",
+      "max": 255,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_divider": {
+      "kind": "integer",
+      "max": 255,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_duration_for_critical": {
+      "kind": "integer",
+      "max": 150,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_duration_for_warning": {
+      "kind": "integer",
+      "max": 150,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_full_cell_voltage": {
+      "kind": "integer",
+      "max": 500,
+      "min": 100,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_hysteresis": {
+      "kind": "integer",
+      "max": 250,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_max_cell_voltage": {
+      "kind": "integer",
+      "max": 500,
+      "min": 100,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_min_cell_voltage": {
+      "kind": "integer",
+      "max": 500,
+      "min": 100,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_multiplier": {
+      "kind": "integer",
+      "max": 255,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_sag_compensation": {
+      "kind": "integer",
+      "max": 150,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "vbat_sag_lpf_period": {
+      "kind": "integer",
+      "max": 255,
+      "min": 1,
+      "scope": "global",
+      "values": []
+    },
+    "vbat_warning_cell_voltage": {
+      "kind": "integer",
+      "max": 500,
+      "min": 100,
+      "scope": "global",
+      "values": []
+    },
+    "vcd_h_offset": {
+      "kind": "integer",
+      "max": 31,
+      "min": -32,
+      "scope": "global",
+      "values": []
+    },
+    "vcd_v_offset": {
+      "kind": "integer",
+      "max": 16,
+      "min": -15,
+      "scope": "global",
+      "values": []
+    },
+    "vcd_video_system": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "AUTO",
+        "PAL",
+        "NTSC",
+        "HD"
+      ]
+    },
+    "vtx_band": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "vtx_channel": {
+      "kind": "integer",
+      "max": 8,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vtx_freq": {
+      "kind": "integer",
+      "max": 5999,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vtx_halfduplex": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "vtx_low_power_disarm": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON",
+        "UNTIL_FIRST_ARM"
+      ]
+    },
+    "vtx_pit_mode_freq": {
+      "kind": "integer",
+      "max": 5999,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "vtx_power": {
+      "kind": "integer",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": []
+    },
+    "vtx_softserial_alt": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "yaw_control_reversed": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "yaw_deadband": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "global",
+      "values": []
+    },
+    "yaw_expo": {
+      "kind": "integer",
+      "max": 100,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "yaw_lowpass_hz": {
+      "kind": "integer",
+      "max": 500,
+      "min": 0,
+      "scope": "pid",
+      "values": []
+    },
+    "yaw_motors_reversed": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON"
+      ]
+    },
+    "yaw_rate_limit": {
+      "kind": "integer",
+      "max": 1998,
+      "min": 200,
+      "scope": "rate",
+      "values": []
+    },
+    "yaw_rc_rate": {
+      "kind": "integer",
+      "max": 255,
+      "min": 1,
+      "scope": "rate",
+      "values": []
+    },
+    "yaw_spin_recovery": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "OFF",
+        "ON",
+        "AUTO"
+      ]
+    },
+    "yaw_spin_threshold": {
+      "kind": "integer",
+      "max": 1950,
+      "min": 500,
+      "scope": "global",
+      "values": []
+    },
+    "yaw_srate": {
+      "kind": "integer",
+      "max": 255,
+      "min": 0,
+      "scope": "rate",
+      "values": []
+    },
+    "yaw_type": {
+      "kind": "enum",
+      "max": null,
+      "min": null,
+      "scope": "global",
+      "values": [
+        "RUDDER",
+        "DIFF_THRUST"
+      ]
+    }
+  },
+  "profiles": {
+    "pid": 4,
+    "rate": 4
+  },
+  "schema_verified": [
+    {
+      "path": "cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/cli/settings.c",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "fc/parameter_names.h",
+      "sha256": "58b3563ba5134c126cbf1bff9161bc5a079eaee6a20900c6f1dc070bc2218dac",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/fc/parameter_names.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "cli/settings.h",
+      "sha256": "b72b582f0062cadb431a2df9e2ff2842d866dbf7f758d0570964556402dbc880",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/cli/settings.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "target/common_pre.h",
+      "sha256": "48c96fd6c7b444630f8b743f6b4b68771e1eab065723e0a5e9fb3101d434f696",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/target/common_pre.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "build/debug.c",
+      "sha256": "9584031d8ab2082a9e362aa17edd92145310b06e9332086c2df3c42c9454b1f9",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/build/debug.c",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "common/color.h",
+      "sha256": "631c8060cadc9e70b13c789cdadb1ab59169552575b7a3da54c5097d1dd2818c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/common/color.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "common/time.h",
+      "sha256": "402ed942ae537f81f8d83a53172d2dbdfc7b9807bafcfd52403e7ed0edbcebcd",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/common/time.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "config/simplified_tuning.h",
+      "sha256": "a06b45356fe77983a2b7b9c697bf585869bf4295975e31d1cf69ba158aae5866",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/config/simplified_tuning.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "drivers/display.h",
+      "sha256": "ad1eac1769706cae98f24240c2819f0221a77395d3578b3008396274762c2fa0",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/drivers/display.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "drivers/motor_types.h",
+      "sha256": "5ae42b83cdfba6f0dfa8b10203b6d2684793aebd025bbafb988513264d8462b3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/drivers/motor_types.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "drivers/vtx_common.h",
+      "sha256": "0f450ba0e7256442c1dd59ed57f8ec0b49f1a11f25d758a0fd538ff2a91d2811",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/drivers/vtx_common.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "drivers/vtx_table.h",
+      "sha256": "d77a0a18cecb4c57315c00ea83f5ae55f103d749831cb5ea7abf9bc259aed7b4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/drivers/vtx_table.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "drivers/dshot_command.h",
+      "sha256": "4dea90338a2be41d744127df86d6cd04b8374d151ce07043baabd9c628ff1b8b",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/drivers/dshot_command.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "fc/core.h",
+      "sha256": "69cacc28113da8879b9caddce803b1929f4cab3025911579cb00a9dc374052c3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/fc/core.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "fc/rc.h",
+      "sha256": "1876693eacc078f2ab8cfcb4fd6e435facc911f5f437f9dba75caa47eff7ba2b",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/fc/rc.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "fc/rc_controls.h",
+      "sha256": "0245d103e0ced0e05e6085bc0fad2dbe9bd116ceb97b8b8095f66cba15af46a1",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/fc/rc_controls.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "fc/controlrate_profile.h",
+      "sha256": "1eab97b905334a23abd5f664095ec824b1ce243b5ca31c5d3239a4979395ddf6",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/fc/controlrate_profile.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "flight/dyn_notch_filter.h",
+      "sha256": "0a653f03e8e1f2a910cfd60866e9960fc28e24f3efe2997c3bb5359496850004",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/flight/dyn_notch_filter.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "flight/failsafe.h",
+      "sha256": "df7797b8508aa732856c1dfbf537effbc68a745b7a74ca4868d0c7a05bdf96e7",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/flight/failsafe.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "flight/pid.h",
+      "sha256": "6a508b6395b0c7b27c366e6748982f467bc5e5a0776b0d72fc99d579a797f9b3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/flight/pid.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "osd/osd.h",
+      "sha256": "2d36ccd4fe127342624c10fa99d9ac8120acd5a0bb7d5661730cbe21e7acb8d4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/osd/osd.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "pg/stats.h",
+      "sha256": "c51018850f932fc3beb8a2033199462a6168c0c0e89782fc1429474ea8f5716e",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/pg/stats.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "rx/crsf.h",
+      "sha256": "70079dd30bbd12ab13f258d0364642fd5b0c5accba482ffb97d76485ed04b0da",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/rx/crsf.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "rx/cyrf6936_spektrum.h",
+      "sha256": "fb6776219c57c1e1c9993164f17be8dc09ac4aeb9562af4cf2bde7529e5c7dc3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/rx/cyrf6936_spektrum.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "rx/rx.h",
+      "sha256": "0dcee139f3c001bb01939882dc6c016be988979b633f7d10e4287f97acfbfbca",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/rx/rx.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "rx/spektrum.h",
+      "sha256": "10ae57c24ec7afc7824ae6424c421250965c613b6f4b99498fabada83f84f1e2",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/rx/spektrum.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/battery.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "sensors/gyro.h",
+      "sha256": "8e9d48f697eeb1741238e42dfd07837b3282b9df7d583e10d1443f28cb5e94f9",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/gyro.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "sensors/voltage.h",
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/voltage.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "telemetry/frsky_hub.h",
+      "sha256": "0ddd1e90d0ff81b467f99598c1b197aa2174737965489db24f9149098dc29c97",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/telemetry/frsky_hub.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "telemetry/telemetry.h",
+      "sha256": "b4e626f18afd119abed816fbbd2069744f86bd58573146f55e5a586d4a515d64",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/telemetry/telemetry.h",
+      "version": "2025.12.1"
+    },
+    {
+      "path": "cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/cli/settings.c",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "fc/parameter_names.h",
+      "sha256": "58b3563ba5134c126cbf1bff9161bc5a079eaee6a20900c6f1dc070bc2218dac",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/fc/parameter_names.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "cli/settings.h",
+      "sha256": "b72b582f0062cadb431a2df9e2ff2842d866dbf7f758d0570964556402dbc880",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/cli/settings.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "target/common_pre.h",
+      "sha256": "48c96fd6c7b444630f8b743f6b4b68771e1eab065723e0a5e9fb3101d434f696",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/target/common_pre.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "build/debug.c",
+      "sha256": "9584031d8ab2082a9e362aa17edd92145310b06e9332086c2df3c42c9454b1f9",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/build/debug.c",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "common/color.h",
+      "sha256": "631c8060cadc9e70b13c789cdadb1ab59169552575b7a3da54c5097d1dd2818c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/common/color.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "common/time.h",
+      "sha256": "402ed942ae537f81f8d83a53172d2dbdfc7b9807bafcfd52403e7ed0edbcebcd",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/common/time.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "config/simplified_tuning.h",
+      "sha256": "a06b45356fe77983a2b7b9c697bf585869bf4295975e31d1cf69ba158aae5866",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/config/simplified_tuning.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "drivers/display.h",
+      "sha256": "ad1eac1769706cae98f24240c2819f0221a77395d3578b3008396274762c2fa0",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/drivers/display.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "drivers/motor_types.h",
+      "sha256": "5ae42b83cdfba6f0dfa8b10203b6d2684793aebd025bbafb988513264d8462b3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/drivers/motor_types.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "drivers/vtx_common.h",
+      "sha256": "0f450ba0e7256442c1dd59ed57f8ec0b49f1a11f25d758a0fd538ff2a91d2811",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/drivers/vtx_common.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "drivers/vtx_table.h",
+      "sha256": "d77a0a18cecb4c57315c00ea83f5ae55f103d749831cb5ea7abf9bc259aed7b4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/drivers/vtx_table.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "drivers/dshot_command.h",
+      "sha256": "4dea90338a2be41d744127df86d6cd04b8374d151ce07043baabd9c628ff1b8b",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/drivers/dshot_command.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "fc/core.h",
+      "sha256": "69cacc28113da8879b9caddce803b1929f4cab3025911579cb00a9dc374052c3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/fc/core.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "fc/rc.h",
+      "sha256": "1876693eacc078f2ab8cfcb4fd6e435facc911f5f437f9dba75caa47eff7ba2b",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/fc/rc.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "fc/rc_controls.h",
+      "sha256": "0245d103e0ced0e05e6085bc0fad2dbe9bd116ceb97b8b8095f66cba15af46a1",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/fc/rc_controls.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "fc/controlrate_profile.h",
+      "sha256": "1eab97b905334a23abd5f664095ec824b1ce243b5ca31c5d3239a4979395ddf6",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/fc/controlrate_profile.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "flight/dyn_notch_filter.h",
+      "sha256": "0a653f03e8e1f2a910cfd60866e9960fc28e24f3efe2997c3bb5359496850004",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/flight/dyn_notch_filter.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "flight/failsafe.h",
+      "sha256": "df7797b8508aa732856c1dfbf537effbc68a745b7a74ca4868d0c7a05bdf96e7",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/flight/failsafe.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "flight/pid.h",
+      "sha256": "6a508b6395b0c7b27c366e6748982f467bc5e5a0776b0d72fc99d579a797f9b3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/flight/pid.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "osd/osd.h",
+      "sha256": "2d36ccd4fe127342624c10fa99d9ac8120acd5a0bb7d5661730cbe21e7acb8d4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/osd/osd.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "pg/stats.h",
+      "sha256": "c51018850f932fc3beb8a2033199462a6168c0c0e89782fc1429474ea8f5716e",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/pg/stats.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "rx/crsf.h",
+      "sha256": "70079dd30bbd12ab13f258d0364642fd5b0c5accba482ffb97d76485ed04b0da",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/rx/crsf.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "rx/cyrf6936_spektrum.h",
+      "sha256": "fb6776219c57c1e1c9993164f17be8dc09ac4aeb9562af4cf2bde7529e5c7dc3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/rx/cyrf6936_spektrum.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "rx/rx.h",
+      "sha256": "0dcee139f3c001bb01939882dc6c016be988979b633f7d10e4287f97acfbfbca",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/rx/rx.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "rx/spektrum.h",
+      "sha256": "10ae57c24ec7afc7824ae6424c421250965c613b6f4b99498fabada83f84f1e2",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/rx/spektrum.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/sensors/battery.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "sensors/gyro.h",
+      "sha256": "8e9d48f697eeb1741238e42dfd07837b3282b9df7d583e10d1443f28cb5e94f9",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/sensors/gyro.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "sensors/voltage.h",
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/sensors/voltage.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "telemetry/frsky_hub.h",
+      "sha256": "0ddd1e90d0ff81b467f99598c1b197aa2174737965489db24f9149098dc29c97",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/telemetry/frsky_hub.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "telemetry/telemetry.h",
+      "sha256": "b4e626f18afd119abed816fbbd2069744f86bd58573146f55e5a586d4a515d64",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/telemetry/telemetry.h",
+      "version": "2025.12.2"
+    },
+    {
+      "path": "cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/cli/settings.c",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "fc/parameter_names.h",
+      "sha256": "58b3563ba5134c126cbf1bff9161bc5a079eaee6a20900c6f1dc070bc2218dac",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/fc/parameter_names.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "cli/settings.h",
+      "sha256": "b72b582f0062cadb431a2df9e2ff2842d866dbf7f758d0570964556402dbc880",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/cli/settings.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "target/common_pre.h",
+      "sha256": "48c96fd6c7b444630f8b743f6b4b68771e1eab065723e0a5e9fb3101d434f696",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/target/common_pre.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "build/debug.c",
+      "sha256": "9584031d8ab2082a9e362aa17edd92145310b06e9332086c2df3c42c9454b1f9",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/build/debug.c",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "common/color.h",
+      "sha256": "631c8060cadc9e70b13c789cdadb1ab59169552575b7a3da54c5097d1dd2818c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/common/color.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "common/time.h",
+      "sha256": "402ed942ae537f81f8d83a53172d2dbdfc7b9807bafcfd52403e7ed0edbcebcd",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/common/time.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "config/simplified_tuning.h",
+      "sha256": "a06b45356fe77983a2b7b9c697bf585869bf4295975e31d1cf69ba158aae5866",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/config/simplified_tuning.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "drivers/display.h",
+      "sha256": "ad1eac1769706cae98f24240c2819f0221a77395d3578b3008396274762c2fa0",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/drivers/display.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "drivers/motor_types.h",
+      "sha256": "5ae42b83cdfba6f0dfa8b10203b6d2684793aebd025bbafb988513264d8462b3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/drivers/motor_types.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "drivers/vtx_common.h",
+      "sha256": "0f450ba0e7256442c1dd59ed57f8ec0b49f1a11f25d758a0fd538ff2a91d2811",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/drivers/vtx_common.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "drivers/vtx_table.h",
+      "sha256": "d77a0a18cecb4c57315c00ea83f5ae55f103d749831cb5ea7abf9bc259aed7b4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/drivers/vtx_table.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "drivers/dshot_command.h",
+      "sha256": "4dea90338a2be41d744127df86d6cd04b8374d151ce07043baabd9c628ff1b8b",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/drivers/dshot_command.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "fc/core.h",
+      "sha256": "69cacc28113da8879b9caddce803b1929f4cab3025911579cb00a9dc374052c3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/fc/core.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "fc/rc.h",
+      "sha256": "1876693eacc078f2ab8cfcb4fd6e435facc911f5f437f9dba75caa47eff7ba2b",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/fc/rc.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "fc/rc_controls.h",
+      "sha256": "0245d103e0ced0e05e6085bc0fad2dbe9bd116ceb97b8b8095f66cba15af46a1",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/fc/rc_controls.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "fc/controlrate_profile.h",
+      "sha256": "1eab97b905334a23abd5f664095ec824b1ce243b5ca31c5d3239a4979395ddf6",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/fc/controlrate_profile.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "flight/dyn_notch_filter.h",
+      "sha256": "0a653f03e8e1f2a910cfd60866e9960fc28e24f3efe2997c3bb5359496850004",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/flight/dyn_notch_filter.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "flight/failsafe.h",
+      "sha256": "df7797b8508aa732856c1dfbf537effbc68a745b7a74ca4868d0c7a05bdf96e7",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/flight/failsafe.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "flight/pid.h",
+      "sha256": "6a508b6395b0c7b27c366e6748982f467bc5e5a0776b0d72fc99d579a797f9b3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/flight/pid.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "osd/osd.h",
+      "sha256": "2d36ccd4fe127342624c10fa99d9ac8120acd5a0bb7d5661730cbe21e7acb8d4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/osd/osd.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "pg/stats.h",
+      "sha256": "c51018850f932fc3beb8a2033199462a6168c0c0e89782fc1429474ea8f5716e",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/pg/stats.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "rx/crsf.h",
+      "sha256": "70079dd30bbd12ab13f258d0364642fd5b0c5accba482ffb97d76485ed04b0da",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/rx/crsf.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "rx/cyrf6936_spektrum.h",
+      "sha256": "fb6776219c57c1e1c9993164f17be8dc09ac4aeb9562af4cf2bde7529e5c7dc3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/rx/cyrf6936_spektrum.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "rx/rx.h",
+      "sha256": "0dcee139f3c001bb01939882dc6c016be988979b633f7d10e4287f97acfbfbca",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/rx/rx.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "rx/spektrum.h",
+      "sha256": "10ae57c24ec7afc7824ae6424c421250965c613b6f4b99498fabada83f84f1e2",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/rx/spektrum.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/sensors/battery.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "sensors/gyro.h",
+      "sha256": "8e9d48f697eeb1741238e42dfd07837b3282b9df7d583e10d1443f28cb5e94f9",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/sensors/gyro.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "sensors/voltage.h",
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/sensors/voltage.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "telemetry/frsky_hub.h",
+      "sha256": "0ddd1e90d0ff81b467f99598c1b197aa2174737965489db24f9149098dc29c97",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/telemetry/frsky_hub.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "telemetry/telemetry.h",
+      "sha256": "b4e626f18afd119abed816fbbd2069744f86bd58573146f55e5a586d4a515d64",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/telemetry/telemetry.h",
+      "version": "2025.12.3"
+    },
+    {
+      "path": "cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/cli/settings.c",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "fc/parameter_names.h",
+      "sha256": "58b3563ba5134c126cbf1bff9161bc5a079eaee6a20900c6f1dc070bc2218dac",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/fc/parameter_names.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "cli/settings.h",
+      "sha256": "b72b582f0062cadb431a2df9e2ff2842d866dbf7f758d0570964556402dbc880",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/cli/settings.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "target/common_pre.h",
+      "sha256": "48c96fd6c7b444630f8b743f6b4b68771e1eab065723e0a5e9fb3101d434f696",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/target/common_pre.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "build/debug.c",
+      "sha256": "9584031d8ab2082a9e362aa17edd92145310b06e9332086c2df3c42c9454b1f9",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/build/debug.c",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "common/color.h",
+      "sha256": "631c8060cadc9e70b13c789cdadb1ab59169552575b7a3da54c5097d1dd2818c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/common/color.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "common/time.h",
+      "sha256": "402ed942ae537f81f8d83a53172d2dbdfc7b9807bafcfd52403e7ed0edbcebcd",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/common/time.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "config/simplified_tuning.h",
+      "sha256": "a06b45356fe77983a2b7b9c697bf585869bf4295975e31d1cf69ba158aae5866",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/config/simplified_tuning.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "drivers/display.h",
+      "sha256": "ad1eac1769706cae98f24240c2819f0221a77395d3578b3008396274762c2fa0",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/drivers/display.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "drivers/motor_types.h",
+      "sha256": "5ae42b83cdfba6f0dfa8b10203b6d2684793aebd025bbafb988513264d8462b3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/drivers/motor_types.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "drivers/vtx_common.h",
+      "sha256": "0f450ba0e7256442c1dd59ed57f8ec0b49f1a11f25d758a0fd538ff2a91d2811",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/drivers/vtx_common.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "drivers/vtx_table.h",
+      "sha256": "d77a0a18cecb4c57315c00ea83f5ae55f103d749831cb5ea7abf9bc259aed7b4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/drivers/vtx_table.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "drivers/dshot_command.h",
+      "sha256": "4dea90338a2be41d744127df86d6cd04b8374d151ce07043baabd9c628ff1b8b",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/drivers/dshot_command.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "fc/core.h",
+      "sha256": "69cacc28113da8879b9caddce803b1929f4cab3025911579cb00a9dc374052c3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/fc/core.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "fc/rc.h",
+      "sha256": "1876693eacc078f2ab8cfcb4fd6e435facc911f5f437f9dba75caa47eff7ba2b",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/fc/rc.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "fc/rc_controls.h",
+      "sha256": "0245d103e0ced0e05e6085bc0fad2dbe9bd116ceb97b8b8095f66cba15af46a1",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/fc/rc_controls.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "fc/controlrate_profile.h",
+      "sha256": "1eab97b905334a23abd5f664095ec824b1ce243b5ca31c5d3239a4979395ddf6",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/fc/controlrate_profile.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "flight/dyn_notch_filter.h",
+      "sha256": "0a653f03e8e1f2a910cfd60866e9960fc28e24f3efe2997c3bb5359496850004",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/flight/dyn_notch_filter.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "flight/failsafe.h",
+      "sha256": "df7797b8508aa732856c1dfbf537effbc68a745b7a74ca4868d0c7a05bdf96e7",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/flight/failsafe.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "flight/pid.h",
+      "sha256": "6a508b6395b0c7b27c366e6748982f467bc5e5a0776b0d72fc99d579a797f9b3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/flight/pid.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "osd/osd.h",
+      "sha256": "2d36ccd4fe127342624c10fa99d9ac8120acd5a0bb7d5661730cbe21e7acb8d4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/osd/osd.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "pg/stats.h",
+      "sha256": "c51018850f932fc3beb8a2033199462a6168c0c0e89782fc1429474ea8f5716e",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/pg/stats.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "rx/crsf.h",
+      "sha256": "70079dd30bbd12ab13f258d0364642fd5b0c5accba482ffb97d76485ed04b0da",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/rx/crsf.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "rx/cyrf6936_spektrum.h",
+      "sha256": "fb6776219c57c1e1c9993164f17be8dc09ac4aeb9562af4cf2bde7529e5c7dc3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/rx/cyrf6936_spektrum.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "rx/rx.h",
+      "sha256": "0dcee139f3c001bb01939882dc6c016be988979b633f7d10e4287f97acfbfbca",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/rx/rx.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "rx/spektrum.h",
+      "sha256": "10ae57c24ec7afc7824ae6424c421250965c613b6f4b99498fabada83f84f1e2",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/rx/spektrum.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/sensors/battery.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "sensors/gyro.h",
+      "sha256": "8e9d48f697eeb1741238e42dfd07837b3282b9df7d583e10d1443f28cb5e94f9",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/sensors/gyro.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "sensors/voltage.h",
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/sensors/voltage.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "telemetry/frsky_hub.h",
+      "sha256": "0ddd1e90d0ff81b467f99598c1b197aa2174737965489db24f9149098dc29c97",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/telemetry/frsky_hub.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "telemetry/telemetry.h",
+      "sha256": "b4e626f18afd119abed816fbbd2069744f86bd58573146f55e5a586d4a515d64",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/telemetry/telemetry.h",
+      "version": "2025.12.4"
+    },
+    {
+      "path": "cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/cli/settings.c",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "fc/parameter_names.h",
+      "sha256": "58b3563ba5134c126cbf1bff9161bc5a079eaee6a20900c6f1dc070bc2218dac",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/fc/parameter_names.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "cli/settings.h",
+      "sha256": "b72b582f0062cadb431a2df9e2ff2842d866dbf7f758d0570964556402dbc880",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/cli/settings.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "target/common_pre.h",
+      "sha256": "48c96fd6c7b444630f8b743f6b4b68771e1eab065723e0a5e9fb3101d434f696",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/target/common_pre.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "build/debug.c",
+      "sha256": "9584031d8ab2082a9e362aa17edd92145310b06e9332086c2df3c42c9454b1f9",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/build/debug.c",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "common/color.h",
+      "sha256": "631c8060cadc9e70b13c789cdadb1ab59169552575b7a3da54c5097d1dd2818c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/common/color.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "common/time.h",
+      "sha256": "402ed942ae537f81f8d83a53172d2dbdfc7b9807bafcfd52403e7ed0edbcebcd",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/common/time.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "config/simplified_tuning.h",
+      "sha256": "a06b45356fe77983a2b7b9c697bf585869bf4295975e31d1cf69ba158aae5866",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/config/simplified_tuning.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "drivers/display.h",
+      "sha256": "ad1eac1769706cae98f24240c2819f0221a77395d3578b3008396274762c2fa0",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/drivers/display.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "drivers/motor_types.h",
+      "sha256": "5ae42b83cdfba6f0dfa8b10203b6d2684793aebd025bbafb988513264d8462b3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/drivers/motor_types.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "drivers/vtx_common.h",
+      "sha256": "0f450ba0e7256442c1dd59ed57f8ec0b49f1a11f25d758a0fd538ff2a91d2811",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/drivers/vtx_common.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "drivers/vtx_table.h",
+      "sha256": "d77a0a18cecb4c57315c00ea83f5ae55f103d749831cb5ea7abf9bc259aed7b4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/drivers/vtx_table.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "drivers/dshot_command.h",
+      "sha256": "4dea90338a2be41d744127df86d6cd04b8374d151ce07043baabd9c628ff1b8b",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/drivers/dshot_command.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "fc/core.h",
+      "sha256": "69cacc28113da8879b9caddce803b1929f4cab3025911579cb00a9dc374052c3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/fc/core.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "fc/rc.h",
+      "sha256": "1876693eacc078f2ab8cfcb4fd6e435facc911f5f437f9dba75caa47eff7ba2b",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/fc/rc.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "fc/rc_controls.h",
+      "sha256": "0245d103e0ced0e05e6085bc0fad2dbe9bd116ceb97b8b8095f66cba15af46a1",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/fc/rc_controls.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "fc/controlrate_profile.h",
+      "sha256": "1eab97b905334a23abd5f664095ec824b1ce243b5ca31c5d3239a4979395ddf6",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/fc/controlrate_profile.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "flight/dyn_notch_filter.h",
+      "sha256": "0a653f03e8e1f2a910cfd60866e9960fc28e24f3efe2997c3bb5359496850004",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/flight/dyn_notch_filter.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "flight/failsafe.h",
+      "sha256": "df7797b8508aa732856c1dfbf537effbc68a745b7a74ca4868d0c7a05bdf96e7",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/flight/failsafe.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "flight/pid.h",
+      "sha256": "6a508b6395b0c7b27c366e6748982f467bc5e5a0776b0d72fc99d579a797f9b3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/flight/pid.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "osd/osd.h",
+      "sha256": "2d36ccd4fe127342624c10fa99d9ac8120acd5a0bb7d5661730cbe21e7acb8d4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/osd/osd.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "pg/stats.h",
+      "sha256": "c51018850f932fc3beb8a2033199462a6168c0c0e89782fc1429474ea8f5716e",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/pg/stats.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "rx/crsf.h",
+      "sha256": "70079dd30bbd12ab13f258d0364642fd5b0c5accba482ffb97d76485ed04b0da",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/rx/crsf.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "rx/cyrf6936_spektrum.h",
+      "sha256": "fb6776219c57c1e1c9993164f17be8dc09ac4aeb9562af4cf2bde7529e5c7dc3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/rx/cyrf6936_spektrum.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "rx/rx.h",
+      "sha256": "0dcee139f3c001bb01939882dc6c016be988979b633f7d10e4287f97acfbfbca",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/rx/rx.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "rx/spektrum.h",
+      "sha256": "10ae57c24ec7afc7824ae6424c421250965c613b6f4b99498fabada83f84f1e2",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/rx/spektrum.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/battery.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "sensors/gyro.h",
+      "sha256": "8e9d48f697eeb1741238e42dfd07837b3282b9df7d583e10d1443f28cb5e94f9",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/gyro.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "sensors/voltage.h",
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/voltage.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "telemetry/frsky_hub.h",
+      "sha256": "0ddd1e90d0ff81b467f99598c1b197aa2174737965489db24f9149098dc29c97",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/telemetry/frsky_hub.h",
+      "version": "2025.12.5"
+    },
+    {
+      "path": "telemetry/telemetry.h",
+      "sha256": "b4e626f18afd119abed816fbbd2069744f86bd58573146f55e5a586d4a515d64",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/telemetry/telemetry.h",
+      "version": "2025.12.5"
+    }
+  ],
+  "sources": {
+    "build/debug.c": {
+      "sha256": "9584031d8ab2082a9e362aa17edd92145310b06e9332086c2df3c42c9454b1f9",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/build/debug.c"
+    },
+    "cli/settings.c": {
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/cli/settings.c"
+    },
+    "cli/settings.h": {
+      "sha256": "b72b582f0062cadb431a2df9e2ff2842d866dbf7f758d0570964556402dbc880",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/cli/settings.h"
+    },
+    "common/color.h": {
+      "sha256": "631c8060cadc9e70b13c789cdadb1ab59169552575b7a3da54c5097d1dd2818c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/common/color.h"
+    },
+    "common/time.h": {
+      "sha256": "402ed942ae537f81f8d83a53172d2dbdfc7b9807bafcfd52403e7ed0edbcebcd",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/common/time.h"
+    },
+    "config/simplified_tuning.h": {
+      "sha256": "a06b45356fe77983a2b7b9c697bf585869bf4295975e31d1cf69ba158aae5866",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/config/simplified_tuning.h"
+    },
+    "drivers/display.h": {
+      "sha256": "ad1eac1769706cae98f24240c2819f0221a77395d3578b3008396274762c2fa0",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/drivers/display.h"
+    },
+    "drivers/dshot_command.h": {
+      "sha256": "4dea90338a2be41d744127df86d6cd04b8374d151ce07043baabd9c628ff1b8b",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/drivers/dshot_command.h"
+    },
+    "drivers/motor_types.h": {
+      "sha256": "5ae42b83cdfba6f0dfa8b10203b6d2684793aebd025bbafb988513264d8462b3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/drivers/motor_types.h"
+    },
+    "drivers/vtx_common.h": {
+      "sha256": "0f450ba0e7256442c1dd59ed57f8ec0b49f1a11f25d758a0fd538ff2a91d2811",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/drivers/vtx_common.h"
+    },
+    "drivers/vtx_table.h": {
+      "sha256": "d77a0a18cecb4c57315c00ea83f5ae55f103d749831cb5ea7abf9bc259aed7b4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/drivers/vtx_table.h"
+    },
+    "fc/controlrate_profile.c": {
+      "sha256": "81885ec3ae55e5dbfc7f50bd27fec4b9e67ec63002dae34e7aba204dcb80174e",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/fc/controlrate_profile.c"
+    },
+    "fc/controlrate_profile.h": {
+      "sha256": "1eab97b905334a23abd5f664095ec824b1ce243b5ca31c5d3239a4979395ddf6",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/fc/controlrate_profile.h"
+    },
+    "fc/core.h": {
+      "sha256": "69cacc28113da8879b9caddce803b1929f4cab3025911579cb00a9dc374052c3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/fc/core.h"
+    },
+    "fc/parameter_names.h": {
+      "sha256": "58b3563ba5134c126cbf1bff9161bc5a079eaee6a20900c6f1dc070bc2218dac",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/fc/parameter_names.h"
+    },
+    "fc/rc.h": {
+      "sha256": "1876693eacc078f2ab8cfcb4fd6e435facc911f5f437f9dba75caa47eff7ba2b",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/fc/rc.h"
+    },
+    "fc/rc_controls.h": {
+      "sha256": "0245d103e0ced0e05e6085bc0fad2dbe9bd116ceb97b8b8095f66cba15af46a1",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/fc/rc_controls.h"
+    },
+    "flight/dyn_notch_filter.h": {
+      "sha256": "0a653f03e8e1f2a910cfd60866e9960fc28e24f3efe2997c3bb5359496850004",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/flight/dyn_notch_filter.h"
+    },
+    "flight/failsafe.h": {
+      "sha256": "df7797b8508aa732856c1dfbf537effbc68a745b7a74ca4868d0c7a05bdf96e7",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/flight/failsafe.h"
+    },
+    "flight/pid.h": {
+      "sha256": "6a508b6395b0c7b27c366e6748982f467bc5e5a0776b0d72fc99d579a797f9b3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/flight/pid.h"
+    },
+    "osd/osd.h": {
+      "sha256": "2d36ccd4fe127342624c10fa99d9ac8120acd5a0bb7d5661730cbe21e7acb8d4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/osd/osd.h"
+    },
+    "pg/stats.h": {
+      "sha256": "c51018850f932fc3beb8a2033199462a6168c0c0e89782fc1429474ea8f5716e",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/pg/stats.h"
+    },
+    "rx/crsf.h": {
+      "sha256": "70079dd30bbd12ab13f258d0364642fd5b0c5accba482ffb97d76485ed04b0da",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/rx/crsf.h"
+    },
+    "rx/cyrf6936_spektrum.h": {
+      "sha256": "fb6776219c57c1e1c9993164f17be8dc09ac4aeb9562af4cf2bde7529e5c7dc3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/rx/cyrf6936_spektrum.h"
+    },
+    "rx/rx.h": {
+      "sha256": "0dcee139f3c001bb01939882dc6c016be988979b633f7d10e4287f97acfbfbca",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/rx/rx.h"
+    },
+    "rx/spektrum.h": {
+      "sha256": "10ae57c24ec7afc7824ae6424c421250965c613b6f4b99498fabada83f84f1e2",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/rx/spektrum.h"
+    },
+    "sensors/battery.h": {
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/battery.h"
+    },
+    "sensors/gyro.h": {
+      "sha256": "8e9d48f697eeb1741238e42dfd07837b3282b9df7d583e10d1443f28cb5e94f9",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/gyro.h"
+    },
+    "sensors/voltage.h": {
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/voltage.h"
+    },
+    "target/common_pre.h": {
+      "sha256": "48c96fd6c7b444630f8b743f6b4b68771e1eab065723e0a5e9fb3101d434f696",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/target/common_pre.h"
+    },
+    "telemetry/frsky_hub.h": {
+      "sha256": "0ddd1e90d0ff81b467f99598c1b197aa2174737965489db24f9149098dc29c97",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/telemetry/frsky_hub.h"
+    },
+    "telemetry/telemetry.h": {
+      "sha256": "b4e626f18afd119abed816fbbd2069744f86bd58573146f55e5a586d4a515d64",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/telemetry/telemetry.h"
+    }
+  },
+  "unresolved_bounds": {
+    "flysky_spi_tx_id": "Unsigned bound exceeds the current integer value model",
+    "osd_profile": "Unresolved bound: OSD_PROFILE_COUNT",
+    "osd_stat_bitmask": "Unsigned bound exceeds the current integer value model",
+    "osd_warn_bitmask": "Unsigned bound exceeds the current integer value model",
+    "stats_mah_used": "Unsigned bound exceeds the current integer value model",
+    "stats_total_dist_m": "Unsigned bound exceeds the current integer value model",
+    "stats_total_flights": "Unsigned bound exceeds the current integer value model",
+    "stats_total_time_s": "Unsigned bound exceeds the current integer value model",
+    "telemetry_disabled_sensors": "Unresolved bound: SENSOR_ALL",
+    "tpa_low_rate": "Unresolved bound: TPA_LOW_RATE_MIN",
+    "vtx_band": "Unresolved bound: VTX_TABLE_MAX_BANDS",
+    "vtx_power": "Unresolved bound: VTX_TABLE_MAX_POWER_LEVELS - 1"
+  },
+  "version": "2025.12.1"
+}

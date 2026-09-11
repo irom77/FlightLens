@@ -30,10 +30,11 @@ version bump; follow the [release policy](docs/releases/README.md).
   verification requirements in [the investigation](docs/betaflight-2025.12-compatibility.md).
 - [x] Support named serial ports and preserve firmware-appropriate export syntax.
   Full checks pass against the now 14-file Windows corpus; all 15 original serial
-  syntax errors are resolved. 2025.12 export remains gated on its compatibility pack.
-- [ ] Add a verified, bundled 2025.12 schema and rate reference coverage. Keep
-  custom-build defaults uncertified and update supported-version guidance only
-  when the compatibility implementation is verified.
+  syntax errors are resolved.
+- [x] Add a verified, bundled 2025.12 schema and rate reference coverage. Schema
+  inputs, rate vectors, and reset defaults are verified across 2025.12.1–2025.12.5;
+  custom-build defaults remain uncertified. Supported-version guidance is updated.
+  Twelve settings with unresolved bounds remain excluded from export (see TODO).
 - [ ] Resolve the remaining feature syntax and schema validation diagnostics
   tracked in [TODO.md](TODO.md).
 

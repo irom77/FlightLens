@@ -41,14 +41,15 @@ pub struct Pack {
     pub defaults: Defaults,
     pub parameters: BTreeMap<String, Schema>,
 }
-pub fn packs() -> &'static [Pack; 4] {
-    static PACKS: OnceLock<[Pack; 4]> = OnceLock::new();
+pub fn packs() -> &'static [Pack; 5] {
+    static PACKS: OnceLock<[Pack; 5]> = OnceLock::new();
     PACKS.get_or_init(|| {
         [
             include_str!("../compatibility/betaflight-4.2.0.json"),
             include_str!("../compatibility/betaflight-4.3.0.json"),
             include_str!("../compatibility/betaflight-4.4.0.json"),
             include_str!("../compatibility/betaflight-4.5.0.json"),
+            include_str!("../compatibility/betaflight-2025.12.1.json"),
         ]
         .map(|p| serde_json::from_str(p).expect("bundled schema must validate"))
     })

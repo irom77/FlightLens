@@ -1,5 +1,7 @@
 """Explicit developer-only pack generation from pinned upstream tags; never runs in-app."""
-import hashlib, json, pathlib, re, urllib.request
+import hashlib, json, pathlib, re, sys, urllib.request
+from concurrent.futures import ThreadPoolExecutor
+from schema_expressions import BOUND_HEADERS, resolver
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / 'crates/flightlens-core/compatibility'
 OUT.mkdir(parents=True, exist_ok=True)
@@ -13,20 +15,22 @@ CONSTANTS = {'UINT8_MAX':255,'UINT16_MAX':65535,'INT8_MIN':-128,'INT8_MAX':127,
 PATCH_RELEASES = {'4.2.0':[f'4.2.{patch}' for patch in range(12)],
  '4.3.0':['4.3.0','4.3.1','4.3.2'],
  '4.4.0':['4.4.0','4.4.1','4.4.2','4.4.3'],
- '4.5.0':['4.5.0','4.5.1','4.5.2','4.5.3','4.5.4','4.5.5']}
+ '4.5.0':['4.5.0','4.5.1','4.5.2','4.5.3','4.5.4','4.5.5'],
+ '2025.12.1':[f'2025.12.{patch}' for patch in range(1, 6)]}
 RESET_FN = 'pgResetFn_controlRateProfiles'
 def reset_body(text):
     """The one reset function whose defaults this generator certifies."""
     start = text.index('void ' + RESET_FN)
     return text[start:text.index('\n}', start)]
 
-for version in PATCH_RELEASES:
+for version in (sys.argv[1:] or PATCH_RELEASES):
     sources = {}
     def fetch(path):
         url = f'https://raw.githubusercontent.com/betaflight/betaflight/{version}/src/main/{path}'
         data = urllib.request.urlopen(url).read()
         sources[path] = {'url':url, 'sha256':hashlib.sha256(data).hexdigest()}
         return data.decode()
+    modern = version == "2025.12.1"
     settings = fetch('cli/settings.c')
     # 4.2 uses literal CLI names; parameter_names.h was added later.
     names = '' if version == '4.2.0' else fetch('fc/parameter_names.h')
@@ -34,6 +38,14 @@ for version in PATCH_RELEASES:
     common_pre = fetch('target/common_pre.h')
     defines = dict(re.findall(r'#define\s+(\w+)\s+"([^"\n]+)"', names))
     arrays = {n: re.findall(r'"([^"\n]+)"', body) for n,body in re.findall(r'(\w+)\[\]\s*=\s*\{(.*?)\};',settings,re.S)}
+    if modern:
+        # Sized arrays and the external debug table are absent from the legacy
+        # extractor. Preserve source order so enum defaults retain their ordinal.
+        extra = fetch('build/debug.c')
+        arrays.update({n: re.findall(r'"([^"\n]+)"', body)
+            for n, body in re.findall(r'(\w+)\[[^]\n]*\]\s*=\s*\{(.*?)\};', settings + extra, re.S)})
+        resolve = resolver([fetch(path) for path in BOUND_HEADERS])
+    unresolved = {}
     table_names = re.findall(r'^\s*(TABLE_\w+)(?:\s*=\s*0)?\s*,', settings_h, re.M)
     table_arrays = re.findall(r'^\s*LOOKUP_TABLE_ENTRY\((\w+)\)', settings, re.M)
     assert len(table_names) == len(table_arrays), (version, len(table_names), len(table_arrays))
@@ -56,6 +68,26 @@ for version in PATCH_RELEASES:
         params[name] = {'scope':{'MASTER_VALUE':'global','PROFILE_RATE_VALUE':'rate','PROFILE_VALUE':'pid'}[scope],
             'kind':kind, 'min':number(bounds[1]) if bounds else None,'max':number(bounds[2]) if bounds else None,
             'values':['OFF','ON'] if bitset else (lookups.get(enum[1],[]) if enum else [])}
+        if modern and kind == 'integer':
+            bounds = re.search(r'config.minmax(?:Unsigned)?\s*=\s*\{([^,]+),([^}]+)', line)
+            try:
+                if bounds:
+                    lo, hi = (resolve(v) for v in bounds.groups())
+                else:
+                    wide = re.search(r'config\.([du])32Max\s*=\s*([^,]+)', line)
+                    if not wide:
+                        raise ValueError('Missing integer bound')
+                    hi = resolve(wide[2])
+                    lo = -hi if wide[1] == 'd' else 0
+                if hi > 2147483647:
+                    raise ValueError('Unsigned bound exceeds the current integer value model')
+                assert lo <= hi, (name, lo, hi)
+                params[name]['min'], params[name]['max'] = lo, hi
+            except (ValueError, SyntaxError, TypeError) as error:
+                # An unresolved bound must not leave a partially checked value
+                # exportable. Keep it inspectable and record the audit gap.
+                params[name]['min'] = params[name]['max'] = None
+                unresolved[name] = str(error)
     # Profile counts are build-dependent: common_pre.h lowers them on
     # flash-constrained targets. A backup can only have been written by one
     # build, so the widest definition on the line is the bound that accepts
@@ -132,4 +164,20 @@ for version in PATCH_RELEASES:
       'defaults':{'source':f'fc/controlrate_profile.c {RESET_FN}', 'reset_sha256':reset,
         'verified':verified, 'values':defaults},
       'baseline':None, 'notice':'Schema does not certify build features or defaults. GPL-3.0-or-later; derived from Betaflight.'}
+    if modern:
+        pack['unresolved_bounds'] = unresolved
+        # Verify every schema input at every supported plain patch, rather than
+        # assuming patch releases cannot change a bound or lookup table.
+        schema_paths = [path for path in sources if path != 'fc/controlrate_profile.c']
+        def verify_schema(item):
+            tag, path = item
+            url = f'https://raw.githubusercontent.com/betaflight/betaflight/{tag}/src/main/{path}'
+            digest = hashlib.sha256(urllib.request.urlopen(url).read()).hexdigest()
+            assert digest == sources[path]['sha256'], f'Schema input {path} changed at {tag}'
+            return {'version': tag, 'path': path, 'url': url, 'sha256': digest}
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            pack['schema_verified'] = list(pool.map(verify_schema,
+                [(tag, path) for tag in PATCH_RELEASES[version] for path in schema_paths]))
+        assert all(p['values'] for p in params.values() if p['kind'] == 'enum')
+        print(f'{version}: {len(params)} parameters, {len(unresolved)} non-exportable bounds')
     (OUT / f'betaflight-{version}.json').write_text(json.dumps(pack,indent=2,sort_keys=True)+'\n')

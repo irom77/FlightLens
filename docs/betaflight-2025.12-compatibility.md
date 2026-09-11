@@ -1,6 +1,6 @@
 # Betaflight 2025.12 compatibility investigation
 
-Investigated 2026-09-11. This is an implementation checkpoint, not certification of the KAACK fork. Only public upstream source was fetched; no backup contents were uploaded.
+Investigated 2026-09-11. This records the implementation checkpoints, not certification of the KAACK fork. Only public upstream source was fetched; no backup contents were uploaded.
 
 ## Available source pins
 
@@ -26,9 +26,43 @@ OSD coordinate packing retains the 4.5 layout: five low X bits, five Y bits, ext
 
 Named ports, case-insensitive lookup, legacy numeric aliases, and the Gimbal mask
 are implemented for 2025.12 inspection. Serial export token round trips are tested;
-the compatibility-pack gate still disables actual 2025.12 export. Full checks pass
+actual 2025.12 export remained gated until the schema checkpoint below. Full checks pass
 against the current 14-file corpus, with all 15 original serial errors removed.
 
-## Remaining checkpoint
+## Schema checkpoint completed
 
-Generate a pinned 2025.12 schema, audit unresolved constants and lookup changes, verify all release resets and compiled rate vectors, update pack selection and supported-version UI copy, and test custom builds without default inference. Keep generated compatibility data bundled for offline use.
+The bundled `betaflight-2025.12.1.json` now supplies 679 setting definitions and
+four PID/rate profiles. Every schema input (including bound headers and external
+debug names) was SHA-256 identical across 2025.12.1–2025.12.5; the pack records
+all source URLs and hashes in `sources` and `schema_verified`. The generator
+asserts this invariance on regeneration. All enum lists are populated. Signed
+bounds, arithmetic expressions, and enum constants are resolved from upstream
+headers; ambiguous conditional definitions are left unresolved.
+
+Nineteen rate defaults were extracted from the reset function and verified at all
+five plain releases. Compiled, unmodified upstream C produced 672 differential
+rate vectors per release (3,360 new vectors). The source `fc/rc.c` SHA-256 is
+`74396af807110de4905a9517426a9074eb521de43aab5d96bfc799e1882533f5` at all five
+releases. Custom/prerelease builds receive the schema but no inferred defaults.
+
+Twelve integer settings remain non-exportable, enumerated in the pack's
+`unresolved_bounds`: seven full unsigned 32-bit fields exceed the current signed
+integer model; OSD profile count, TPA low rate and VTX band/power bounds depend on
+build options; the telemetry sensor mask still needs resolution. Hardware-specific
+schema entries and array export remain outside this checkpoint. These gaps do
+not block explicit rate inspection/export. Unknown or out-of-range values are
+preserved as source text, never rewritten.
+
+Validation passed: `./test.sh` against the 14-file Windows corpus, the expression
+resolver tests (`python3 -B -m unittest discover -s tools -p 'test_schema_expressions.py'`),
+and `git diff --check`. Both original 2025.12 custom backups now have four complete
+rate profiles, four complete PID profiles, 79 OSD positions and successful rate
+export, with no inferred defaults. Across the corpus, all 64 rate profiles and
+52 PID profiles are complete. Thirty diagnostics remain; enabling schema checks
+exposed two previously unchecked validation errors.
+
+## Next checkpoint
+
+Resolve the remaining feature syntax and schema validation diagnostics recorded
+in TODO.md. Extend the explicitly deferred bound/value-model coverage separately;
+do not substitute a guessed target build for conditional definitions.

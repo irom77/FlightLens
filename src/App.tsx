@@ -452,8 +452,8 @@ function BackupInstructions() {
         This includes unchanged settings. A <code>diff</code> or{" "}
         <code>diff all</code> backup is accepted, but omitted Rates, Expo, or
         PID values may remain unknown. No reset or <code>defaults</code> command
-        is needed. FlightLens currently supports Betaflight 4.2, 4.3, 4.4, and
-        4.5 schemas; a full dump does not add support for other firmware
+        is needed. FlightLens currently supports Betaflight 4.2, 4.3, 4.4,
+        4.5, and 2025.12 schemas; a full dump does not add support for other firmware
         versions.
       </p>
     </section>
@@ -670,8 +670,8 @@ function Inspector({
         {!d.firmware.packId && (
           <p className="notice">
             This firmware version is not supported for Rates and PID inspection.
-            FlightLens currently supports Betaflight 4.2, 4.3, 4.4, and 4.5
-            schemas. A new backup will not resolve this compatibility gap.
+            FlightLens currently supports Betaflight 4.2, 4.3, 4.4, 4.5,
+            and 2025.12 schemas. A new backup will not resolve this compatibility gap.
             Source and parsed syntax remain inspectable; semantic views and
             export require supported firmware.
           </p>

@@ -2,7 +2,7 @@
 import hashlib,json,pathlib,re,subprocess,tempfile,urllib.request
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 results=[]
-for version in ['4.2.0','4.2.11','4.3.0','4.4.0','4.5.0']:
+for version in ['4.2.0','4.2.11','4.3.0','4.4.0','4.5.0','2025.12.1','2025.12.2','2025.12.3','2025.12.4','2025.12.5']:
     url=f'https://raw.githubusercontent.com/betaflight/betaflight/{version}/src/main/fc/rc.c'
     data=urllib.request.urlopen(url).read(); source=data.decode()
     functions=[]

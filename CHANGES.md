@@ -8,9 +8,15 @@ renamed to the version when the release is cut. Purely internal work
 
 ## Unreleased
 
+- Add bundled Betaflight 2025.12 schema and rate support, including named-port
+  snippet export. Verify upstream schema inputs, rate functions, and rate defaults
+  across releases 2025.12.1–2025.12.5. Custom builds use explicit settings only;
+  their omitted defaults remain unknown. Settings with unresolved bounds remain
+  excluded from export.
+
 - Inspect Betaflight 2025.12 named serial ports and numeric aliases with correct
   UART identities and Gimbal function labels. Preserve firmware-specific serial
-  export tokens; export for 2025.12 remains gated on a verified compatibility pack.
+  export tokens.
 
 - Update the roadmap to mark same-version parameter comparison, firmware version
   recognition, and the 2025.12 compatibility investigation complete, with remaining
