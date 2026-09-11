@@ -6,6 +6,12 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## Unreleased
+
+- Recognize Betaflight version headers with prerelease or build suffixes, including
+  year-based custom builds, instead of displaying “unknown version”. Preserve the
+  full version without certifying unsupported firmware defaults.
+
 ## 0.4.1 — 2026-09-08
 
 - Fix comparison module resolution on case-insensitive filesystems, which blocked

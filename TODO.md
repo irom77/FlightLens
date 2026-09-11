@@ -7,6 +7,11 @@ file holds only what is actionable now.
 
 ## Next
 
+- Add verified compatibility coverage for year-based Betaflight releases. Their
+  versions are now recognized, but no bundled schema covers those firmware lines,
+  including the `2025.12.3-alpha.KAACK_V19` backups in the Windows DUMP_ALL corpus.
+- Investigate the 41 parser/validation diagnostics across the 13-file Windows
+  DUMP_ALL corpus; the non-strict smoke check passes but does not certify them.
 - Add certified cross-version parameter equivalence mappings; current parameter
   comparison only classifies changes within the same supported firmware version.
   CLI collections, three-backup comparison and saved selections remain outstanding.

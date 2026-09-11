@@ -8,6 +8,28 @@ fn config(text: &str) -> ConfigDocument {
 fn header() -> &'static str {
     "# Betaflight / STM32F405 4.5.0"
 }
+#[test]
+fn firmware_versions_preserve_prerelease_and_build_suffixes() {
+    for version in [
+        "2026.01.0-ALPHA.CUSTOM_A01",
+        "2026.01.0",
+        "4.5.3-RC1",
+        "4.5.3+custom",
+        "4.5.3.KAACK_V18",
+    ] {
+        let d = config(&format!("# Betaflight / STM32F405 {version}\n"));
+        assert_eq!(d.firmware.family, "betaflight");
+        assert_eq!(d.firmware.version.as_deref(), Some(version));
+        assert!(!compatibility::defaults_certified(version));
+        if version.starts_with("2026.") {
+            assert!(d.firmware.pack_id.is_none());
+        }
+    }
+    for version in ["4.5", "4.5.x", "4.5.3garbage"] {
+        let d = config(&format!("# Betaflight / STM32F405 {version}\n"));
+        assert!(d.firmware.version.is_none());
+    }
+}
 fn with(body: &str) -> ConfigDocument {
     config(&format!("{}\n{body}", header()))
 }

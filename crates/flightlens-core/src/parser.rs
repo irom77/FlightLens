@@ -280,9 +280,11 @@ fn version_from(header: &str) -> Option<String> {
     header
         .split_whitespace()
         .find(|w| {
-            let mut parts = w.split('.');
+            let base = w.split(['-', '+']).next().unwrap_or(w);
+            let mut parts = base.split('.');
             parts.by_ref().take(3).count() == 3
-                && w.split('.')
+                && base
+                    .split('.')
                     .take(3)
                     .all(|v| !v.is_empty() && v.bytes().all(|b| b.is_ascii_digit()))
         })
