@@ -19,6 +19,24 @@ explicitly unavailable. Desktop smoke checks and known defects remain tracked in
 [TODO.md](TODO.md). Phase completion does not imply 1.0 readiness or choose a
 version bump; follow the [release policy](docs/releases/README.md).
 
+### Betaflight compatibility follow-up — in progress
+
+- [x] Recognize prerelease and build suffixes in firmware headers, including
+  year-based custom builds. The parser fix is committed and unreleased; regression
+  tests and the full check script passed against the 13-file Windows DUMP_ALL
+  corpus. Version recognition does not certify firmware semantics or defaults.
+- [x] Investigate upstream 2025.12 compatibility and classify the local corpus
+  diagnostics. Record source pins, serial syntax changes, and schema/rate
+  verification requirements in [the investigation](docs/betaflight-2025.12-compatibility.md).
+- [x] Support named serial ports and preserve firmware-appropriate export syntax.
+  Full checks pass against the now 14-file Windows corpus; all 15 original serial
+  syntax errors are resolved. 2025.12 export remains gated on its compatibility pack.
+- [ ] Add a verified, bundled 2025.12 schema and rate reference coverage. Keep
+  custom-build defaults uncertified and update supported-version guidance only
+  when the compatibility implementation is verified.
+- [ ] Resolve the remaining feature syntax and schema validation diagnostics
+  tracked in [TODO.md](TODO.md).
+
 ## Phase 2 — Workspace and comparison — in progress
 
 Phase 2 builds on foundations already shipped:
@@ -29,10 +47,11 @@ Phase 2 builds on foundations already shipped:
   preferences; persisted light/dark theme selection.
 - [x] Windows and macOS installer packaging and tag-triggered release workflows.
 
-Comparison is the next feature priority; recursive indexing is not a prerequisite.
-Native installer validation continues alongside feature development.
+Comparison extensions remain the Phase 2 feature priority; recursive indexing is
+not a prerequisite. Betaflight compatibility follow-up and native installer
+validation continue alongside feature development.
 
-Remaining work, in implementation order:
+Comparison progress and remaining work, in implementation order:
 
 1. [x] Add a comparison view where users select two imported backups, including
    files opened together through the multi-file picker. Select each backup's rate
@@ -41,28 +60,29 @@ Remaining work, in implementation order:
    profile, show values at the same stick position, and explicitly report missing
    or unsupported curves. These are configuration-derived responses, not measured
    flight motion; Blackbox angular velocity remains in Phase 3.
-2. [ ] Extend the two-backup view with semantic parameter comparison, independent
-   PID/rate profile mapping, source-line links, and declared/derived/unknown
-   provenance badges. Distinguish unknown values from changes; compare versions
-   only where bundled compatibility data establishes equivalent semantics.
-   Same-version parameter comparison, independent profiles, source declarations,
-   and provenance are implemented; cross-version equivalence mappings remain.
-3. [ ] Extend comparison to three selected configurations, including angular
+2. [x] Add same-version parameter comparison for global settings and independently
+   selected PID/rate profiles, source-line links, and declared/derived/unknown
+   provenance. Distinguish unknown values from changes. Shipped in 0.4.0, with
+   the Windows/macOS module-resolution build fix in 0.4.1.
+3. [ ] Add certified cross-version parameter equivalence mappings and comparison
+   of CLI collections. Compare versions only where bundled compatibility data
+   establishes equivalent semantics.
+4. [ ] Extend comparison to three selected configurations, including angular
    velocity overlays. Use an explicitly selected baseline for semantic differences,
    distinguishing changes on either side and conflicting changes. Comparison
    remains read-only; it does not merge or apply configurations.
-4. [ ] Add recursive workspace indexing and searchable explorer navigation, with
+5. [ ] Add recursive workspace indexing and searchable explorer navigation, with
    pagination, cancellation, bounded background work, and removable-media
    handling. Index metadata without keeping every backup open in memory.
-5. [ ] Add explicitly saved/opened `.flightlens` sessions for workspace locations,
+6. [ ] Add explicitly saved/opened `.flightlens` sessions for workspace locations,
    document references, comparison/profile selections, and layout preferences.
    Define format versioning, compatibility, relative-path resolution, and recovery
    for moved or changed files. Automatic `session.json` restore is already present;
    portable sessions are not.
-6. [ ] Add native file associations and OS open-file routing, including opening
+7. [ ] Add native file associations and OS open-file routing, including opening
    files in an already-running app. Keep firmware and telemetry capability checks
    explicit when a recognized format is not yet supported.
-7. [ ] Validate the desktop workflow on Windows and macOS: compile the desktop
+8. [ ] Validate the desktop workflow on Windows and macOS: compile the desktop
    crate before release publication and record native smoke checks for picking,
    dropping, OS file opening, restore, clipboard, and snippet saving. Existing
    installer builds and browser tests do not replace native integration checks.

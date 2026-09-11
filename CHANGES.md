@@ -8,6 +8,13 @@ renamed to the version when the release is cut. Purely internal work
 
 ## Unreleased
 
+- Inspect Betaflight 2025.12 named serial ports and numeric aliases with correct
+  UART identities and Gimbal function labels. Preserve firmware-specific serial
+  export tokens; export for 2025.12 remains gated on a verified compatibility pack.
+
+- Update the roadmap to mark same-version parameter comparison, firmware version
+  recognition, and the 2025.12 compatibility investigation complete, with remaining
+  compatibility and comparison work listed separately.
 - Recognize Betaflight version headers with prerelease or build suffixes, including
   year-based custom builds, instead of displaying “unknown version”. Preserve the
   full version without certifying unsupported firmware defaults.

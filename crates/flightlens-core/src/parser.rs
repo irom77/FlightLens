@@ -215,7 +215,11 @@ pub fn parse_line(raw: &str) -> Result<Command, String> {
             if words.len() != 7 {
                 return Err(bad());
             }
-            let identifier = words[1].parse().map_err(|_| bad())?;
+            let identifier = words[1]
+                .parse()
+                .ok()
+                .or_else(|| named_port_id(words[1]))
+                .ok_or_else(bad)?;
             let v = words[2..]
                 .iter()
                 .map(|v| v.parse::<u32>().map_err(|_| bad()))
@@ -490,12 +494,18 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
                 mask,
                 baud,
             } => {
-                d.ports.retain(|p| p.identifier != *identifier);
+                let modern = named_serial_version(d.firmware.version.as_deref());
+                let identifier = if modern && (0..20).contains(identifier) {
+                    *identifier + 51
+                } else {
+                    *identifier
+                };
+                d.ports.retain(|p| p.identifier != identifier);
                 d.ports.push(Port {
-                    identifier: *identifier,
-                    name: port_name(*identifier),
+                    identifier,
+                    name: port_name(identifier, modern),
                     mask: *mask,
-                    functions: port_functions(*mask),
+                    functions: port_functions(*mask, modern),
                     baud: *baud,
                     line,
                 });
@@ -578,7 +588,37 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
     derive_defaults(&mut d, pack, baseline);
     Ok(Artifact::Config(Box::new(d)))
 }
-fn port_name(id: i32) -> String {
+pub(crate) fn named_serial_version(version: Option<&str>) -> bool {
+    version.is_some_and(|v| v.starts_with("2025.12."))
+}
+
+pub(crate) fn serial_port_token(id: i32, modern: bool) -> Option<String> {
+    match id {
+        50..=60 if modern => Some(format!("UART{}", id - 50)),
+        70..=79 if modern => Some(format!("PIOUART{}", id - 70)),
+        20 if modern => Some("VCP".into()),
+        30..=31 if modern => Some(format!("SOFT{}", id - 29)),
+        40 if modern => Some("LPUART1".into()),
+        0..=9 | 20 | 30..=31 | 40 if !modern => Some(id.to_string()),
+        _ => None,
+    }
+}
+
+fn named_port_id(token: &str) -> Option<i32> {
+    (20..=79).find(|id| {
+        serial_port_token(*id, true).is_some_and(|name| name.eq_ignore_ascii_case(token))
+    })
+}
+
+fn port_name(id: i32, modern: bool) -> String {
+    if modern {
+        match id {
+            50..=60 => return format!("UART {}", id - 50),
+            70..=79 => return format!("PIO UART {}", id - 70),
+            0..=19 => return format!("Unknown port {id}"),
+            _ => {}
+        }
+    }
     match id {
         0..=9 => format!("UART {}", id + 1),
         20 => "USB VCP".into(),
@@ -587,7 +627,7 @@ fn port_name(id: i32) -> String {
         _ => format!("Unknown port {id}"),
     }
 }
-fn port_functions(mask: u32) -> Vec<String> {
+fn port_functions(mask: u32, modern: bool) -> Vec<String> {
     let names = [
         (0, "MSP"),
         (1, "GPS"),
@@ -613,6 +653,12 @@ fn port_functions(mask: u32) -> Vec<String> {
         known |= 1 << bit;
         if mask & (1 << bit) != 0 {
             out.push(name.into());
+        }
+    }
+    if modern {
+        known |= 1 << 18;
+        if mask & (1 << 18) != 0 {
+            out.push("Gimbal".into());
         }
     }
     if mask & !known != 0 {
@@ -644,4 +690,26 @@ fn mode_name(id: u32) -> String {
         _ => return format!("Mode ID {id}"),
     }
     .into()
+}
+
+#[cfg(test)]
+mod serial_tests {
+    use super::*;
+
+    #[test]
+    fn serial_export_tokens_round_trip_without_aliasing_uart_zero() {
+        for id in [20, 30, 31, 40, 50, 51, 60, 70, 79] {
+            let token = serial_port_token(id, true).unwrap();
+            let text =
+                format!("# Betaflight / STM32F405 2025.12.3\nserial {token} 1 115200 0 0 0\n");
+            let Artifact::Config(d) = analyze(&text, "test", "test").unwrap() else {
+                panic!()
+            };
+            assert_eq!(d.ports[0].identifier, id);
+        }
+        assert_eq!(serial_port_token(0, false).as_deref(), Some("0"));
+        assert_eq!(serial_port_token(50, true).as_deref(), Some("UART0"));
+        assert!(serial_port_token(50, false).is_none());
+        assert!(serial_port_token(0, true).is_none());
+    }
 }

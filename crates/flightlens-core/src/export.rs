@@ -271,9 +271,14 @@ pub fn export(d: &ConfigDocument, r: &ExportRequest) -> Result<ValidatedSnippet,
                         .into(),
                 );
             }
+            let token = crate::parser::serial_port_token(
+                p.identifier,
+                crate::parser::named_serial_version(d.firmware.version.as_deref()),
+            )
+            .ok_or("Serial identifier is unsupported for this firmware")?;
             lines.push(format!(
                 "serial {} {} {} {} {} {}",
-                p.identifier, p.mask, p.baud[0], p.baud[1], p.baud[2], p.baud[3]
+                token, p.mask, p.baud[0], p.baud[1], p.baud[2], p.baud[3]
             ));
         }
     }

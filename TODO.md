@@ -10,8 +10,12 @@ file holds only what is actionable now.
 - Add verified compatibility coverage for year-based Betaflight releases. Their
   versions are now recognized, but no bundled schema covers those firmware lines,
   including the `2025.12.3-alpha.KAACK_V19` backups in the Windows DUMP_ALL corpus.
-- Investigate the 41 parser/validation diagnostics across the 13-file Windows
-  DUMP_ALL corpus; the non-strict smoke check passes but does not certify them.
+  See [the compatibility investigation](docs/betaflight-2025.12-compatibility.md)
+  for upstream evidence and implementation checkpoints.
+- Resolve the remaining feature syntax and schema validation diagnostics in the
+  Windows DUMP_ALL corpus: the current 14-file run reports 28 errors and no
+  smoke-check failures. The 15 serial syntax errors in the original two year-based
+  backups are resolved. Full 2025.12 export remains gated on the compatibility pack.
 - Add certified cross-version parameter equivalence mappings; current parameter
   comparison only classifies changes within the same supported firmware version.
   CLI collections, three-backup comparison and saved selections remain outstanding.

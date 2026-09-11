@@ -831,3 +831,37 @@ fn session_identity_follows_successful_reimports_and_recognized_artifacts() {
         "# INAV / STM32F405 7.0.0\n"
     );
 }
+
+#[test]
+fn named_serial_ports_and_numeric_aliases_preserve_identity() {
+    let text = "# Betaflight / STM32F405 2025.12.3-alpha.CUSTOM\nserial UART0 1 115200 0 0 0\nserial UART1 1 115200 0 0 0\nserial 0 64 115200 57600 0 115200\nserial 51 262144 115200 0 0 0\nserial soft2 1 115200 0 0 0\nserial PIOUART9 1 115200 0 0 0\n";
+    let d = config(text);
+    assert_eq!(
+        d.syntax.iter().map(|l| l.raw.as_str()).collect::<String>(),
+        text
+    );
+    assert_eq!(d.ports.len(), 4);
+    assert_eq!(
+        d.ports.iter().map(|p| p.identifier).collect::<Vec<_>>(),
+        vec![50, 51, 31, 79]
+    );
+    assert_eq!(d.ports[0].name, "UART 0");
+    assert_eq!(d.ports[1].name, "UART 1");
+    assert_eq!(d.ports[1].functions, vec!["Gimbal"]);
+    assert!(!d.diagnostics.iter().any(|d| d.severity == "error"));
+    assert!(export(&d, &request(&d, &["serial"]))
+        .unwrap_err()
+        .contains("compatibility pack"));
+    for token in ["UART11", "UART01", "SOFT0", "PIOUART10", "unknown"] {
+        assert!(parse_line(&format!("serial {token} 1 115200 0 0 0")).is_err());
+    }
+    let old = with("serial 0 64 115200 57600 0 115200\n");
+    assert_eq!(old.ports[0].identifier, 0);
+    assert_eq!(old.ports[0].name, "UART 1");
+    assert!(export(&old, &request(&old, &["serial"]))
+        .unwrap()
+        .text
+        .contains("serial 0 64"));
+    let invalid_old = with("serial UART0 1 115200 0 0 0\n");
+    assert!(export(&invalid_old, &request(&invalid_old, &["serial"])).is_err());
+}
