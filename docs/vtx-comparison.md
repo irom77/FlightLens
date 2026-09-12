@@ -1,7 +1,8 @@
 # VTX comparison: verified scope
 
-Source review is complete for the initial comparison design. Explicit table comparison is implemented locally; activation comparison remains
-outstanding. The collection view also retains preserved source text.
+Source review is complete for the initial comparison design. Explicit table and
+official 4.5 activation comparison are implemented locally. The collection view
+also retains preserved source text.
 
 Run `python3 tools/verify_vtx_comparison.py` to regenerate
 [source evidence](vtx-source-evidence.json). It checks 99 upstream files across
@@ -81,13 +82,12 @@ behavior have not been certified by this review.
   tables, unknown dimensions, resets, malformed syntax, case normalization and
   firmware gates. Include a browser test using actual Rust parser output.
 
-## Following unit: activation declarations
+## Implemented: activation declarations
 
-Compare slots separately, preserving AUX index, band/channel/power selectors and
-normalized ranges. Resolve table-dimension dependencies and build-capacity evidence
-before certifying a declaration; unknown prerequisites must remain unknown.
-Include invalid partial assignments, zero selectors, overlapping slots and
-non-table builds in the design. Do not infer RF equivalence from matching selectors.
+Slots are compared separately, preserving AUX index, band/channel/power selectors
+and normalized ranges. The implementation follows the prerequisite decision below,
+including unknown dependencies, invalid partial assignments, zero selectors,
+overlapping slots and non-table builds. Matching selectors do not certify RF equivalence.
 Core diagnostics and export remain outside these comparison slices.
 
 ## Activation prerequisite decision
@@ -136,7 +136,7 @@ activation slots: once accepted, a slot's selector numbers remain known even if
 later dimensions shrink. Equal selectors still say nothing about the selected
 frequency or device power.
 
-### Next implementation unit
+### Implemented scope
 
 - Compare final explicit declarations by slot 0–9. Accept exactly seven unsigned
   decimal operands: slot, AUX, band, channel, power, start, end. Bound range input

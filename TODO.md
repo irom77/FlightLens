@@ -7,6 +7,22 @@ file holds only what is actionable now.
 
 ## Next
 
+- Implement Phase 2 item 4: three-backup comparison with an explicit baseline,
+  independent profile selections, angular velocity overlays, and separate
+  one-sided changes and conflicts. Reuse existing compatibility and unknown-value
+  rules; keep the comparison read-only. Item 3 is complete within its fixed
+  [roadmap boundary](ROADMAP.md); broader mapping research is deferred.
+
+- Develop a guide explaining how FlightLens processes Betaflight (BF) CLI dumps,
+  building on the existing research and comparison documentation in `docs/`.
+  Cover firmware/version detection, parsing and profile scopes, schema selection
+  and validation, raw/unknown data preservation, comparison and equivalence rules,
+  diagnostics, and export limits. Link to the existing compatibility, parameter
+  equivalence, and CLI collection documents for detailed evidence, and distinguish
+  implemented behavior from deferred support. Organize the guide with a shared
+  processing overview and a Betaflight section so iNav and ArduPilot (AP) sections
+  can be added later without implying current support.
+
 - Complete 2025.12 export coverage for the 12 settings listed in the bundled
   pack's `unresolved_bounds`: build-dependent OSD/TPA/VTX limits, telemetry sensor
   masks, and unsigned 32-bit settings. The current integer model is signed 32-bit;
@@ -16,23 +32,10 @@ file holds only what is actionable now.
   exact upstream 4.5.2 choices. Revisit only with evidence of additional syntax.
 - Extend patch-specific schema verification beyond the known 4.4 GPS rescue
   bound change; unverified patches continue to use the base firmware-line schema.
-- Expand certified cross-version parameter equivalence beyond `motor_poles`
-  and the three battery cell-voltage thresholds
-  for official 4.5.0–4.5.5 and 2025.12.1–2025.12.5 releases.
-  Same-version feature, serial-port, and mode-assignment declaration comparisons are complete
-  locally. Source-text comparison of the five recognized CLI collections is
-  complete locally. Same-version rxrange endpoint comparison is complete for
-  verified official releases; semantic comparison of vtx/adjrange,
-  additional rxrange firmware coverage, certified cross-version ports, modes and
-  features, three-backup comparison and saved selections remain outstanding.
-- Implement the resolved official 4.5 [VTX activation scope](docs/vtx-comparison.md).
-  Explicit table comparison is complete locally; build-specific selector bounds
-  and 2025.12 activation capacity still need verified build evidence.
-- Extend rxfail firmware coverage beyond matching verified official releases;
-  core collection diagnostics and export remain outstanding.
 - Manually check the new comparison view in packaged Windows/macOS builds.
 - Manually check the feedback hand-off in packaged Windows/macOS builds, including
-  attachment toggles during preview preparation and near-limit file guidance. The
+  the upfront GitHub account notice, attachment toggles during preview preparation
+  and near-limit file guidance. The
   prefilled issue must open in the default browser and the redacted
   configuration must reach the system clipboard. Only the Linux/WSL path has
   been exercised.
@@ -77,12 +80,22 @@ file holds only what is actionable now.
 
 ## Later
 
-- Remaining Phase 2 work follows the sequence in [ROADMAP.md](ROADMAP.md):
-  semantic differences, then baseline-based
-  three-way comparison, workspace indexing, portable `.flightlens` sessions, and
-  native file associations. Native restore validation continues alongside this work.
-  Automatic restore and Windows/macOS installer packaging already exist; native
-  integration smoke checks and CI gating before release publication remain open.
+- After three-backup comparison, complete Phase 2 workspace indexing, portable
+  `.flightlens` sessions, native file associations, and desktop validation in
+  roadmap order. Saved comparison selections belong to the session work.
+- Expand comparison coverage after Phase 2: additional parameter mappings,
+  certified cross-version features/ports/modes and CLI collections, and additional
+  rxrange/rxfail firmware coverage. These do not block Phase 2 item 3 completion.
+- Extend [VTX activation comparison](docs/vtx-comparison.md) with verified build
+  evidence for build-specific selector bounds and 2025.12 activation capacity.
+- Investigate adjustment-range runtime equivalence separately from the completed
+  [declaration comparison](docs/adjrange-comparison.md). Collection diagnostics
+  and export remain separate follow-up work for all supported collections.
+- Keep hardware-classified `vbat_scale` deferred until its schema support is verified;
+  see [the voltage calibration review](docs/voltage-calibration-equivalence.md).
+- Keep hardware-classified `ibata_scale` deferred pending schema support; see
+  [the current calibration review](docs/current-calibration-equivalence.md).
+
 
 ## Accepted limitations
 

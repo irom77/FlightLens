@@ -80,13 +80,14 @@ export function ParameterComparison({
       <h2>Parameter comparison</h2>
       <p>
         Global settings and the selected PID and rate profiles. Unknown values
-        are not changes. Cross-version comparison is certified for motor_poles
-        and vbat_max_cell_voltage, vbat_min_cell_voltage,
-        vbat_warning_cell_voltage between official Betaflight 4.5.0–4.5.5 and
-        2025.12.1–2025.12.5 releases. Other cross-version settings remain not
-        comparable. Features, ports, and modes appear in separate comparisons
-        below. Additional CLI collections have a separate source-text comparison
-        below.
+        are not changes. Cross-version comparison is certified for motor_poles,
+        bat_capacity, force_battery_cell_count, vbat_max_cell_voltage,
+        vbat_min_cell_voltage, vbat_warning_cell_voltage, vbat_divider,
+        vbat_multiplier, ibata_offset, ibatv_scale and ibatv_offset between
+        official Betaflight 4.5.0–4.5.5 and 2025.12.1–2025.12.5 releases. Other
+        cross-version settings remain not comparable. Features, ports, and modes
+        appear in separate comparisons below. Additional CLI collections have a
+        separate source-text comparison below.
       </p>
       <div className="profile-controls">
         {[

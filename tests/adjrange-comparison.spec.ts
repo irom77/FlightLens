@@ -1,28 +1,28 @@
 import { test, expect } from "@playwright/test";
 import { execFileSync } from "node:child_process";
 
-const fixtures = [[], ["--cross-version-parameters"]].map((flags) =>
-  JSON.parse(
-    execFileSync(
-      process.env.FLIGHTLENS_CARGO ?? "cargo",
-      [
-        "run",
-        "--quiet",
-        "-p",
-        "flightlens-core",
-        "--bin",
-        "preview_fixture",
-        "--",
-        "--explicit-only",
-        "--parameter-baseline",
-        ...flags,
-      ],
-      { encoding: "utf8" },
+const fixtures = [["--adjrange-baseline"], ["--adjrange-differences"]].map(
+  (flags) =>
+    JSON.parse(
+      execFileSync(
+        process.env.FLIGHTLENS_CARGO ?? "cargo",
+        [
+          "run",
+          "--quiet",
+          "-p",
+          "flightlens-core",
+          "--bin",
+          "preview_fixture",
+          "--",
+          "--explicit-only",
+          ...flags,
+        ],
+        { encoding: "utf8" },
+      ),
     ),
-  ),
 );
 
-test("certified parameter comparisons use real parser firmware identities", async ({
+test("Adjustment range comparison tracks parser declarations and invalidation", async ({
   page,
 }) => {
   expect(fixtures.map((f) => f.artifact.document.firmware.family)).toEqual([
@@ -31,7 +31,7 @@ test("certified parameter comparisons use real parser firmware identities", asyn
   ]);
   expect(fixtures.map((f) => f.artifact.document.firmware.version)).toEqual([
     "4.5.0",
-    "2025.12.1",
+    "4.5.0",
   ]);
   await page.addInitScript((fixtures) => {
     const win = window as unknown as Record<string, unknown>;
@@ -67,33 +67,27 @@ test("certified parameter comparisons use real parser firmware identities", asyn
     .getByRole("button", { name: "Compare backups", exact: true })
     .click();
   const parameters = page.getByRole("region", {
-    name: "Parameter comparison",
+    name: "Adjustment range comparison",
     exact: true,
   });
-  await parameters.getByLabel("Hide equal values").uncheck();
+  await parameters.getByLabel("Hide equal Adjustment ranges").uncheck();
   for (const [key, status] of [
-    ["motor_poles", "Changed"],
-    ["bat_capacity", "Changed"],
-    ["vbat_divider", "Changed"],
-    ["vbat_multiplier", "Equal"],
-    ["ibata_offset", "Changed"],
-    ["ibatv_scale", "Changed"],
-    ["ibatv_offset", "Changed"],
-    ["force_battery_cell_count", "Equal"],
-    ["vbat_max_cell_voltage", "Equal"],
-    ["vbat_min_cell_voltage", "Equal"],
-    ["vbat_warning_cell_voltage", "Equal"],
-    ["motor_pwm_protocol", "Not comparable"],
+    ["0", "Equal"],
+    ["1", "Changed"],
+    ["2", "Unknown"],
   ]) {
-    await parameters.getByLabel("Filter compared parameters").fill(key);
-    await expect(parameters.getByRole("row").nth(1)).toContainText(status);
-    if (key === "ibatv_scale") {
-      await expect(parameters.getByRole("row").nth(1)).toContainText("-16000");
-      await expect(parameters.getByRole("row").nth(1)).toContainText("16000");
-    }
-    if (key === "ibata_offset") {
-      await expect(parameters.getByRole("row").nth(1)).toContainText("-32000");
-      await expect(parameters.getByRole("row").nth(1)).toContainText("32000");
+    await parameters.getByLabel("Filter compared adjustment slots").fill(key);
+    const row = parameters
+      .getByRole("row")
+      .filter({ has: page.getByRole("cell", { name: key, exact: true }) });
+    await expect(row).toContainText(status);
+    if (key === "0") {
+      await expect(row).toContainText("Stored range: 1000–1975 µs");
+      await expect(row).toContainText("Center: 0");
+      await row.getByText(/B: Line/).click();
+      await expect(row.locator("pre").last()).toHaveText(
+        "adjrange 00 00 00 1024 1975 01 00 0 0",
+      );
     }
   }
 });

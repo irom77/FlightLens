@@ -8,91 +8,93 @@ const unsigned = (text: string | undefined, max: number) =>
 const token = (text: string | undefined, max: number) =>
   Boolean(text && text.length <= max && /^[!-~]+$/.test(text));
 
-function table(document: ConfigDocument) {
-  const values = new Map<string, VtxTableValue>();
+export function applyVtxTableLine(
+  values: Map<string, VtxTableValue>,
+  source: SyntaxLine,
+) {
   const count = (key: string) => {
     const entry = values.get(key);
     return entry ? Number(entry.value) : undefined;
   };
-  for (const source of document.syntax) {
-    const command = source.command;
-    if (
-      command.kind === "defaults" ||
-      (command.kind === "malformed" &&
-        source.raw.trim().split(/\s+/)[0] === "defaults")
-    )
-      values.clear();
-    if (command.kind === "malformed" && /^vtxtable\s+/.test(source.raw.trim()))
-      values.clear();
-    if (command.kind !== "collection" || command.name !== "vtxtable") continue;
-    const [key, ...args] = command.operands;
-    const set = (name: string, value: string) =>
-      values.set(name, { value, source });
-    if (dimensions.includes(key) && args.length === 1 && unsigned(args[0], 8)) {
-      if (count(key) !== Number(args[0])) {
-        for (const name of values.keys()) {
-          if (
-            (key === "bands" || key === "channels") &&
-            name.startsWith("band ")
-          )
-            values.delete(name);
-          if (
-            key === "powerlevels" &&
-            (name === "powervalues" || name === "powerlabels")
-          )
-            values.delete(name);
-        }
-      }
-      set(key, String(Number(args[0])));
-      continue;
-    }
-    const bands = count("bands"),
-      channels = count("channels"),
-      levels = count("powerlevels");
-    if (
-      key === "band" &&
-      bands !== undefined &&
-      channels !== undefined &&
-      channels > 0 &&
-      unsigned(args[0], bands) &&
-      Number(args[0]) >= 1 &&
-      args.length === 4 + channels &&
-      token(args[1], 8) &&
-      token(args[2], 1) &&
-      ["FACTORY", "CUSTOM"].includes(args[3]?.toUpperCase()) &&
-      args.slice(4).every((value) => unsigned(value, 65535))
-    ) {
-      set(
-        `band ${Number(args[0])}`,
-        [
-          args[1].toUpperCase(),
-          args[2].toUpperCase(),
-          args[3].toUpperCase(),
-          ...args.slice(4).map(Number),
-        ].join(" "),
-      );
-      continue;
-    }
-    if (
-      (key === "powervalues" || key === "powerlabels") &&
-      levels !== undefined &&
-      args.length === levels &&
-      args.every((value) =>
-        key === "powervalues" ? unsigned(value, 65535) : token(value, 3),
-      )
-    ) {
-      set(
-        key,
-        args
-          .map((value) =>
-            key === "powervalues" ? String(Number(value)) : value.toUpperCase(),
-          )
-          .join(" "),
-      );
-      continue;
-    }
+  const command = source.command;
+  if (
+    command.kind === "defaults" ||
+    (command.kind === "malformed" &&
+      source.raw.trim().split(/\s+/)[0] === "defaults")
+  )
     values.clear();
+  if (command.kind === "malformed" && /^vtxtable\s+/.test(source.raw.trim()))
+    values.clear();
+  if (command.kind !== "collection" || command.name !== "vtxtable") return;
+  const [key, ...args] = command.operands;
+  const set = (name: string, value: string) =>
+    values.set(name, { value, source });
+  if (dimensions.includes(key) && args.length === 1 && unsigned(args[0], 8)) {
+    if (count(key) !== Number(args[0])) {
+      for (const name of values.keys()) {
+        if ((key === "bands" || key === "channels") && name.startsWith("band "))
+          values.delete(name);
+        if (
+          key === "powerlevels" &&
+          (name === "powervalues" || name === "powerlabels")
+        )
+          values.delete(name);
+      }
+    }
+    set(key, String(Number(args[0])));
+    return;
   }
+  const bands = count("bands"),
+    channels = count("channels"),
+    levels = count("powerlevels");
+  if (
+    key === "band" &&
+    bands !== undefined &&
+    channels !== undefined &&
+    channels > 0 &&
+    unsigned(args[0], bands) &&
+    Number(args[0]) >= 1 &&
+    args.length === 4 + channels &&
+    token(args[1], 8) &&
+    token(args[2], 1) &&
+    ["FACTORY", "CUSTOM"].includes(args[3]?.toUpperCase()) &&
+    args.slice(4).every((value) => unsigned(value, 65535))
+  ) {
+    set(
+      `band ${Number(args[0])}`,
+      [
+        args[1].toUpperCase(),
+        args[2].toUpperCase(),
+        args[3].toUpperCase(),
+        ...args.slice(4).map(Number),
+      ].join(" "),
+    );
+    return;
+  }
+  if (
+    (key === "powervalues" || key === "powerlabels") &&
+    levels !== undefined &&
+    args.length === levels &&
+    args.every((value) =>
+      key === "powervalues" ? unsigned(value, 65535) : token(value, 3),
+    )
+  ) {
+    set(
+      key,
+      args
+        .map((value) =>
+          key === "powervalues" ? String(Number(value)) : value.toUpperCase(),
+        )
+        .join(" "),
+    );
+    return;
+  }
+  values.clear();
+}
+
+function table(document: ConfigDocument) {
+  const values = new Map<string, VtxTableValue>();
+  for (const source of document.syntax) applyVtxTableLine(values, source);
   return values;
 }
 

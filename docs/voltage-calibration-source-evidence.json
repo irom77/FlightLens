@@ -1,0 +1,257 @@
+{
+  "sources": [
+    {
+      "version": "4.5.0",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.0",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/sensors/voltage.h",
+      "sha256": "eae14847fa97121f7dd72f99c89dd83bc2b0e5e0957e18eac59ecff5f9cb53e4",
+      "sections": {}
+    },
+    {
+      "version": "4.5.0",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/sensors/voltage.c",
+      "sha256": "1837280e4e25828f8386fd56143d6063e6e4cf1e2df2257c634d2abb08353a90",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "4.5.1",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.1",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/sensors/voltage.h",
+      "sha256": "f249bdbe3db82a5989660872d0b0ac3f3f89e65be70f041dafd96c23abe75990",
+      "sections": {}
+    },
+    {
+      "version": "4.5.1",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/sensors/voltage.c",
+      "sha256": "306d70a8ae388a951688c01f410b63ae187fce111fafec6c29445de431c13289",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "4.5.2",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.2",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/sensors/voltage.h",
+      "sha256": "f249bdbe3db82a5989660872d0b0ac3f3f89e65be70f041dafd96c23abe75990",
+      "sections": {}
+    },
+    {
+      "version": "4.5.2",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/sensors/voltage.c",
+      "sha256": "306d70a8ae388a951688c01f410b63ae187fce111fafec6c29445de431c13289",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "4.5.3",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.3",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/sensors/voltage.h",
+      "sha256": "f249bdbe3db82a5989660872d0b0ac3f3f89e65be70f041dafd96c23abe75990",
+      "sections": {}
+    },
+    {
+      "version": "4.5.3",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/sensors/voltage.c",
+      "sha256": "306d70a8ae388a951688c01f410b63ae187fce111fafec6c29445de431c13289",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "4.5.4",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.4",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/sensors/voltage.h",
+      "sha256": "f249bdbe3db82a5989660872d0b0ac3f3f89e65be70f041dafd96c23abe75990",
+      "sections": {}
+    },
+    {
+      "version": "4.5.4",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/sensors/voltage.c",
+      "sha256": "306d70a8ae388a951688c01f410b63ae187fce111fafec6c29445de431c13289",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "4.5.5",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.5",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/sensors/voltage.h",
+      "sha256": "f249bdbe3db82a5989660872d0b0ac3f3f89e65be70f041dafd96c23abe75990",
+      "sections": {}
+    },
+    {
+      "version": "4.5.5",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/sensors/voltage.c",
+      "sha256": "306d70a8ae388a951688c01f410b63ae187fce111fafec6c29445de431c13289",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "2025.12.1",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.1",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/voltage.h",
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.1",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/voltage.c",
+      "sha256": "2f9209e886098d662c2e906913d1e93c066f0592d73e1eacaaf62139f011d9e1",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "2025.12.2",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.2",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/sensors/voltage.h",
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.2",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/sensors/voltage.c",
+      "sha256": "2f9209e886098d662c2e906913d1e93c066f0592d73e1eacaaf62139f011d9e1",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "2025.12.3",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.3",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/sensors/voltage.h",
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.3",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/sensors/voltage.c",
+      "sha256": "2f9209e886098d662c2e906913d1e93c066f0592d73e1eacaaf62139f011d9e1",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "2025.12.4",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.4",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/sensors/voltage.h",
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.4",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/sensors/voltage.c",
+      "sha256": "2f9209e886098d662c2e906913d1e93c066f0592d73e1eacaaf62139f011d9e1",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "2025.12.5",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.5",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/voltage.h",
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.5",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/voltage.c",
+      "sha256": "2f9209e886098d662c2e906913d1e93c066f0592d73e1eacaaf62139f011d9e1",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    }
+  ]
+}

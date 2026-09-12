@@ -3,6 +3,13 @@ import hashlib
 import json
 from pathlib import Path
 import urllib.request
+from verify_battery_parameter_equivalence import CHECKS as BATTERY_CHECKS, verify as verify_battery
+
+from verify_voltage_calibration_equivalence import CHECKS as VOLTAGE_CHECKS, verify as verify_voltage
+
+from verify_current_calibration_equivalence import CHECKS as CURRENT_CHECKS, verify as verify_current
+
+from verify_virtual_current_equivalence import CHECKS as VIRTUAL_CHECKS, verify as verify_virtual
 
 ROOT = Path(__file__).resolve().parents[1]
 releases = {**{f'4.5.{n}': 'betaflight-4.5.0-schema-1' for n in range(6)},
@@ -35,6 +42,31 @@ for name, (description, usage) in battery_fields.items():
     checks['sensors/battery.c'].append(usage)
     mappings.append({'scope': 'global', 'key': key, 'kind': 'integer',
                      'min': 100, 'max': 500, 'unit': '0.01 V'})
+mappings.extend([
+    {'scope': 'global', 'key': 'ibatv_scale', 'kind': 'integer',
+     'min': -16000, 'max': 16000, 'unit': 'coefficient'},
+    {'scope': 'global', 'key': 'ibatv_offset', 'kind': 'integer',
+     'min': 0, 'max': 16000, 'unit': '0.01 A'},
+    {'scope': 'global', 'key': 'ibata_offset', 'kind': 'integer',
+     'min': -32000, 'max': 32000, 'unit': 'mA'},
+    {'scope': 'global', 'key': 'bat_capacity', 'kind': 'integer',
+     'min': 0, 'max': 20000, 'unit': 'mAh'},
+    {'scope': 'global', 'key': 'force_battery_cell_count', 'kind': 'integer',
+     'min': 0, 'max': 24, 'unit': 'cells'},
+    {'scope': 'global', 'key': 'vbat_divider', 'kind': 'integer',
+     'min': 1, 'max': 255, 'unit': 'factor'},
+    {'scope': 'global', 'key': 'vbat_multiplier', 'kind': 'integer',
+     'min': 1, 'max': 255, 'unit': 'factor'},
+])
+# Verify reviewed full runtime functions before publishing the expanded manifest.
+battery_sources = [verify_battery((version, path))
+                   for version in releases for path in BATTERY_CHECKS]
+voltage_sources = [verify_voltage((version, path))
+                   for version in releases for path in VOLTAGE_CHECKS]
+current_sources = [verify_current((version, path))
+                   for version in releases for path in CURRENT_CHECKS]
+virtual_sources = [verify_virtual((version, path))
+                   for version in releases for path in VIRTUAL_CHECKS]
 sources = []
 for version in releases:
     for path, expected in checks.items():
@@ -46,5 +78,7 @@ for version in releases:
         sources.append({'version': version, 'path': path, 'url': url,
                         'sha256': hashlib.sha256(data).hexdigest()})
 manifest = {'family': 'betaflight', 'releases': releases,
-            'mappings': mappings, 'sources': sources}
+            'mappings': mappings, 'sources': sources, 'batterySources': battery_sources,
+            'voltageSources': voltage_sources, 'currentSources': current_sources,
+            'virtualSources': virtual_sources}
 (ROOT / 'src/parameterEquivalence.json').write_text(json.dumps(manifest, indent=2) + '\n')

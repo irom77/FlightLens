@@ -131,6 +131,7 @@ export function Feedback({
           </>
         ) : (
           <>
+            <p>Submitting feedback requires a GitHub account.</p>
             <p>
               FlightLens does not send anything. The issue opens prefilled in
               your browser and you file it yourself; an attached configuration
@@ -234,7 +235,7 @@ export function Feedback({
                 disabled={!report || filing}
                 onClick={() => void file()}
               >
-                Open GitHub issue
+                Continue to GitHub
               </button>
             </div>
           </>

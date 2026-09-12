@@ -71,35 +71,37 @@ Comparison progress and remaining work, in implementation order:
    selected PID/rate profiles, source-line links, and declared/derived/unknown
    provenance. Distinguish unknown values from changes. Shipped in 0.4.0, with
    the Windows/macOS module-resolution build fix in 0.4.1.
-3. [ ] Add certified cross-version parameter equivalence mappings and comparison
-   of CLI collections. Compare versions only where bundled compatibility data
-   establishes equivalent semantics. Four mappings completed locally:
-   `motor_poles`, `vbat_max_cell_voltage`, `vbat_min_cell_voltage`, and
-   `vbat_warning_cell_voltage` across official 4.5.0–4.5.5 and 2025.12.1–2025.12.5.
-   The firmware-family gate now matches parser output, with renderer coverage
-   for certified cross-version comparisons.
-   Same-version feature declaration comparison is complete locally, including
-   final explicit states, unknown omissions, filtering, and source lines.
-   Same-version serial-port comparison is complete locally, including function
-   masks, all baud settings, missing ports, filtering, and source lines.
-   Same-version mode-assignment comparison is complete locally, including slot
-   matching, channels, ranges, logic, linked IDs, filtering, and source lines.
-   Source-text comparison of vtxtable, vtx, rxfail, rxrange, and adjrange is
-   complete locally, retaining duplicates and pre-reset lines without certifying
-   semantics. Same-version rxrange endpoint comparison is complete locally for
-   verified official 4.5.0–4.5.5 and 2025.12.1–2025.12.5, with resets, unknown
-   omissions, filtering, and source lines. Additional settings, cross-version features/ports/modes, and
-   semantic comparison of other CLI collections remain outstanding.
-   [rxfail source verification](docs/rxfail-comparison.md) is complete across
-   the same 11 official releases. Its semantic comparison UI is complete locally,
-   including final channel declarations, 25 µs normalization, unknown omissions,
-   firmware gates, filtering, source lines, and parser-to-renderer coverage.
-   [VTX source review](docs/vtx-comparison.md) is complete across 11 releases;
-   explicit table comparison is complete locally, including command ordering,
-   dependency invalidation, normalization, firmware gates, filtering and source lines.
-   Activation prerequisites are resolved for an initial official 4.5 slice using
-   fixed slot capacity and bounds valid with or without table support. Its UI is
-   next; 2025.12 build-capacity certification remains deferred.
+3. [x] Deliver a bounded first set of certified cross-version parameter mappings
+   and CLI collection comparisons. **Completed in 0.7.0.** The
+   completion boundary is the following implemented and tested scope:
+   - Eleven global integer mappings across official Betaflight 4.5.0–4.5.5 and
+     2025.12.1–2025.12.5: `motor_poles`, `vbat_max_cell_voltage`,
+     `vbat_min_cell_voltage`, `vbat_warning_cell_voltage`, `bat_capacity`,
+     `force_battery_cell_count`, `vbat_divider`, `vbat_multiplier`, `ibata_offset`,
+     `ibatv_scale`, and `ibatv_offset`. Each requires verified bounds, exact
+     release/family/pack gates and bundled upstream evidence. See
+     [parameter equivalence](docs/parameter-equivalence.md).
+   - Same-version feature, serial-port and mode-assignment declaration comparison.
+   - Source-text comparison for all five recognized collections: `vtxtable`,
+     `vtx`, `rxfail`, `rxrange`, and `adjrange`. Certified same-version comparison
+     covers explicit VTX tables, rxrange endpoints, rxfail channel declarations
+     and adjustment-range declarations for the verified official releases;
+     VTX activation comparison is limited to official 4.5.0–4.5.5. See
+     [VTX](docs/vtx-comparison.md), [rxfail](docs/rxfail-comparison.md), and
+     [adjustment-range](docs/adjrange-comparison.md) evidence for exact gates.
+   - Comparisons preserve source lines and provenance, distinguish missing or
+     invalid values from changes, and report unsupported equivalence as not
+     comparable. Collection comparisons respect reviewed command ordering,
+     resets and normalization. Backups remain read-only and comparison offline.
+   - Bounds, unsupported identities, unknown values and parser-to-renderer
+     behavior have regression coverage. `./test.sh` and `pnpm screenshots:check`
+     passed at the implementation checkpoint on 2026-09-12. Packaged native
+     validation remains required under item 8.
+   Additional mappings, firmware coverage, cross-version collection equivalence,
+   collection diagnostics/export and runtime equivalence are follow-up work,
+   not prerequisites for this item or Phase 2. The dump-processing guide is a
+   separate documentation task. Do not reopen this item for coverage expansion;
+   defects in the delivered scope still require fixes.
 4. [ ] Extend comparison to three selected configurations, including angular
    velocity overlays. Use an explicitly selected baseline for semantic differences,
    distinguishing changes on either side and conflicting changes. Comparison
@@ -124,8 +126,10 @@ Comparison progress and remaining work, in implementation order:
 
 Signing and notarization remain a separate distribution decision tracked in
 [TODO.md](TODO.md); initial installer packaging is already delivered. Phase 2 is
-complete when the remaining workflow is implemented and verified, with saved-data
-compatibility and platform limitations documented.
+complete when items 1–8 are implemented and verified, with saved-data
+compatibility and platform limitations documented. Item 3 has a fixed coverage
+boundary above; further comparison research does not block items 4–8. The next
+feature unit is item 4, baseline-based three-backup comparison.
 
 ## Phase 2.5 — Feedback and inspection improvements
 
@@ -139,6 +143,8 @@ telemetry pipeline. Items are independent and may ship in any order.
    server, credentials, or captcha. The reporter files the issue and maintainers
    triage it on GitHub. Require complete fields before submitting, make the
    configuration opt-in, and show the redacted payload before it leaves the app.
+   The dialog states that submission requires a GitHub account before the form,
+   with a “Continue to GitHub” button for the browser hand-off.
    Review fixes complete locally: submission requires a matching preview and
    attachment size checks include the report text. Opening the browser and reaching the clipboard remain to be
    checked in packaged Windows and macOS builds (see TODO).

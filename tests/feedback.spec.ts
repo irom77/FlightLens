@@ -98,7 +98,10 @@ test("feedback is reviewed in the app and filed by the reporter", async ({
     .click();
   await page.getByRole("button", { name: "Send feedback" }).click();
   const dialog = page.getByRole("dialog", { name: "Send feedback" });
-  const submit = dialog.getByRole("button", { name: "Open GitHub issue" });
+  const submit = dialog.getByRole("button", { name: "Continue to GitHub" });
+  await expect(
+    dialog.getByText("Submitting feedback requires a GitHub account."),
+  ).toBeVisible();
   // An empty report cannot be filed, and the dialog says why rather than
   // leaving a disabled button unexplained.
   await expect(submit).toBeDisabled();

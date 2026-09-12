@@ -204,3 +204,90 @@ describe("certified battery voltage comparison", () => {
     });
   }
 });
+
+describe("certified battery quantity and calibration comparison", () => {
+  const make = (key: string, value: number, version: string) => {
+    const d = document([
+      { ...parameter(value), key, semanticKey: key, scope: { kind: "global" } },
+    ]);
+    d.firmware.version = version;
+    d.firmware.packId = version.startsWith("4.5.")
+      ? "betaflight-4.5.0-schema-1"
+      : "betaflight-2025.12.1-schema-1";
+    return d;
+  };
+  const status = (a: ConfigDocument, b: ConfigDocument) =>
+    compareParameters(a, b, profiles, profiles)[0].status;
+  for (const [key, minimum, maximum] of [
+    ["bat_capacity", 0, 20000],
+    ["force_battery_cell_count", 0, 24],
+    ["vbat_divider", 1, 255],
+    ["vbat_multiplier", 1, 255],
+    ["ibata_offset", -32000, 32000],
+    ["ibatv_scale", -16000, 16000],
+    ["ibatv_offset", 0, 16000],
+  ] as const) {
+    it(`compares ${key} within certified bounds`, () => {
+      for (const version of [
+        ...Array.from({ length: 6 }, (_, i) => `4.5.${i}`),
+        ...Array.from({ length: 5 }, (_, i) => `2025.12.${i + 1}`),
+      ]) {
+        for (const value of [
+          minimum,
+          minimum + 1,
+          maximum,
+          ...(minimum < 0 ? [-1, 0, 1] : []),
+        ]) {
+          const a = make(key, value, version),
+            b = make(key, value, "4.5.2");
+          expect(status(a, b)).toBe("Equal");
+          expect(status(b, a)).toBe("Equal");
+          expect(
+            status(
+              a,
+              make(key, value === maximum ? maximum - 1 : value + 1, "4.5.2"),
+            ),
+          ).toBe("Changed");
+        }
+      }
+      const a = make(key, 1, "4.5.0");
+      for (const value of [minimum - 1, maximum + 1]) {
+        const invalid = make(key, value, "4.5.0");
+        const valid = make(key, minimum, "2025.12.1");
+        expect(status(a, make(key, value, "2025.12.1"))).toBe("Not comparable");
+        expect(status(invalid, valid)).toBe("Not comparable");
+        expect(status(valid, invalid)).toBe("Not comparable");
+      }
+      for (const version of [
+        "4.5.3.KAACK_V19",
+        "2025.12.3-alpha.KAACK_V19",
+        "2025.12.6",
+      ])
+        expect(status(a, make(key, 1, version))).toBe("Not comparable");
+      const b = make(key, 1, "2025.12.1");
+      b.parameters["0"]!.value = { kind: "text", value: "1" };
+      expect(status(a, b)).toBe("Not comparable");
+      for (const mutate of [
+        (d: ConfigDocument) => {
+          d.firmware.family = "INAV";
+        },
+        (d: ConfigDocument) => {
+          d.firmware.packId = "other";
+        },
+        (d: ConfigDocument) => {
+          d.parameters["0"]!.scope = { kind: "pid", index: 0 };
+        },
+      ]) {
+        const left = make(key, minimum, "4.5.0"),
+          right = make(key, minimum, "2025.12.1");
+        mutate(left);
+        mutate(right);
+        expect(status(left, right)).toBe("Not comparable");
+      }
+      b.parameters["0"]!.valid = false;
+      expect(status(a, b)).toBe("Unknown");
+      b.parameters = {};
+      expect(status(a, b)).toBe("Unknown");
+    });
+  }
+});

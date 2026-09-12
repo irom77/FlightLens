@@ -6,6 +6,52 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## 0.7.0 — 2026-09-12
+
+- Define the completed Phase 2 comparison coverage boundary and defer broader
+  equivalence research so three-backup comparison is the next feature priority.
+
+- Compare virtual-current scale and offset across verified official Betaflight
+  4.5.0–4.5.5 and 2025.12.1–2025.12.5 releases, enforcing scale bounds of
+  -16000–16000 and offset bounds of 0–16000 centiamperes (0.01 A).
+
+- Document virtual-current scale and offset mapping prerequisites, with an upstream
+  verifier covering 11 releases and explicit units and runtime limitations.
+
+- Compare ADC current offset across verified official Betaflight 4.5.0–4.5.5
+  and 2025.12.1–2025.12.5 releases, enforcing signed bounds of -32000–32000 mA.
+
+- Document current calibration mapping prerequisites with an upstream verifier
+  covering 11 releases; identify the signed ADC offset candidate and defer hardware scale.
+
+- Document Codex co-author attribution for future assisted commits.
+
+- Compare voltage divider and multiplier settings across verified official
+  Betaflight 4.5.0–4.5.5 and 2025.12.1–2025.12.5 releases, enforcing bounds of 1–255.
+
+- Document voltage calibration comparison prerequisites with an upstream verifier
+  covering 11 releases; distinguish global divisor settings from hardware scale.
+
+- Compare battery capacity and forced cell count across verified official
+  Betaflight 4.5.0–4.5.5 and 2025.12.1–2025.12.5 releases.
+
+- Document capacity and forced-cell-count comparison scope, with an upstream
+  verifier covering 11 official Betaflight releases and reviewed runtime differences.
+
+- Compare final explicit adjustment-range slots on matching verified official
+  Betaflight 4.5.0–4.5.5 and 2025.12.1–2025.12.5 versions, with normalized
+  ranges, optional defaults, filtering and source lines.
+
+- Document adjustment-range comparison prerequisites, with a reproducible upstream
+  verifier covering 11 official Betaflight releases.
+
+- Compare final explicit VTX activation slots on matching verified official
+  Betaflight 4.5.0–4.5.5 versions, with normalized ranges, conservative selector
+  prerequisites, filtering and source lines.
+
+- State the GitHub account requirement before the feedback form and label the
+  browser hand-off “Continue to GitHub”.
+
 ## 0.6.0 — 2026-09-12
 
 - Compare explicit VTX table dimensions, bands and power arrays on matching verified

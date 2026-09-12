@@ -1,3 +1,5 @@
+import { AdjustmentRangeComparison } from "./AdjustmentRangeComparison";
+import { VtxActivationComparison } from "./VtxActivationComparison";
 import { VtxTableComparison } from "./VtxTableComparison";
 import { RxFailComparison } from "./RxFailComparison";
 import { RxRangeComparison } from "./RxRangeComparison";
@@ -134,6 +136,8 @@ function RateComparison({ a, b }: { a?: ConfigDocument; b?: ConfigDocument }) {
       {a && b && <RxRangeComparison a={a} b={b} />}
       {a && b && <RxFailComparison a={a} b={b} />}
       {a && b && <VtxTableComparison a={a} b={b} />}
+      {a && b && <VtxActivationComparison a={a} b={b} />}
+      {a && b && <AdjustmentRangeComparison a={a} b={b} />}
       {a && b && <CollectionComparison a={a} b={b} />}
       {a && b ? (
         ["roll", "pitch", "yaw"].map((axis) => (

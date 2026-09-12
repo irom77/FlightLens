@@ -182,6 +182,19 @@ Before choosing a version or preparing release notes, follow the
 [release policy](docs/releases/README.md) for bump criteria, compatibility,
 cadence, and milestone-note requirements.
 
+For Codex-assisted commits, retain the human author and add this trailer after a
+blank line at the end of the commit message:
+
+```text
+Co-Authored-By: Codex <267193182+codex@users.noreply.github.com>
+```
+
+This uses the [Codex GitHub account](https://github.com/codex)'s numeric-ID
+noreply address (account ID verified through the GitHub API). Credit only work
+Codex assisted with and preserve other co-author trailers where applicable.
+Attribution reaches GitHub when the commit is pushed under the release policy;
+do not rewrite published history just to add credit.
+
 Cutting a release (commit and push only when requested):
 
 ```sh

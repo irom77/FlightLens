@@ -44,6 +44,62 @@
       "min": 100,
       "max": 500,
       "unit": "0.01 V"
+    },
+    {
+      "scope": "global",
+      "key": "ibatv_scale",
+      "kind": "integer",
+      "min": -16000,
+      "max": 16000,
+      "unit": "coefficient"
+    },
+    {
+      "scope": "global",
+      "key": "ibatv_offset",
+      "kind": "integer",
+      "min": 0,
+      "max": 16000,
+      "unit": "0.01 A"
+    },
+    {
+      "scope": "global",
+      "key": "ibata_offset",
+      "kind": "integer",
+      "min": -32000,
+      "max": 32000,
+      "unit": "mA"
+    },
+    {
+      "scope": "global",
+      "key": "bat_capacity",
+      "kind": "integer",
+      "min": 0,
+      "max": 20000,
+      "unit": "mAh"
+    },
+    {
+      "scope": "global",
+      "key": "force_battery_cell_count",
+      "kind": "integer",
+      "min": 0,
+      "max": 24,
+      "unit": "cells"
+    },
+    {
+      "scope": "global",
+      "key": "vbat_divider",
+      "kind": "integer",
+      "min": 1,
+      "max": 255,
+      "unit": "factor"
+    },
+    {
+      "scope": "global",
+      "key": "vbat_multiplier",
+      "kind": "integer",
+      "min": 1,
+      "max": 255,
+      "unit": "factor"
     }
   ],
   "sources": [
@@ -442,6 +498,1059 @@
       "path": "sensors/battery.c",
       "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/battery.c",
       "sha256": "2f32fb565c0c5525f9516deaf06e77082f38f8544a87c57dd363ad3cc245eb38"
+    }
+  ],
+  "batterySources": [
+    {
+      "version": "4.5.0",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.0",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "sections": {}
+    },
+    {
+      "version": "4.5.0",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/sensors/battery.c",
+      "sha256": "57cfb220c94131cd3303bd3bd15c35f218f6912ed8927f0b34c26b561d324347",
+      "sections": {
+        "void batteryUpdatePresence(": "c17f395271dff5a0e46b9b5c7d459169d54f63a25ee113f0153c9b719303ac3b",
+        "uint8_t calculateBatteryPercentageRemaining(": "75c137fa65b5f9e99f0106fc4e56fe9c17c4347115e1dd7c1a5b1a5d66932f87"
+      }
+    },
+    {
+      "version": "4.5.1",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.1",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "sections": {}
+    },
+    {
+      "version": "4.5.1",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/sensors/battery.c",
+      "sha256": "dfcf3621d29954d3520e773209645e7e02b9109a9bbc139c39bacc2bcbf5224f",
+      "sections": {
+        "void batteryUpdatePresence(": "6d23b6795673a7c5d2324d766acb619e536aa5541bd353a44e5200639b2be602",
+        "uint8_t calculateBatteryPercentageRemaining(": "75c137fa65b5f9e99f0106fc4e56fe9c17c4347115e1dd7c1a5b1a5d66932f87"
+      }
+    },
+    {
+      "version": "4.5.2",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.2",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "sections": {}
+    },
+    {
+      "version": "4.5.2",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/sensors/battery.c",
+      "sha256": "dfcf3621d29954d3520e773209645e7e02b9109a9bbc139c39bacc2bcbf5224f",
+      "sections": {
+        "void batteryUpdatePresence(": "6d23b6795673a7c5d2324d766acb619e536aa5541bd353a44e5200639b2be602",
+        "uint8_t calculateBatteryPercentageRemaining(": "75c137fa65b5f9e99f0106fc4e56fe9c17c4347115e1dd7c1a5b1a5d66932f87"
+      }
+    },
+    {
+      "version": "4.5.3",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.3",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "sections": {}
+    },
+    {
+      "version": "4.5.3",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/sensors/battery.c",
+      "sha256": "dfcf3621d29954d3520e773209645e7e02b9109a9bbc139c39bacc2bcbf5224f",
+      "sections": {
+        "void batteryUpdatePresence(": "6d23b6795673a7c5d2324d766acb619e536aa5541bd353a44e5200639b2be602",
+        "uint8_t calculateBatteryPercentageRemaining(": "75c137fa65b5f9e99f0106fc4e56fe9c17c4347115e1dd7c1a5b1a5d66932f87"
+      }
+    },
+    {
+      "version": "4.5.4",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.4",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "sections": {}
+    },
+    {
+      "version": "4.5.4",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/sensors/battery.c",
+      "sha256": "dfcf3621d29954d3520e773209645e7e02b9109a9bbc139c39bacc2bcbf5224f",
+      "sections": {
+        "void batteryUpdatePresence(": "6d23b6795673a7c5d2324d766acb619e536aa5541bd353a44e5200639b2be602",
+        "uint8_t calculateBatteryPercentageRemaining(": "75c137fa65b5f9e99f0106fc4e56fe9c17c4347115e1dd7c1a5b1a5d66932f87"
+      }
+    },
+    {
+      "version": "4.5.5",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.5",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "sections": {}
+    },
+    {
+      "version": "4.5.5",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/sensors/battery.c",
+      "sha256": "dfcf3621d29954d3520e773209645e7e02b9109a9bbc139c39bacc2bcbf5224f",
+      "sections": {
+        "void batteryUpdatePresence(": "6d23b6795673a7c5d2324d766acb619e536aa5541bd353a44e5200639b2be602",
+        "uint8_t calculateBatteryPercentageRemaining(": "75c137fa65b5f9e99f0106fc4e56fe9c17c4347115e1dd7c1a5b1a5d66932f87"
+      }
+    },
+    {
+      "version": "2025.12.1",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.1",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.1",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/battery.c",
+      "sha256": "2f32fb565c0c5525f9516deaf06e77082f38f8544a87c57dd363ad3cc245eb38",
+      "sections": {
+        "void batteryUpdatePresence(": "49f78068e150c036788f20d8ca0b0af8d8b249a5dc3184c496870c00167480a0",
+        "uint8_t calculateBatteryPercentageRemaining(": "75c137fa65b5f9e99f0106fc4e56fe9c17c4347115e1dd7c1a5b1a5d66932f87"
+      }
+    },
+    {
+      "version": "2025.12.2",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.2",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.2",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/sensors/battery.c",
+      "sha256": "2f32fb565c0c5525f9516deaf06e77082f38f8544a87c57dd363ad3cc245eb38",
+      "sections": {
+        "void batteryUpdatePresence(": "49f78068e150c036788f20d8ca0b0af8d8b249a5dc3184c496870c00167480a0",
+        "uint8_t calculateBatteryPercentageRemaining(": "75c137fa65b5f9e99f0106fc4e56fe9c17c4347115e1dd7c1a5b1a5d66932f87"
+      }
+    },
+    {
+      "version": "2025.12.3",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.3",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.3",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/sensors/battery.c",
+      "sha256": "2f32fb565c0c5525f9516deaf06e77082f38f8544a87c57dd363ad3cc245eb38",
+      "sections": {
+        "void batteryUpdatePresence(": "49f78068e150c036788f20d8ca0b0af8d8b249a5dc3184c496870c00167480a0",
+        "uint8_t calculateBatteryPercentageRemaining(": "75c137fa65b5f9e99f0106fc4e56fe9c17c4347115e1dd7c1a5b1a5d66932f87"
+      }
+    },
+    {
+      "version": "2025.12.4",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.4",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.4",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/sensors/battery.c",
+      "sha256": "2f32fb565c0c5525f9516deaf06e77082f38f8544a87c57dd363ad3cc245eb38",
+      "sections": {
+        "void batteryUpdatePresence(": "49f78068e150c036788f20d8ca0b0af8d8b249a5dc3184c496870c00167480a0",
+        "uint8_t calculateBatteryPercentageRemaining(": "75c137fa65b5f9e99f0106fc4e56fe9c17c4347115e1dd7c1a5b1a5d66932f87"
+      }
+    },
+    {
+      "version": "2025.12.5",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.5",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.5",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/battery.c",
+      "sha256": "2f32fb565c0c5525f9516deaf06e77082f38f8544a87c57dd363ad3cc245eb38",
+      "sections": {
+        "void batteryUpdatePresence(": "49f78068e150c036788f20d8ca0b0af8d8b249a5dc3184c496870c00167480a0",
+        "uint8_t calculateBatteryPercentageRemaining(": "75c137fa65b5f9e99f0106fc4e56fe9c17c4347115e1dd7c1a5b1a5d66932f87"
+      }
+    }
+  ],
+  "voltageSources": [
+    {
+      "version": "4.5.0",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.0",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/sensors/voltage.h",
+      "sha256": "eae14847fa97121f7dd72f99c89dd83bc2b0e5e0957e18eac59ecff5f9cb53e4",
+      "sections": {}
+    },
+    {
+      "version": "4.5.0",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/sensors/voltage.c",
+      "sha256": "1837280e4e25828f8386fd56143d6063e6e4cf1e2df2257c634d2abb08353a90",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "4.5.1",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.1",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/sensors/voltage.h",
+      "sha256": "f249bdbe3db82a5989660872d0b0ac3f3f89e65be70f041dafd96c23abe75990",
+      "sections": {}
+    },
+    {
+      "version": "4.5.1",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/sensors/voltage.c",
+      "sha256": "306d70a8ae388a951688c01f410b63ae187fce111fafec6c29445de431c13289",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "4.5.2",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.2",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/sensors/voltage.h",
+      "sha256": "f249bdbe3db82a5989660872d0b0ac3f3f89e65be70f041dafd96c23abe75990",
+      "sections": {}
+    },
+    {
+      "version": "4.5.2",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/sensors/voltage.c",
+      "sha256": "306d70a8ae388a951688c01f410b63ae187fce111fafec6c29445de431c13289",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "4.5.3",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.3",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/sensors/voltage.h",
+      "sha256": "f249bdbe3db82a5989660872d0b0ac3f3f89e65be70f041dafd96c23abe75990",
+      "sections": {}
+    },
+    {
+      "version": "4.5.3",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/sensors/voltage.c",
+      "sha256": "306d70a8ae388a951688c01f410b63ae187fce111fafec6c29445de431c13289",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "4.5.4",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.4",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/sensors/voltage.h",
+      "sha256": "f249bdbe3db82a5989660872d0b0ac3f3f89e65be70f041dafd96c23abe75990",
+      "sections": {}
+    },
+    {
+      "version": "4.5.4",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/sensors/voltage.c",
+      "sha256": "306d70a8ae388a951688c01f410b63ae187fce111fafec6c29445de431c13289",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "4.5.5",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.5",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/sensors/voltage.h",
+      "sha256": "f249bdbe3db82a5989660872d0b0ac3f3f89e65be70f041dafd96c23abe75990",
+      "sections": {}
+    },
+    {
+      "version": "4.5.5",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/sensors/voltage.c",
+      "sha256": "306d70a8ae388a951688c01f410b63ae187fce111fafec6c29445de431c13289",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "2025.12.1",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.1",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/voltage.h",
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.1",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/voltage.c",
+      "sha256": "2f9209e886098d662c2e906913d1e93c066f0592d73e1eacaaf62139f011d9e1",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "2025.12.2",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.2",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/sensors/voltage.h",
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.2",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/sensors/voltage.c",
+      "sha256": "2f9209e886098d662c2e906913d1e93c066f0592d73e1eacaaf62139f011d9e1",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "2025.12.3",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.3",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/sensors/voltage.h",
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.3",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/sensors/voltage.c",
+      "sha256": "2f9209e886098d662c2e906913d1e93c066f0592d73e1eacaaf62139f011d9e1",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "2025.12.4",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.4",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/sensors/voltage.h",
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.4",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/sensors/voltage.c",
+      "sha256": "2f9209e886098d662c2e906913d1e93c066f0592d73e1eacaaf62139f011d9e1",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    },
+    {
+      "version": "2025.12.5",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.5",
+      "path": "sensors/voltage.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/voltage.h",
+      "sha256": "f0a5181b38d19714cbcc70771fde49cd0d365ed99562dd5b9eda2d1e131c2cf0",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.5",
+      "path": "sensors/voltage.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/voltage.c",
+      "sha256": "2f9209e886098d662c2e906913d1e93c066f0592d73e1eacaaf62139f011d9e1",
+      "sections": {
+        "STATIC_UNIT_TESTED uint16_t voltageAdcToVoltage(": "11072d9896d577a19394c4387f69e6f9976c125513ba789b8ea345e1fe40ff4d"
+      }
+    }
+  ],
+  "currentSources": [
+    {
+      "version": "4.5.0",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.0",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/sensors/current.h",
+      "sha256": "18ca5ceedb133cf103308b84df1fb2eace8ccbe861c50c333b60d0ec6125e317",
+      "sections": {}
+    },
+    {
+      "version": "4.5.0",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/sensors/current.c",
+      "sha256": "94010414dcee39bb0187eef19e8452f3c18f7c457997bc8a1b4cfb94ca23560d",
+      "sections": {
+        "static int32_t currentMeterADCToCentiamps(": "a48edb61554f10d59c0d85a4d61eb37e4aeda282d499b8b41aaea5a388d647bb",
+        "void currentMeterADCRefresh(": "f2c24d34023868f27e806e105b4e60b5e120635970c45284b44b77958c7a4e36"
+      }
+    },
+    {
+      "version": "4.5.1",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.1",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/sensors/current.h",
+      "sha256": "18ca5ceedb133cf103308b84df1fb2eace8ccbe861c50c333b60d0ec6125e317",
+      "sections": {}
+    },
+    {
+      "version": "4.5.1",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/sensors/current.c",
+      "sha256": "94010414dcee39bb0187eef19e8452f3c18f7c457997bc8a1b4cfb94ca23560d",
+      "sections": {
+        "static int32_t currentMeterADCToCentiamps(": "a48edb61554f10d59c0d85a4d61eb37e4aeda282d499b8b41aaea5a388d647bb",
+        "void currentMeterADCRefresh(": "f2c24d34023868f27e806e105b4e60b5e120635970c45284b44b77958c7a4e36"
+      }
+    },
+    {
+      "version": "4.5.2",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.2",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/sensors/current.h",
+      "sha256": "18ca5ceedb133cf103308b84df1fb2eace8ccbe861c50c333b60d0ec6125e317",
+      "sections": {}
+    },
+    {
+      "version": "4.5.2",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/sensors/current.c",
+      "sha256": "94010414dcee39bb0187eef19e8452f3c18f7c457997bc8a1b4cfb94ca23560d",
+      "sections": {
+        "static int32_t currentMeterADCToCentiamps(": "a48edb61554f10d59c0d85a4d61eb37e4aeda282d499b8b41aaea5a388d647bb",
+        "void currentMeterADCRefresh(": "f2c24d34023868f27e806e105b4e60b5e120635970c45284b44b77958c7a4e36"
+      }
+    },
+    {
+      "version": "4.5.3",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.3",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/sensors/current.h",
+      "sha256": "18ca5ceedb133cf103308b84df1fb2eace8ccbe861c50c333b60d0ec6125e317",
+      "sections": {}
+    },
+    {
+      "version": "4.5.3",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/sensors/current.c",
+      "sha256": "94010414dcee39bb0187eef19e8452f3c18f7c457997bc8a1b4cfb94ca23560d",
+      "sections": {
+        "static int32_t currentMeterADCToCentiamps(": "a48edb61554f10d59c0d85a4d61eb37e4aeda282d499b8b41aaea5a388d647bb",
+        "void currentMeterADCRefresh(": "f2c24d34023868f27e806e105b4e60b5e120635970c45284b44b77958c7a4e36"
+      }
+    },
+    {
+      "version": "4.5.4",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.4",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/sensors/current.h",
+      "sha256": "18ca5ceedb133cf103308b84df1fb2eace8ccbe861c50c333b60d0ec6125e317",
+      "sections": {}
+    },
+    {
+      "version": "4.5.4",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/sensors/current.c",
+      "sha256": "94010414dcee39bb0187eef19e8452f3c18f7c457997bc8a1b4cfb94ca23560d",
+      "sections": {
+        "static int32_t currentMeterADCToCentiamps(": "a48edb61554f10d59c0d85a4d61eb37e4aeda282d499b8b41aaea5a388d647bb",
+        "void currentMeterADCRefresh(": "f2c24d34023868f27e806e105b4e60b5e120635970c45284b44b77958c7a4e36"
+      }
+    },
+    {
+      "version": "4.5.5",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.5",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/sensors/current.h",
+      "sha256": "18ca5ceedb133cf103308b84df1fb2eace8ccbe861c50c333b60d0ec6125e317",
+      "sections": {}
+    },
+    {
+      "version": "4.5.5",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/sensors/current.c",
+      "sha256": "94010414dcee39bb0187eef19e8452f3c18f7c457997bc8a1b4cfb94ca23560d",
+      "sections": {
+        "static int32_t currentMeterADCToCentiamps(": "a48edb61554f10d59c0d85a4d61eb37e4aeda282d499b8b41aaea5a388d647bb",
+        "void currentMeterADCRefresh(": "f2c24d34023868f27e806e105b4e60b5e120635970c45284b44b77958c7a4e36"
+      }
+    },
+    {
+      "version": "2025.12.1",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.1",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/current.h",
+      "sha256": "5678fed09a8cfcb54297a1f6ebfff10071dfd7d7d9ac5d64aa2bf884494d23ea",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.1",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/current.c",
+      "sha256": "32082f440dfaaa4277ed7f969214e495d36b65d41b3c84caeac0841a4b5b7137",
+      "sections": {
+        "static int32_t currentMeterADCToCentiamps(": "a48edb61554f10d59c0d85a4d61eb37e4aeda282d499b8b41aaea5a388d647bb",
+        "void currentMeterADCRefresh(": "c23599b3dce8ca2aa9689dd3077ab6f10a8e312ae41d73a88e1b51f6304d4cdb"
+      }
+    },
+    {
+      "version": "2025.12.2",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.2",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/sensors/current.h",
+      "sha256": "5678fed09a8cfcb54297a1f6ebfff10071dfd7d7d9ac5d64aa2bf884494d23ea",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.2",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/sensors/current.c",
+      "sha256": "32082f440dfaaa4277ed7f969214e495d36b65d41b3c84caeac0841a4b5b7137",
+      "sections": {
+        "static int32_t currentMeterADCToCentiamps(": "a48edb61554f10d59c0d85a4d61eb37e4aeda282d499b8b41aaea5a388d647bb",
+        "void currentMeterADCRefresh(": "c23599b3dce8ca2aa9689dd3077ab6f10a8e312ae41d73a88e1b51f6304d4cdb"
+      }
+    },
+    {
+      "version": "2025.12.3",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.3",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/sensors/current.h",
+      "sha256": "5678fed09a8cfcb54297a1f6ebfff10071dfd7d7d9ac5d64aa2bf884494d23ea",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.3",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/sensors/current.c",
+      "sha256": "32082f440dfaaa4277ed7f969214e495d36b65d41b3c84caeac0841a4b5b7137",
+      "sections": {
+        "static int32_t currentMeterADCToCentiamps(": "a48edb61554f10d59c0d85a4d61eb37e4aeda282d499b8b41aaea5a388d647bb",
+        "void currentMeterADCRefresh(": "c23599b3dce8ca2aa9689dd3077ab6f10a8e312ae41d73a88e1b51f6304d4cdb"
+      }
+    },
+    {
+      "version": "2025.12.4",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.4",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/sensors/current.h",
+      "sha256": "5678fed09a8cfcb54297a1f6ebfff10071dfd7d7d9ac5d64aa2bf884494d23ea",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.4",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/sensors/current.c",
+      "sha256": "32082f440dfaaa4277ed7f969214e495d36b65d41b3c84caeac0841a4b5b7137",
+      "sections": {
+        "static int32_t currentMeterADCToCentiamps(": "a48edb61554f10d59c0d85a4d61eb37e4aeda282d499b8b41aaea5a388d647bb",
+        "void currentMeterADCRefresh(": "c23599b3dce8ca2aa9689dd3077ab6f10a8e312ae41d73a88e1b51f6304d4cdb"
+      }
+    },
+    {
+      "version": "2025.12.5",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.5",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/current.h",
+      "sha256": "5678fed09a8cfcb54297a1f6ebfff10071dfd7d7d9ac5d64aa2bf884494d23ea",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.5",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/current.c",
+      "sha256": "32082f440dfaaa4277ed7f969214e495d36b65d41b3c84caeac0841a4b5b7137",
+      "sections": {
+        "static int32_t currentMeterADCToCentiamps(": "a48edb61554f10d59c0d85a4d61eb37e4aeda282d499b8b41aaea5a388d647bb",
+        "void currentMeterADCRefresh(": "c23599b3dce8ca2aa9689dd3077ab6f10a8e312ae41d73a88e1b51f6304d4cdb"
+      }
+    }
+  ],
+  "virtualSources": [
+    {
+      "version": "4.5.0",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.0",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/sensors/current.h",
+      "sha256": "18ca5ceedb133cf103308b84df1fb2eace8ccbe861c50c333b60d0ec6125e317",
+      "sections": {}
+    },
+    {
+      "version": "4.5.0",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/sensors/current.c",
+      "sha256": "94010414dcee39bb0187eef19e8452f3c18f7c457997bc8a1b4cfb94ca23560d",
+      "sections": {
+        "void currentMeterVirtualRefresh(": "ebb91b83a9f7d3d87c0ec2dce268565c3f992d630ddd0130490f586aedc53bbd",
+        "static void updateCurrentmAhDrawnState(": "7750bc36f50be75202ea950b76caae4d9df9ec7da3557288224646d90150dbd9"
+      }
+    },
+    {
+      "version": "4.5.1",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.1",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/sensors/current.h",
+      "sha256": "18ca5ceedb133cf103308b84df1fb2eace8ccbe861c50c333b60d0ec6125e317",
+      "sections": {}
+    },
+    {
+      "version": "4.5.1",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/sensors/current.c",
+      "sha256": "94010414dcee39bb0187eef19e8452f3c18f7c457997bc8a1b4cfb94ca23560d",
+      "sections": {
+        "void currentMeterVirtualRefresh(": "ebb91b83a9f7d3d87c0ec2dce268565c3f992d630ddd0130490f586aedc53bbd",
+        "static void updateCurrentmAhDrawnState(": "7750bc36f50be75202ea950b76caae4d9df9ec7da3557288224646d90150dbd9"
+      }
+    },
+    {
+      "version": "4.5.2",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.2",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/sensors/current.h",
+      "sha256": "18ca5ceedb133cf103308b84df1fb2eace8ccbe861c50c333b60d0ec6125e317",
+      "sections": {}
+    },
+    {
+      "version": "4.5.2",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/sensors/current.c",
+      "sha256": "94010414dcee39bb0187eef19e8452f3c18f7c457997bc8a1b4cfb94ca23560d",
+      "sections": {
+        "void currentMeterVirtualRefresh(": "ebb91b83a9f7d3d87c0ec2dce268565c3f992d630ddd0130490f586aedc53bbd",
+        "static void updateCurrentmAhDrawnState(": "7750bc36f50be75202ea950b76caae4d9df9ec7da3557288224646d90150dbd9"
+      }
+    },
+    {
+      "version": "4.5.3",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.3",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/sensors/current.h",
+      "sha256": "18ca5ceedb133cf103308b84df1fb2eace8ccbe861c50c333b60d0ec6125e317",
+      "sections": {}
+    },
+    {
+      "version": "4.5.3",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/sensors/current.c",
+      "sha256": "94010414dcee39bb0187eef19e8452f3c18f7c457997bc8a1b4cfb94ca23560d",
+      "sections": {
+        "void currentMeterVirtualRefresh(": "ebb91b83a9f7d3d87c0ec2dce268565c3f992d630ddd0130490f586aedc53bbd",
+        "static void updateCurrentmAhDrawnState(": "7750bc36f50be75202ea950b76caae4d9df9ec7da3557288224646d90150dbd9"
+      }
+    },
+    {
+      "version": "4.5.4",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.4",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/sensors/current.h",
+      "sha256": "18ca5ceedb133cf103308b84df1fb2eace8ccbe861c50c333b60d0ec6125e317",
+      "sections": {}
+    },
+    {
+      "version": "4.5.4",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/sensors/current.c",
+      "sha256": "94010414dcee39bb0187eef19e8452f3c18f7c457997bc8a1b4cfb94ca23560d",
+      "sections": {
+        "void currentMeterVirtualRefresh(": "ebb91b83a9f7d3d87c0ec2dce268565c3f992d630ddd0130490f586aedc53bbd",
+        "static void updateCurrentmAhDrawnState(": "7750bc36f50be75202ea950b76caae4d9df9ec7da3557288224646d90150dbd9"
+      }
+    },
+    {
+      "version": "4.5.5",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb",
+      "sections": {}
+    },
+    {
+      "version": "4.5.5",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/sensors/current.h",
+      "sha256": "18ca5ceedb133cf103308b84df1fb2eace8ccbe861c50c333b60d0ec6125e317",
+      "sections": {}
+    },
+    {
+      "version": "4.5.5",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/sensors/current.c",
+      "sha256": "94010414dcee39bb0187eef19e8452f3c18f7c457997bc8a1b4cfb94ca23560d",
+      "sections": {
+        "void currentMeterVirtualRefresh(": "ebb91b83a9f7d3d87c0ec2dce268565c3f992d630ddd0130490f586aedc53bbd",
+        "static void updateCurrentmAhDrawnState(": "7750bc36f50be75202ea950b76caae4d9df9ec7da3557288224646d90150dbd9"
+      }
+    },
+    {
+      "version": "2025.12.1",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.1",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/current.h",
+      "sha256": "5678fed09a8cfcb54297a1f6ebfff10071dfd7d7d9ac5d64aa2bf884494d23ea",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.1",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/current.c",
+      "sha256": "32082f440dfaaa4277ed7f969214e495d36b65d41b3c84caeac0841a4b5b7137",
+      "sections": {
+        "void currentMeterVirtualRefresh(": "ebb91b83a9f7d3d87c0ec2dce268565c3f992d630ddd0130490f586aedc53bbd",
+        "static void updateCurrentmAhDrawnState(": "7750bc36f50be75202ea950b76caae4d9df9ec7da3557288224646d90150dbd9"
+      }
+    },
+    {
+      "version": "2025.12.2",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.2",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/sensors/current.h",
+      "sha256": "5678fed09a8cfcb54297a1f6ebfff10071dfd7d7d9ac5d64aa2bf884494d23ea",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.2",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/sensors/current.c",
+      "sha256": "32082f440dfaaa4277ed7f969214e495d36b65d41b3c84caeac0841a4b5b7137",
+      "sections": {
+        "void currentMeterVirtualRefresh(": "ebb91b83a9f7d3d87c0ec2dce268565c3f992d630ddd0130490f586aedc53bbd",
+        "static void updateCurrentmAhDrawnState(": "7750bc36f50be75202ea950b76caae4d9df9ec7da3557288224646d90150dbd9"
+      }
+    },
+    {
+      "version": "2025.12.3",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.3",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/sensors/current.h",
+      "sha256": "5678fed09a8cfcb54297a1f6ebfff10071dfd7d7d9ac5d64aa2bf884494d23ea",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.3",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/sensors/current.c",
+      "sha256": "32082f440dfaaa4277ed7f969214e495d36b65d41b3c84caeac0841a4b5b7137",
+      "sections": {
+        "void currentMeterVirtualRefresh(": "ebb91b83a9f7d3d87c0ec2dce268565c3f992d630ddd0130490f586aedc53bbd",
+        "static void updateCurrentmAhDrawnState(": "7750bc36f50be75202ea950b76caae4d9df9ec7da3557288224646d90150dbd9"
+      }
+    },
+    {
+      "version": "2025.12.4",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.4",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/sensors/current.h",
+      "sha256": "5678fed09a8cfcb54297a1f6ebfff10071dfd7d7d9ac5d64aa2bf884494d23ea",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.4",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/sensors/current.c",
+      "sha256": "32082f440dfaaa4277ed7f969214e495d36b65d41b3c84caeac0841a4b5b7137",
+      "sections": {
+        "void currentMeterVirtualRefresh(": "ebb91b83a9f7d3d87c0ec2dce268565c3f992d630ddd0130490f586aedc53bbd",
+        "static void updateCurrentmAhDrawnState(": "7750bc36f50be75202ea950b76caae4d9df9ec7da3557288224646d90150dbd9"
+      }
+    },
+    {
+      "version": "2025.12.5",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.5",
+      "path": "sensors/current.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/current.h",
+      "sha256": "5678fed09a8cfcb54297a1f6ebfff10071dfd7d7d9ac5d64aa2bf884494d23ea",
+      "sections": {}
+    },
+    {
+      "version": "2025.12.5",
+      "path": "sensors/current.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/current.c",
+      "sha256": "32082f440dfaaa4277ed7f969214e495d36b65d41b3c84caeac0841a4b5b7137",
+      "sections": {
+        "void currentMeterVirtualRefresh(": "ebb91b83a9f7d3d87c0ec2dce268565c3f992d630ddd0130490f586aedc53bbd",
+        "static void updateCurrentmAhDrawnState(": "7750bc36f50be75202ea950b76caae4d9df9ec7da3557288224646d90150dbd9"
+      }
     }
   ]
 }

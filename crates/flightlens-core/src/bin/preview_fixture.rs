@@ -27,6 +27,14 @@ fn main() {
     if std::env::args().any(|arg| arg == "--parameter-baseline") {
         text.push_str("\nset vbat_max_cell_voltage = 430\nset vbat_min_cell_voltage = 330\nset vbat_warning_cell_voltage = 350\n");
     }
+    if std::env::args().any(|arg| arg == "--parameter-baseline") {
+        text.push_str("\nset bat_capacity = 0\nset force_battery_cell_count = 0\nset vbat_divider = 1\nset vbat_multiplier = 255\nset ibata_offset = -32000\nset ibatv_scale = -16000\nset ibatv_offset = 0\n");
+        if std::env::args().any(|arg| arg == "--cross-version-parameters") {
+            text.push_str(
+                "set bat_capacity = 20000\nset vbat_divider = 255\nset ibata_offset = 32000\nset ibatv_scale = 16000\nset ibatv_offset = 16000\n",
+            );
+        }
+    }
     if std::env::args().any(|arg| arg == "--empty-profiles") {
         text = text
             .replace("profile 1", "profile 3")
@@ -64,6 +72,18 @@ fn main() {
         text.push_str(
             "\naux 0 0 0 1700 2100 0 0\naux 0 0 1 1600 2100 1 0\naux 2 2 14 900 900 0 0\n",
         );
+    }
+    if std::env::args().any(|arg| arg == "--adjrange-baseline" || arg == "--adjrange-differences") {
+        text.push_str("\nadjrange 0 0 0 1001 1999 1 0\nadjrange 1 0 1 900 2100 2 1 0 0\nadjrange 2 0 2 900 1200 3 2\n");
+    }
+    if std::env::args().any(|arg| arg == "--adjrange-differences") {
+        text.push_str("\nadjrange 2\nadjrange 00 00 00 1024 1975 01 00 0 0\nadjrange 1 0 1 900 2100 2 1 100 20\nadjrange\n");
+    }
+    if std::env::args().any(|arg| arg == "--vtx-baseline" || arg == "--vtx-differences") {
+        text.push_str("\nvtxtable bands 5\nvtxtable channels 8\nvtxtable powerlevels 5\nvtx 0 0 0 0 0 1001 1999\nvtx 1 1 5 8 5 900 2100\nvtx 2 2 1 1 1 900 1200\n");
+    }
+    if std::env::args().any(|arg| arg == "--vtx-differences") {
+        text.push_str("\nvtx 2\nvtx 00 00 00 00 00 1024 1975\nvtx 1 1 5 8 4 900 2100\nvtx\n");
     }
     if std::env::args().any(|arg| arg == "--vtxtable-baseline" || arg == "--vtxtable-differences") {
         text.push_str("\nvtxtable bands 1\nvtxtable channels 2\nvtxtable band 1 RACE R FACTORY 5658 5695\nvtxtable powerlevels 2\nvtxtable powervalues 25 100\nvtxtable powerlabels 25 100\n");
