@@ -127,7 +127,8 @@ telemetry pipeline. Items are independent and may ship in any order.
    server, credentials, or captcha. The reporter files the issue and maintainers
    triage it on GitHub. Require complete fields before submitting, make the
    configuration opt-in, and show the redacted payload before it leaves the app.
-   Complete locally; opening the browser and reaching the clipboard remain to be
+   Review fixes complete locally: submission requires a matching preview and
+   attachment size checks include the report text. Opening the browser and reaching the clipboard remain to be
    checked in packaged Windows and macOS builds (see TODO).
 2. [ ] Add a Throttle Curve Preview to the Rate Profile tab, alongside the
    existing Rates Preview, with Throttle Limit, Throttle MID, and Throttle EXPO

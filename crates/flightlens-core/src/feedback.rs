@@ -382,9 +382,8 @@ fn issue_body(
     text.push_str("\n### Configuration\n\n");
     match redacted {
         Some(r) if r.oversized => text.push_str(&format!(
-            "The reporter's redacted backup is {} characters, over the {ISSUE_BODY_LIMIT} \
-             an issue body holds. {} Attach it as a file instead of pasting it.\n",
-            r.text.chars().count(),
+            "The report and redacted backup together exceed the {ISSUE_BODY_LIMIT} \
+             characters an issue body holds. {} Attach it as a file instead of pasting it.\n",
             removal_note(&r.removed)
         )),
         Some(r) => text.push_str(&format!(
@@ -409,13 +408,19 @@ pub fn build_report(
     if let Some(first) = problems.first() {
         return Err(first.clone());
     }
-    let redacted = request.include_config.then(|| {
+    let mut redacted = request.include_config.then(|| {
         redact(
             document
                 .expect("problems() rejects an attached configuration without an open document"),
         )
     });
-    let body = issue_body(request, document, redacted.as_ref());
+    let mut body = issue_body(request, document, redacted.as_ref());
+    if let Some(r) = &mut redacted {
+        if !r.oversized && body.chars().count() + r.text.chars().count() > ISSUE_BODY_LIMIT {
+            r.oversized = true;
+            body = issue_body(request, document, Some(r));
+        }
+    }
     let url = format!(
         "{REPOSITORY}/issues/new?labels={}&title={}&body={}",
         encode(request.kind.label()),

@@ -39,7 +39,11 @@ export function Feedback({
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [includeConfig, setIncludeConfig] = useState(false);
-  const [report, setReport] = useState<FeedbackReport | null>(null);
+  const [prepared, setPrepared] = useState<{
+    key: string;
+    report: FeedbackReport;
+  } | null>(null);
+  const [filing, setFiling] = useState(false);
   const [incomplete, setIncomplete] = useState("");
   const [error, setError] = useState("");
   const [filed, setFiled] = useState(false);
@@ -53,18 +57,20 @@ export function Feedback({
     appVersion: "",
     platform: "",
   };
+  const requestKey = JSON.stringify([configId, request]);
+  const report = prepared?.key === requestKey ? prepared.report : null;
   useEffect(() => {
     let current = true;
     api
       .feedbackReport(configId, request)
       .then((r) => {
         if (!current) return;
-        setReport(r);
+        setPrepared({ key: requestKey, report: r });
         setIncomplete("");
       })
       .catch((e) => {
         if (!current) return;
-        setReport(null);
+        setPrepared(null);
         setIncomplete(message(e));
       });
     return () => {
@@ -72,7 +78,8 @@ export function Feedback({
     };
   }, [configId, kind, subject, body, includeConfig]);
   const file = async () => {
-    if (!report) return;
+    if (!report || filing) return;
+    setFiling(true);
     setError("");
     if (report.clipboard !== null) {
       try {
@@ -81,6 +88,7 @@ export function Feedback({
         setError(
           "The configuration could not be copied, so the issue was not opened. Allow clipboard access, or file the report without a configuration.",
         );
+        setFiling(false);
         return;
       }
     }
@@ -89,6 +97,8 @@ export function Feedback({
       setFiled(true);
     } catch (e) {
       setError(message(e));
+    } finally {
+      setFiling(false);
     }
   };
   return (
@@ -126,7 +136,7 @@ export function Feedback({
               your browser and you file it yourself; an attached configuration
               is copied to your clipboard for you to paste.
             </p>
-            <fieldset className="feedback-kind">
+            <fieldset className="feedback-kind" disabled={filing}>
               <legend>What is this?</legend>
               <label>
                 <input
@@ -150,6 +160,7 @@ export function Feedback({
             <label>
               Subject
               <input
+                disabled={filing}
                 autoFocus
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
@@ -160,6 +171,7 @@ export function Feedback({
             <label className="feedback-description">
               Description
               <textarea
+                disabled={filing}
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 maxLength={2000}
@@ -170,7 +182,7 @@ export function Feedback({
               <input
                 type="checkbox"
                 checked={includeConfig}
-                disabled={!configId}
+                disabled={!configId || filing}
                 onChange={(e) => setIncludeConfig(e.target.checked)}
               />
               Attach the open configuration
@@ -199,9 +211,9 @@ export function Feedback({
                     )}
                     {report.oversized && (
                       <p className="notice">
-                        This configuration is larger than a GitHub issue body
-                        holds. Save it from your clipboard and attach it to the
-                        issue as a file instead of pasting it.
+                        This configuration and report exceed the GitHub issue
+                        body limit. Save it from your clipboard and attach it to
+                        the issue as a file instead of pasting it.
                       </p>
                     )}
                     <pre>{report.clipboard}</pre>
@@ -219,7 +231,7 @@ export function Feedback({
               <button onClick={onClose}>Cancel</button>
               <button
                 className="primary"
-                disabled={!report}
+                disabled={!report || filing}
                 onClick={() => void file()}
               >
                 Open GitHub issue

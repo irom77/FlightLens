@@ -1167,3 +1167,30 @@ fn feedback_report_directs_an_oversized_backup_to_a_file_attachment() {
     // clipboard holds rather than retyping anything.
     assert!(r.clipboard.is_some());
 }
+
+#[test]
+fn feedback_report_counts_the_complete_issue_at_the_paste_boundary() {
+    let request = report_request(feedback::ReportKind::Bug, true);
+    let base = format!("{}\n# ", header());
+    let initial = feedback::build_report(&request, Some(&config(&base))).unwrap();
+    let available = feedback::ISSUE_BODY_LIMIT - initial.issue_body.chars().count();
+    for extra in [0, 1] {
+        let text = format!(
+            "{base}{}",
+            "x".repeat(available - base.chars().count() + extra)
+        );
+        let report = feedback::build_report(&request, Some(&config(&text))).unwrap();
+        assert_eq!(report.oversized, extra == 1);
+        assert_eq!(
+            report.issue_body.contains("Attach it as a file"),
+            extra == 1
+        );
+        assert_eq!(report.clipboard.as_deref(), Some(text.as_str()));
+        if extra == 0 {
+            assert_eq!(
+                report.issue_body.chars().count() + text.chars().count(),
+                feedback::ISSUE_BODY_LIMIT
+            );
+        }
+    }
+}

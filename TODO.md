@@ -26,7 +26,8 @@ file holds only what is actionable now.
   additional rxrange firmware coverage, certified cross-version ports, modes and
   features, three-backup comparison and saved selections remain outstanding.
 - Manually check the new comparison view in packaged Windows/macOS builds.
-- Manually check the feedback hand-off in packaged Windows/macOS builds: the
+- Manually check the feedback hand-off in packaged Windows/macOS builds, including
+  attachment toggles during preview preparation and near-limit file guidance. The
   prefilled issue must open in the default browser and the redacted
   configuration must reach the system clipboard. Only the Linux/WSL path has
   been exercised.

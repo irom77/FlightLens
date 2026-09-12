@@ -8,6 +8,10 @@ renamed to the version when the release is cut. Purely internal work
 
 ## Unreleased
 
+- Prevent feedback submission from using a stale preview after fields or attachment
+  consent change. Count the complete report and configuration when deciding
+  whether the backup must be attached as a file.
+
 - Send feedback from inside the app: a subject, a description, and optionally
   the open configuration. FlightLens opens a prefilled GitHub issue in your
   browser and copies the configuration to your clipboard for you to paste; it

@@ -28,6 +28,7 @@ test("feedback is reviewed in the app and filed by the reporter", async ({
       win.isTauri = true;
       win.__TAURI_EVENT_PLUGIN_INTERNALS__ = { unregisterListener: () => {} };
       win.__filed = [];
+      win.__pendingReports = [];
       // The page has no clipboard permission in a test browser, and the copy
       // is what the report depends on, so record it instead.
       Object.defineProperty(navigator, "clipboard", {
@@ -63,6 +64,11 @@ test("feedback is reviewed in the app and filed by the reporter", async ({
             // Mirrors the validation the core performs, so the dialog is
             // exercised in both the incomplete and the complete state.
             const r = args.request!;
+            if (win.__delayReports) {
+              await new Promise<void>((resolve) => {
+                (win.__pendingReports as (() => void)[]).push(resolve);
+              });
+            }
             if (!r.subject.trim()) throw "Enter a subject.";
             if (r.body.trim().length < 20)
               throw "Describe the report in at least 20 characters.";
@@ -114,6 +120,36 @@ test("feedback is reviewed in the app and filed by the reporter", async ({
   await expect(dialog.locator(".feedback-removed")).toContainText(
     "Line 2: craft_name (name)",
   );
+  // Hold IPC responses so edits cannot accidentally submit a previous preview.
+  await page.evaluate(() => {
+    (window as any).__delayReports = true;
+  });
+  await dialog.getByLabel("Attach the open configuration").uncheck();
+  await expect(submit).toBeDisabled();
+  await expect(dialog.locator(".feedback-preview")).toHaveCount(0);
+  await dialog.getByLabel("Attach the open configuration").check();
+  await dialog
+    .getByLabel("Description")
+    .fill("Updated description that must appear in the reviewed report.");
+  await expect(submit).toBeDisabled();
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__pendingReports.length))
+    .toBe(3);
+  // Resolve the latest request first, then stale requests in reverse order.
+  await page.evaluate(() => {
+    (window as any).__pendingReports.pop()();
+  });
+  await expect(submit).toBeEnabled();
+  await expect(dialog.locator(".feedback-preview")).toContainText(
+    "Updated description",
+  );
+  await page.evaluate(() => {
+    for (const resolve of (window as any).__pendingReports.reverse()) resolve();
+  });
+  await expect(dialog.locator(".feedback-preview")).toContainText(
+    "Updated description",
+  );
+  expect(await page.evaluate(() => (window as any).__copied)).toBeUndefined();
   await submit.click();
   await expect(dialog).toContainText("open in your browser");
   expect(await page.evaluate(() => (window as any).__copied)).toBe(redacted);
