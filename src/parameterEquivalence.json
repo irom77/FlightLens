@@ -1,5 +1,5 @@
 {
-  "family": "Betaflight",
+  "family": "betaflight",
   "releases": {
     "4.5.0": "betaflight-4.5.0-schema-1",
     "4.5.1": "betaflight-4.5.0-schema-1",

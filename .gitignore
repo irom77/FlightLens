@@ -6,3 +6,4 @@ target/
 src-tauri/gen/
 test-results/
 playwright-report/
+PROMPTS.md

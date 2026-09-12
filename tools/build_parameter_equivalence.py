@@ -45,6 +45,6 @@ for version in releases:
             assert line in lines, f'Review required: {version} {path}: {line}'
         sources.append({'version': version, 'path': path, 'url': url,
                         'sha256': hashlib.sha256(data).hexdigest()})
-manifest = {'family': 'Betaflight', 'releases': releases,
+manifest = {'family': 'betaflight', 'releases': releases,
             'mappings': mappings, 'sources': sources}
 (ROOT / 'src/parameterEquivalence.json').write_text(json.dumps(manifest, indent=2) + '\n')

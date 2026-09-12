@@ -1,0 +1,19 @@
+{
+  "family": "betaflight",
+  "releases": {
+    "4.5.0": "betaflight-4.5.0-schema-1",
+    "4.5.1": "betaflight-4.5.0-schema-1",
+    "4.5.2": "betaflight-4.5.0-schema-1",
+    "4.5.3": "betaflight-4.5.0-schema-1",
+    "4.5.4": "betaflight-4.5.0-schema-1",
+    "4.5.5": "betaflight-4.5.0-schema-1",
+    "2025.12.1": "betaflight-2025.12.1-schema-1",
+    "2025.12.2": "betaflight-2025.12.1-schema-1",
+    "2025.12.3": "betaflight-2025.12.1-schema-1",
+    "2025.12.4": "betaflight-2025.12.1-schema-1",
+    "2025.12.5": "betaflight-2025.12.1-schema-1"
+  },
+  "channels": 18,
+  "min": 750,
+  "max": 2250
+}

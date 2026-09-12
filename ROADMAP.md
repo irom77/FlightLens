@@ -76,6 +76,8 @@ Comparison progress and remaining work, in implementation order:
    establishes equivalent semantics. Four mappings completed locally:
    `motor_poles`, `vbat_max_cell_voltage`, `vbat_min_cell_voltage`, and
    `vbat_warning_cell_voltage` across official 4.5.0–4.5.5 and 2025.12.1–2025.12.5.
+   The firmware-family gate now matches parser output, with renderer coverage
+   for certified cross-version comparisons.
    Same-version feature declaration comparison is complete locally, including
    final explicit states, unknown omissions, filtering, and source lines.
    Same-version serial-port comparison is complete locally, including function
@@ -88,6 +90,16 @@ Comparison progress and remaining work, in implementation order:
    verified official 4.5.0–4.5.5 and 2025.12.1–2025.12.5, with resets, unknown
    omissions, filtering, and source lines. Additional settings, cross-version features/ports/modes, and
    semantic comparison of other CLI collections remain outstanding.
+   [rxfail source verification](docs/rxfail-comparison.md) is complete across
+   the same 11 official releases. Its semantic comparison UI is complete locally,
+   including final channel declarations, 25 µs normalization, unknown omissions,
+   firmware gates, filtering, source lines, and parser-to-renderer coverage.
+   [VTX source review](docs/vtx-comparison.md) is complete across 11 releases;
+   explicit table comparison is complete locally, including command ordering,
+   dependency invalidation, normalization, firmware gates, filtering and source lines.
+   Activation prerequisites are resolved for an initial official 4.5 slice using
+   fixed slot capacity and bounds valid with or without table support. Its UI is
+   next; 2025.12 build-capacity certification remains deferred.
 4. [ ] Extend comparison to three selected configurations, including angular
    velocity overlays. Use an explicitly selected baseline for semantic differences,
    distinguishing changes on either side and conflicting changes. Comparison

@@ -22,9 +22,14 @@ file holds only what is actionable now.
   Same-version feature, serial-port, and mode-assignment declaration comparisons are complete
   locally. Source-text comparison of the five recognized CLI collections is
   complete locally. Same-version rxrange endpoint comparison is complete for
-  verified official releases; semantic comparison of vtxtable/vtx/rxfail/adjrange,
+  verified official releases; semantic comparison of vtx/adjrange,
   additional rxrange firmware coverage, certified cross-version ports, modes and
   features, three-backup comparison and saved selections remain outstanding.
+- Implement the resolved official 4.5 [VTX activation scope](docs/vtx-comparison.md).
+  Explicit table comparison is complete locally; build-specific selector bounds
+  and 2025.12 activation capacity still need verified build evidence.
+- Extend rxfail firmware coverage beyond matching verified official releases;
+  core collection diagnostics and export remain outstanding.
 - Manually check the new comparison view in packaged Windows/macOS builds.
 - Manually check the feedback hand-off in packaged Windows/macOS builds, including
   attachment toggles during preview preparation and near-limit file guidance. The
@@ -90,7 +95,3 @@ These are deliberate. Reopen them only with a reason, not by habit.
   reproducible in CI.
 - Native picker, drag-and-drop, clipboard and packaged-app behavior need a
   graphical desktop; CI compilation does not cover them.
-
-- Fix the cross-version parameter-equivalence firmware-family gate: the manifest
-  uses `Betaflight`, but parsed DTOs use `betaflight`. Add coverage using real
-  parser output so the existing certified mappings work in the renderer.

@@ -18,6 +18,15 @@ fn main() {
             .replace("gyro_lpf1_static_hz", "gyro_lowpass_hz")
             .replace("gyro_lpf1_type", "gyro_lowpass_type");
     }
+    if std::env::args().any(|arg| arg == "--cross-version-parameters") {
+        text = text
+            .replace("4.5.0 Jan", "2025.12.1 Jan")
+            .replace("MSP API: 1.46", "MSP API: 1.47")
+            .replace("set motor_poles = 14", "set motor_poles = 12");
+    }
+    if std::env::args().any(|arg| arg == "--parameter-baseline") {
+        text.push_str("\nset vbat_max_cell_voltage = 430\nset vbat_min_cell_voltage = 330\nset vbat_warning_cell_voltage = 350\n");
+    }
     if std::env::args().any(|arg| arg == "--empty-profiles") {
         text = text
             .replace("profile 1", "profile 3")
@@ -54,6 +63,20 @@ fn main() {
     if std::env::args().any(|arg| arg == "--mode-differences") {
         text.push_str(
             "\naux 0 0 0 1700 2100 0 0\naux 0 0 1 1600 2100 1 0\naux 2 2 14 900 900 0 0\n",
+        );
+    }
+    if std::env::args().any(|arg| arg == "--vtxtable-baseline" || arg == "--vtxtable-differences") {
+        text.push_str("\nvtxtable bands 1\nvtxtable channels 2\nvtxtable band 1 RACE R FACTORY 5658 5695\nvtxtable powerlevels 2\nvtxtable powervalues 25 100\nvtxtable powerlabels 25 100\n");
+    }
+    if std::env::args().any(|arg| arg == "--vtxtable-differences") {
+        text.push_str("\nvtxtable band 1 race r factory 05658 5695\nvtxtable powerlevels 1\nvtxtable powerlevels 2\nvtxtable powervalues 25 200\nvtxtable\n");
+    }
+    if std::env::args().any(|arg| arg == "--rxfail-baseline") {
+        text.push_str("\nrxfail 0 s 1001\nrxfail 1 a\nrxfail 3 h\n");
+    }
+    if std::env::args().any(|arg| arg == "--rxfail-differences") {
+        text.push_str(
+            "\nrxfail 0 h\nrxfail 0 s 1024\nrxfail\nrxfail 0\nrxfail 1 h\nrxfail 17 s 2250\n",
         );
     }
     if std::env::args().any(|arg| arg == "--collection-baseline") {

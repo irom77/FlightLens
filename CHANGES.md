@@ -6,7 +6,25 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
-## Unreleased
+## 0.6.0 — 2026-09-12
+
+- Compare explicit VTX table dimensions, bands and power arrays on matching verified
+  official firmware, with command ordering, unknown dependencies, filtering and source lines.
+
+- Define a conservative official 4.5 VTX activation comparison scope; document
+  selector dependencies and why 2025.12 requires additional build evidence.
+
+- Document VTX table and activation comparison prerequisites, with a reproducible
+  upstream verifier covering 11 official releases.
+
+- Compare final explicit receiver failsafe modes and normalized set values on
+  matching verified official firmware, with channel filtering and source lines.
+
+- Document the verified receiver failsafe comparison scope and add a developer
+  verifier for upstream semantics across 11 official releases.
+
+- Fix certified cross-version parameter comparisons showing “Not comparable”
+  because the bundled firmware-family identifier differed from parsed backups.
 
 - Prevent feedback submission from using a stale preview after fields or attachment
   consent change. Count the complete report and configuration when deciding

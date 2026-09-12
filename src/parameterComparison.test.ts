@@ -17,7 +17,7 @@ const parameter = (value: number, index = 0): Parameter => ({
 const document = (parameters: Parameter[]): ConfigDocument =>
   ({
     firmware: {
-      family: "Betaflight",
+      family: "betaflight",
       version: "4.5.0",
       packId: "pack",
       boardName: null,
