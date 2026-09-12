@@ -12,15 +12,19 @@ file holds only what is actionable now.
   masks, and unsigned 32-bit settings. The current integer model is signed 32-bit;
   source values outside it remain raw and cannot be exported. Hardware-specific
   schema entries and arrays also remain outside certified export coverage.
-- Resolve the remaining schema validation diagnostics in the Windows DUMP_ALL
-  corpus: the current 14-file run reports 16 errors and no smoke-check failures.
-  All 14 false 3D feature errors and the 15 serial syntax errors in the original
-  two year-based backups are resolved. Enabling the 2025.12 schema exposed two additional
-  validation errors previously unchecked; all 14 selected rate profiles are now
-  complete and all 52 observed PID profiles have complete gains.
-- Add certified cross-version parameter equivalence mappings; current parameter
-  comparison only classifies changes within the same supported firmware version.
-  CLI collections, three-backup comparison and saved selections remain outstanding.
+- Keep the remaining corpus `osd_units` diagnostic: the value is outside the
+  exact upstream 4.5.2 choices. Revisit only with evidence of additional syntax.
+- Extend patch-specific schema verification beyond the known 4.4 GPS rescue
+  bound change; unverified patches continue to use the base firmware-line schema.
+- Expand certified cross-version parameter equivalence beyond `motor_poles`
+  and the three battery cell-voltage thresholds
+  for official 4.5.0–4.5.5 and 2025.12.1–2025.12.5 releases.
+  Same-version feature, serial-port, and mode-assignment declaration comparisons are complete
+  locally. Source-text comparison of the five recognized CLI collections is
+  complete locally. Same-version rxrange endpoint comparison is complete for
+  verified official releases; semantic comparison of vtxtable/vtx/rxfail/adjrange,
+  additional rxrange firmware coverage, certified cross-version ports, modes and
+  features, three-backup comparison and saved selections remain outstanding.
 - Manually check the new comparison view in packaged Windows/macOS builds.
 - Manually check the feedback hand-off in packaged Windows/macOS builds: the
   prefilled issue must open in the default browser and the redacted
@@ -85,3 +89,7 @@ These are deliberate. Reopen them only with a reason, not by habit.
   reproducible in CI.
 - Native picker, drag-and-drop, clipboard and packaged-app behavior need a
   graphical desktop; CI compilation does not cover them.
+
+- Fix the cross-version parameter-equivalence firmware-family gate: the manifest
+  uses `Betaflight`, but parsed DTOs use `betaflight`. Add coverage using real
+  parser output so the existing certified mappings work in the renderer.

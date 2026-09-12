@@ -1,0 +1,447 @@
+{
+  "family": "Betaflight",
+  "releases": {
+    "4.5.0": "betaflight-4.5.0-schema-1",
+    "4.5.1": "betaflight-4.5.0-schema-1",
+    "4.5.2": "betaflight-4.5.0-schema-1",
+    "4.5.3": "betaflight-4.5.0-schema-1",
+    "4.5.4": "betaflight-4.5.0-schema-1",
+    "4.5.5": "betaflight-4.5.0-schema-1",
+    "2025.12.1": "betaflight-2025.12.1-schema-1",
+    "2025.12.2": "betaflight-2025.12.1-schema-1",
+    "2025.12.3": "betaflight-2025.12.1-schema-1",
+    "2025.12.4": "betaflight-2025.12.1-schema-1",
+    "2025.12.5": "betaflight-2025.12.1-schema-1"
+  },
+  "mappings": [
+    {
+      "scope": "global",
+      "key": "motor_poles",
+      "kind": "integer",
+      "min": 4,
+      "max": 255
+    },
+    {
+      "scope": "global",
+      "key": "vbat_max_cell_voltage",
+      "kind": "integer",
+      "min": 100,
+      "max": 500,
+      "unit": "0.01 V"
+    },
+    {
+      "scope": "global",
+      "key": "vbat_min_cell_voltage",
+      "kind": "integer",
+      "min": 100,
+      "max": 500,
+      "unit": "0.01 V"
+    },
+    {
+      "scope": "global",
+      "key": "vbat_warning_cell_voltage",
+      "kind": "integer",
+      "min": 100,
+      "max": 500,
+      "unit": "0.01 V"
+    }
+  ],
+  "sources": [
+    {
+      "version": "4.5.0",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb"
+    },
+    {
+      "version": "4.5.0",
+      "path": "fc/parameter_names.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/fc/parameter_names.h",
+      "sha256": "354936f5494affbd5eb713510fad0671e1e631fb284e8a5d897b794b6e85ca5e"
+    },
+    {
+      "version": "4.5.0",
+      "path": "pg/motor.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/pg/motor.h",
+      "sha256": "c5227a60efa9f5cc75b27c2037e8407187e8be9cc8556e3c74bf8a835328890e"
+    },
+    {
+      "version": "4.5.0",
+      "path": "drivers/dshot.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/drivers/dshot.c",
+      "sha256": "d5f87db80815d0b87aaad6dc988e24c37736e47b93ef42494f6e70abd21c0f77"
+    },
+    {
+      "version": "4.5.0",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e"
+    },
+    {
+      "version": "4.5.0",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/sensors/battery.c",
+      "sha256": "57cfb220c94131cd3303bd3bd15c35f218f6912ed8927f0b34c26b561d324347"
+    },
+    {
+      "version": "4.5.1",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb"
+    },
+    {
+      "version": "4.5.1",
+      "path": "fc/parameter_names.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/fc/parameter_names.h",
+      "sha256": "354936f5494affbd5eb713510fad0671e1e631fb284e8a5d897b794b6e85ca5e"
+    },
+    {
+      "version": "4.5.1",
+      "path": "pg/motor.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/pg/motor.h",
+      "sha256": "c5227a60efa9f5cc75b27c2037e8407187e8be9cc8556e3c74bf8a835328890e"
+    },
+    {
+      "version": "4.5.1",
+      "path": "drivers/dshot.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/drivers/dshot.c",
+      "sha256": "d5f87db80815d0b87aaad6dc988e24c37736e47b93ef42494f6e70abd21c0f77"
+    },
+    {
+      "version": "4.5.1",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e"
+    },
+    {
+      "version": "4.5.1",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/sensors/battery.c",
+      "sha256": "dfcf3621d29954d3520e773209645e7e02b9109a9bbc139c39bacc2bcbf5224f"
+    },
+    {
+      "version": "4.5.2",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb"
+    },
+    {
+      "version": "4.5.2",
+      "path": "fc/parameter_names.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/fc/parameter_names.h",
+      "sha256": "354936f5494affbd5eb713510fad0671e1e631fb284e8a5d897b794b6e85ca5e"
+    },
+    {
+      "version": "4.5.2",
+      "path": "pg/motor.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/pg/motor.h",
+      "sha256": "c5227a60efa9f5cc75b27c2037e8407187e8be9cc8556e3c74bf8a835328890e"
+    },
+    {
+      "version": "4.5.2",
+      "path": "drivers/dshot.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/drivers/dshot.c",
+      "sha256": "d5f87db80815d0b87aaad6dc988e24c37736e47b93ef42494f6e70abd21c0f77"
+    },
+    {
+      "version": "4.5.2",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e"
+    },
+    {
+      "version": "4.5.2",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/sensors/battery.c",
+      "sha256": "dfcf3621d29954d3520e773209645e7e02b9109a9bbc139c39bacc2bcbf5224f"
+    },
+    {
+      "version": "4.5.3",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb"
+    },
+    {
+      "version": "4.5.3",
+      "path": "fc/parameter_names.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/fc/parameter_names.h",
+      "sha256": "354936f5494affbd5eb713510fad0671e1e631fb284e8a5d897b794b6e85ca5e"
+    },
+    {
+      "version": "4.5.3",
+      "path": "pg/motor.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/pg/motor.h",
+      "sha256": "c5227a60efa9f5cc75b27c2037e8407187e8be9cc8556e3c74bf8a835328890e"
+    },
+    {
+      "version": "4.5.3",
+      "path": "drivers/dshot.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/drivers/dshot.c",
+      "sha256": "d5f87db80815d0b87aaad6dc988e24c37736e47b93ef42494f6e70abd21c0f77"
+    },
+    {
+      "version": "4.5.3",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e"
+    },
+    {
+      "version": "4.5.3",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/sensors/battery.c",
+      "sha256": "dfcf3621d29954d3520e773209645e7e02b9109a9bbc139c39bacc2bcbf5224f"
+    },
+    {
+      "version": "4.5.4",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb"
+    },
+    {
+      "version": "4.5.4",
+      "path": "fc/parameter_names.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/fc/parameter_names.h",
+      "sha256": "354936f5494affbd5eb713510fad0671e1e631fb284e8a5d897b794b6e85ca5e"
+    },
+    {
+      "version": "4.5.4",
+      "path": "pg/motor.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/pg/motor.h",
+      "sha256": "c5227a60efa9f5cc75b27c2037e8407187e8be9cc8556e3c74bf8a835328890e"
+    },
+    {
+      "version": "4.5.4",
+      "path": "drivers/dshot.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/drivers/dshot.c",
+      "sha256": "d5f87db80815d0b87aaad6dc988e24c37736e47b93ef42494f6e70abd21c0f77"
+    },
+    {
+      "version": "4.5.4",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e"
+    },
+    {
+      "version": "4.5.4",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/sensors/battery.c",
+      "sha256": "dfcf3621d29954d3520e773209645e7e02b9109a9bbc139c39bacc2bcbf5224f"
+    },
+    {
+      "version": "4.5.5",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/cli/settings.c",
+      "sha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb"
+    },
+    {
+      "version": "4.5.5",
+      "path": "fc/parameter_names.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/fc/parameter_names.h",
+      "sha256": "354936f5494affbd5eb713510fad0671e1e631fb284e8a5d897b794b6e85ca5e"
+    },
+    {
+      "version": "4.5.5",
+      "path": "pg/motor.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/pg/motor.h",
+      "sha256": "c5227a60efa9f5cc75b27c2037e8407187e8be9cc8556e3c74bf8a835328890e"
+    },
+    {
+      "version": "4.5.5",
+      "path": "drivers/dshot.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/drivers/dshot.c",
+      "sha256": "d5f87db80815d0b87aaad6dc988e24c37736e47b93ef42494f6e70abd21c0f77"
+    },
+    {
+      "version": "4.5.5",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e"
+    },
+    {
+      "version": "4.5.5",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/sensors/battery.c",
+      "sha256": "dfcf3621d29954d3520e773209645e7e02b9109a9bbc139c39bacc2bcbf5224f"
+    },
+    {
+      "version": "2025.12.1",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38"
+    },
+    {
+      "version": "2025.12.1",
+      "path": "fc/parameter_names.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/fc/parameter_names.h",
+      "sha256": "58b3563ba5134c126cbf1bff9161bc5a079eaee6a20900c6f1dc070bc2218dac"
+    },
+    {
+      "version": "2025.12.1",
+      "path": "pg/motor.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/pg/motor.h",
+      "sha256": "9c376f0c51efb9da682ebc7afa8ba3052936ea8dbf943c0063f5a5173ae7b4f1"
+    },
+    {
+      "version": "2025.12.1",
+      "path": "drivers/dshot.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/drivers/dshot.c",
+      "sha256": "a4d344a4fbfb8c8059620dee388b44b04c87bcabf63f07b5c155d476fb844610"
+    },
+    {
+      "version": "2025.12.1",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e"
+    },
+    {
+      "version": "2025.12.1",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/sensors/battery.c",
+      "sha256": "2f32fb565c0c5525f9516deaf06e77082f38f8544a87c57dd363ad3cc245eb38"
+    },
+    {
+      "version": "2025.12.2",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38"
+    },
+    {
+      "version": "2025.12.2",
+      "path": "fc/parameter_names.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/fc/parameter_names.h",
+      "sha256": "58b3563ba5134c126cbf1bff9161bc5a079eaee6a20900c6f1dc070bc2218dac"
+    },
+    {
+      "version": "2025.12.2",
+      "path": "pg/motor.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/pg/motor.h",
+      "sha256": "9c376f0c51efb9da682ebc7afa8ba3052936ea8dbf943c0063f5a5173ae7b4f1"
+    },
+    {
+      "version": "2025.12.2",
+      "path": "drivers/dshot.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/drivers/dshot.c",
+      "sha256": "a4d344a4fbfb8c8059620dee388b44b04c87bcabf63f07b5c155d476fb844610"
+    },
+    {
+      "version": "2025.12.2",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e"
+    },
+    {
+      "version": "2025.12.2",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/sensors/battery.c",
+      "sha256": "2f32fb565c0c5525f9516deaf06e77082f38f8544a87c57dd363ad3cc245eb38"
+    },
+    {
+      "version": "2025.12.3",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38"
+    },
+    {
+      "version": "2025.12.3",
+      "path": "fc/parameter_names.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/fc/parameter_names.h",
+      "sha256": "58b3563ba5134c126cbf1bff9161bc5a079eaee6a20900c6f1dc070bc2218dac"
+    },
+    {
+      "version": "2025.12.3",
+      "path": "pg/motor.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/pg/motor.h",
+      "sha256": "9c376f0c51efb9da682ebc7afa8ba3052936ea8dbf943c0063f5a5173ae7b4f1"
+    },
+    {
+      "version": "2025.12.3",
+      "path": "drivers/dshot.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/drivers/dshot.c",
+      "sha256": "a4d344a4fbfb8c8059620dee388b44b04c87bcabf63f07b5c155d476fb844610"
+    },
+    {
+      "version": "2025.12.3",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e"
+    },
+    {
+      "version": "2025.12.3",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/sensors/battery.c",
+      "sha256": "2f32fb565c0c5525f9516deaf06e77082f38f8544a87c57dd363ad3cc245eb38"
+    },
+    {
+      "version": "2025.12.4",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38"
+    },
+    {
+      "version": "2025.12.4",
+      "path": "fc/parameter_names.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/fc/parameter_names.h",
+      "sha256": "58b3563ba5134c126cbf1bff9161bc5a079eaee6a20900c6f1dc070bc2218dac"
+    },
+    {
+      "version": "2025.12.4",
+      "path": "pg/motor.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/pg/motor.h",
+      "sha256": "9c376f0c51efb9da682ebc7afa8ba3052936ea8dbf943c0063f5a5173ae7b4f1"
+    },
+    {
+      "version": "2025.12.4",
+      "path": "drivers/dshot.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/drivers/dshot.c",
+      "sha256": "a4d344a4fbfb8c8059620dee388b44b04c87bcabf63f07b5c155d476fb844610"
+    },
+    {
+      "version": "2025.12.4",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e"
+    },
+    {
+      "version": "2025.12.4",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/sensors/battery.c",
+      "sha256": "2f32fb565c0c5525f9516deaf06e77082f38f8544a87c57dd363ad3cc245eb38"
+    },
+    {
+      "version": "2025.12.5",
+      "path": "cli/settings.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/cli/settings.c",
+      "sha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38"
+    },
+    {
+      "version": "2025.12.5",
+      "path": "fc/parameter_names.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/fc/parameter_names.h",
+      "sha256": "58b3563ba5134c126cbf1bff9161bc5a079eaee6a20900c6f1dc070bc2218dac"
+    },
+    {
+      "version": "2025.12.5",
+      "path": "pg/motor.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/pg/motor.h",
+      "sha256": "9c376f0c51efb9da682ebc7afa8ba3052936ea8dbf943c0063f5a5173ae7b4f1"
+    },
+    {
+      "version": "2025.12.5",
+      "path": "drivers/dshot.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/drivers/dshot.c",
+      "sha256": "a4d344a4fbfb8c8059620dee388b44b04c87bcabf63f07b5c155d476fb844610"
+    },
+    {
+      "version": "2025.12.5",
+      "path": "sensors/battery.h",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/battery.h",
+      "sha256": "a3b68601d9b8cfd81c88fe5f689a334b281b07850ed5eac007be96cc8e685d3e"
+    },
+    {
+      "version": "2025.12.5",
+      "path": "sensors/battery.c",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/sensors/battery.c",
+      "sha256": "2f32fb565c0c5525f9516deaf06e77082f38f8544a87c57dd363ad3cc245eb38"
+    }
+  ]
+}

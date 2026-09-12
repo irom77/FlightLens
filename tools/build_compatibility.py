@@ -2,6 +2,7 @@
 import hashlib, json, pathlib, re, sys, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from schema_expressions import BOUND_HEADERS, resolver
+from schema_lookups import lookup_arrays
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / 'crates/flightlens-core/compatibility'
 OUT.mkdir(parents=True, exist_ok=True)
@@ -37,13 +38,12 @@ for version in (sys.argv[1:] or PATCH_RELEASES):
     settings_h = fetch('cli/settings.h')
     common_pre = fetch('target/common_pre.h')
     defines = dict(re.findall(r'#define\s+(\w+)\s+"([^"\n]+)"', names))
-    arrays = {n: re.findall(r'"([^"\n]+)"', body) for n,body in re.findall(r'(\w+)\[\]\s*=\s*\{(.*?)\};',settings,re.S)}
+    arrays = lookup_arrays(settings)
     if modern:
         # Sized arrays and the external debug table are absent from the legacy
         # extractor. Preserve source order so enum defaults retain their ordinal.
         extra = fetch('build/debug.c')
-        arrays.update({n: re.findall(r'"([^"\n]+)"', body)
-            for n, body in re.findall(r'(\w+)\[[^]\n]*\]\s*=\s*\{(.*?)\};', settings + extra, re.S)})
+        arrays = lookup_arrays(settings + extra, sized=True)
         resolve = resolver([fetch(path) for path in BOUND_HEADERS])
     unresolved = {}
     table_names = re.findall(r'^\s*(TABLE_\w+)(?:\s*=\s*0)?\s*,', settings_h, re.M)
@@ -147,7 +147,7 @@ for version in (sys.argv[1:] or PATCH_RELEASES):
             print(f'{version}: skipping default for {key} (kind {schema["kind"]})')
     assert defaults, version
     # `pack()` accepts any patch release on the line against this one pack. That
-    # is safe for syntax and bounds regardless; for defaults it is only safe
+    # uses explicitly verified overrides for known schema drift; for defaults it is only safe
     # while the reset itself does not move, so prove it at every release rather
     # than trusting the convention.
     reset = hashlib.sha256(body.encode()).hexdigest()
@@ -164,6 +164,21 @@ for version in (sys.argv[1:] or PATCH_RELEASES):
       'defaults':{'source':f'fc/controlrate_profile.c {RESET_FN}', 'reset_sha256':reset,
         'verified':verified, 'values':defaults},
       'baseline':None, 'notice':'Schema does not certify build features or defaults. GPL-3.0-or-later; derived from Betaflight.'}
+    if version == '4.4.0':
+        # Only these patch bounds are certified; retain pinned source evidence.
+        overrides = {}
+        for tag in PATCH_RELEASES[version]:
+            url = f'https://raw.githubusercontent.com/betaflight/betaflight/{tag}/src/main/cli/settings.c'
+            data = urllib.request.urlopen(url).read()
+            line = next(line for line in data.decode().splitlines()
+                        if '{ PARAM_NAME_GPS_RESCUE_MIN_START_DIST,' in line)
+            match = re.search(r'minmaxUnsigned = \{ (\d+), (\d+) \}', line)
+            bounds = tuple(map(int, match.groups()))
+            assert bounds == ((20, 1000) if tag in ('4.4.0', '4.4.1') else (10, 30))
+            schema = dict(params['gps_rescue_min_start_dist'], min=bounds[0], max=bounds[1])
+            overrides[tag] = {'parameters': {'gps_rescue_min_start_dist': schema},
+                              'url': url, 'sha256': hashlib.sha256(data).hexdigest()}
+        pack['patch_overrides'] = overrides
     if modern:
         pack['unresolved_bounds'] = unresolved
         # Verify every schema input at every supported plain patch, rather than

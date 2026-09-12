@@ -1977,7 +1977,8 @@
       "scope": "global",
       "values": [
         "RACE",
-        "BEACON"
+        "BEACON",
+        "STATUS"
       ]
     },
     "ledstrip_race_color": {

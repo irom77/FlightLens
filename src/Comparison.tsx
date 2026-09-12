@@ -1,3 +1,8 @@
+import { RxRangeComparison } from "./RxRangeComparison";
+import { CollectionComparison } from "./CollectionComparison";
+import { ModeComparison } from "./ModeComparison";
+import { PortComparison } from "./PortComparison";
+import { FeatureComparison } from "./FeatureComparison";
 import { useEffect, useState } from "react";
 import type { ConfigDocument, Inspection } from "./bindings/core";
 import { api } from "./ipc/client";
@@ -121,6 +126,11 @@ function RateComparison({ a, b }: { a?: ConfigDocument; b?: ConfigDocument }) {
         )}
       </div>
       {a && b && <ParameterComparison a={a} b={b} rateA={pa} rateB={pb} />}
+      {a && b && <FeatureComparison a={a} b={b} />}
+      {a && b && <PortComparison a={a} b={b} />}
+      {a && b && <ModeComparison a={a} b={b} />}
+      {a && b && <RxRangeComparison a={a} b={b} />}
+      {a && b && <CollectionComparison a={a} b={b} />}
       {a && b ? (
         ["roll", "pitch", "yaw"].map((axis) => (
           <section key={axis} aria-label={`${axis} comparison`}>

@@ -932,6 +932,44 @@ fn year_based_schema_defaults_and_bounds_are_verified() {
 }
 
 #[test]
+fn led_status_profile_is_valid_on_supported_firmware_lines() {
+    for version in [
+        "4.2.0",
+        "4.3.2",
+        "4.4.3",
+        "4.5.2",
+        "2025.12.3-alpha.KAACK_V19",
+    ] {
+        let text = format!("# Betaflight / STM32F405 {version}\nset ledstrip_profile = STATUS\n");
+        let Artifact::Config(d) = analyze(&text, "synthetic", "synthetic").unwrap() else {
+            panic!("expected configuration");
+        };
+        assert!(d.parameters.values().all(|p| p.valid), "{version}");
+    }
+}
+
+#[test]
+fn gps_rescue_bounds_follow_verified_patch_releases() {
+    for (version, min, max) in [
+        ("4.4.0", 20, 1000),
+        ("4.4.1", 20, 1000),
+        ("4.4.2", 10, 30),
+        ("4.4.3", 10, 30),
+        ("4.4.3.KAACK_V19", 10, 30),
+    ] {
+        for (value, valid) in [(min - 1, false), (min, true), (max, true), (max + 1, false)] {
+            let d = config(&format!(
+                "# Betaflight / STM32F405 {version}\nset gps_rescue_min_start_dist = {value}\n"
+            ));
+            assert_eq!(
+                d.parameters["global:gps_rescue_min_start_dist"].valid, valid,
+                "{version}: {value}"
+            );
+        }
+    }
+}
+
+#[test]
 fn redaction_removes_identifying_and_link_secret_values() {
     let d = config(&format!(
         "{}\n# name: Night Hawk\nset craft_name = Night Hawk\nset pilot_name = Alex\n\

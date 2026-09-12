@@ -2105,7 +2105,8 @@
       "scope": "global",
       "values": [
         "RACE",
-        "BEACON"
+        "BEACON",
+        "STATUS"
       ]
     },
     "ledstrip_race_color": {
@@ -4547,6 +4548,60 @@
       "min": 0,
       "scope": "rate",
       "values": []
+    }
+  },
+  "patch_overrides": {
+    "4.4.0": {
+      "parameters": {
+        "gps_rescue_min_start_dist": {
+          "kind": "integer",
+          "max": 1000,
+          "min": 20,
+          "scope": "global",
+          "values": []
+        }
+      },
+      "sha256": "092ff58a2505eb09f94c0db359fb0f3700b0b69b6170c6ffdda8257f0021d211",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.4.0/src/main/cli/settings.c"
+    },
+    "4.4.1": {
+      "parameters": {
+        "gps_rescue_min_start_dist": {
+          "kind": "integer",
+          "max": 1000,
+          "min": 20,
+          "scope": "global",
+          "values": []
+        }
+      },
+      "sha256": "81d1933b6c54fa231667b4652d19cade4b8a9e57334030bcc131f12b3b552600",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.4.1/src/main/cli/settings.c"
+    },
+    "4.4.2": {
+      "parameters": {
+        "gps_rescue_min_start_dist": {
+          "kind": "integer",
+          "max": 30,
+          "min": 10,
+          "scope": "global",
+          "values": []
+        }
+      },
+      "sha256": "844f5ce8b9afc915a3d3164fe6073c319637e5f2db75d64779dc5f53d61127ea",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.4.2/src/main/cli/settings.c"
+    },
+    "4.4.3": {
+      "parameters": {
+        "gps_rescue_min_start_dist": {
+          "kind": "integer",
+          "max": 30,
+          "min": 10,
+          "scope": "global",
+          "values": []
+        }
+      },
+      "sha256": "844f5ce8b9afc915a3d3164fe6073c319637e5f2db75d64779dc5f53d61127ea",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.4.3/src/main/cli/settings.c"
     }
   },
   "profiles": {

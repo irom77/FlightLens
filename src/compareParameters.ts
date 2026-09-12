@@ -1,3 +1,4 @@
+import equivalence from "./parameterEquivalence.json";
 import type {
   ConfigDocument,
   Derived,
@@ -50,6 +51,16 @@ export function compareParameters(
       a.firmware.version &&
       a.firmware.version === b.firmware.version,
   );
+  const certifiedRelease = (document: ConfigDocument) => {
+    const { family, version, packId } = document.firmware;
+    return (
+      family === equivalence.family &&
+      version != null &&
+      Object.hasOwn(equivalence.releases, version) &&
+      (equivalence.releases as Record<string, string>)[version] === packId
+    );
+  };
+  const crossVersion = certifiedRelease(a) && certifiedRelease(b);
   const known = (v?: ComparisonValue) =>
     v?.declared
       ? v.declared.valid && v.declared.supported
@@ -65,15 +76,28 @@ export function compareParameters(
       left?.derived ??
       right?.declared ??
       right?.derived)!.scope.kind;
+    const key = id.slice(id.indexOf(":") + 1);
+    const mapping = equivalence.mappings.find(
+      (entry) => entry.key === key && entry.scope === scope,
+    );
+    const mapped =
+      crossVersion &&
+      mapping &&
+      x?.kind === "integer" &&
+      y?.kind === "integer" &&
+      x.value >= mapping.min &&
+      x.value <= mapping.max &&
+      y.value >= mapping.min &&
+      y.value <= mapping.max;
     return {
-      key: id.slice(id.indexOf(":") + 1),
+      key,
       scope,
       a: left,
       b: right,
       status:
         !x || !y || scope === "unknown"
           ? "Unknown"
-          : !compatible
+          : !(compatible || mapped)
             ? "Not comparable"
             : x.kind === y.kind && x.value === y.value
               ? "Equal"

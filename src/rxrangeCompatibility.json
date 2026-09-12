@@ -1,0 +1,131 @@
+{
+  "family": "betaflight",
+  "releases": {
+    "4.5.0": "betaflight-4.5.0-schema-1",
+    "4.5.1": "betaflight-4.5.0-schema-1",
+    "4.5.2": "betaflight-4.5.0-schema-1",
+    "4.5.3": "betaflight-4.5.0-schema-1",
+    "4.5.4": "betaflight-4.5.0-schema-1",
+    "4.5.5": "betaflight-4.5.0-schema-1",
+    "2025.12.1": "betaflight-2025.12.1-schema-1",
+    "2025.12.2": "betaflight-2025.12.1-schema-1",
+    "2025.12.3": "betaflight-2025.12.1-schema-1",
+    "2025.12.4": "betaflight-2025.12.1-schema-1",
+    "2025.12.5": "betaflight-2025.12.1-schema-1"
+  },
+  "channels": 4,
+  "min": 750,
+  "max": 2250,
+  "sources": [
+    {
+      "version": "4.5.0",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/cli/cli.c",
+      "sha256": "c4cc447bb7308c22385ea46666ba7e38c4a5357be22eb977dbe72b916a1b86e9"
+    },
+    {
+      "version": "4.5.0",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.0/src/main/rx/rx.h",
+      "sha256": "25db7531e740b8ec2d1356ab006c25ea2d020e4e20e84ffd18d2c41ddb9ab110"
+    },
+    {
+      "version": "4.5.1",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/cli/cli.c",
+      "sha256": "c4cc447bb7308c22385ea46666ba7e38c4a5357be22eb977dbe72b916a1b86e9"
+    },
+    {
+      "version": "4.5.1",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.1/src/main/rx/rx.h",
+      "sha256": "25db7531e740b8ec2d1356ab006c25ea2d020e4e20e84ffd18d2c41ddb9ab110"
+    },
+    {
+      "version": "4.5.2",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/cli/cli.c",
+      "sha256": "032294f0073c2f4bff6a5d780689a8e286676f4ecd31ea3ad7aea4f8cf58a13e"
+    },
+    {
+      "version": "4.5.2",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.2/src/main/rx/rx.h",
+      "sha256": "25db7531e740b8ec2d1356ab006c25ea2d020e4e20e84ffd18d2c41ddb9ab110"
+    },
+    {
+      "version": "4.5.3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/cli/cli.c",
+      "sha256": "032294f0073c2f4bff6a5d780689a8e286676f4ecd31ea3ad7aea4f8cf58a13e"
+    },
+    {
+      "version": "4.5.3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.3/src/main/rx/rx.h",
+      "sha256": "25db7531e740b8ec2d1356ab006c25ea2d020e4e20e84ffd18d2c41ddb9ab110"
+    },
+    {
+      "version": "4.5.4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/cli/cli.c",
+      "sha256": "728a8cb7d21c06299b79506c88939cd70eab4fbcc0247bbf3c137b4ed20904f7"
+    },
+    {
+      "version": "4.5.4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.4/src/main/rx/rx.h",
+      "sha256": "25db7531e740b8ec2d1356ab006c25ea2d020e4e20e84ffd18d2c41ddb9ab110"
+    },
+    {
+      "version": "4.5.5",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/cli/cli.c",
+      "sha256": "728a8cb7d21c06299b79506c88939cd70eab4fbcc0247bbf3c137b4ed20904f7"
+    },
+    {
+      "version": "4.5.5",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/4.5.5/src/main/rx/rx.h",
+      "sha256": "25db7531e740b8ec2d1356ab006c25ea2d020e4e20e84ffd18d2c41ddb9ab110"
+    },
+    {
+      "version": "2025.12.1",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/cli/cli.c",
+      "sha256": "283ee0dd4f05cd6040f78950ee864f5fa49411b8b35875d9e74d18c7ef6adb6e"
+    },
+    {
+      "version": "2025.12.1",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.1/src/main/rx/rx.h",
+      "sha256": "0dcee139f3c001bb01939882dc6c016be988979b633f7d10e4287f97acfbfbca"
+    },
+    {
+      "version": "2025.12.2",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/cli/cli.c",
+      "sha256": "283ee0dd4f05cd6040f78950ee864f5fa49411b8b35875d9e74d18c7ef6adb6e"
+    },
+    {
+      "version": "2025.12.2",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.2/src/main/rx/rx.h",
+      "sha256": "0dcee139f3c001bb01939882dc6c016be988979b633f7d10e4287f97acfbfbca"
+    },
+    {
+      "version": "2025.12.3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/cli/cli.c",
+      "sha256": "283ee0dd4f05cd6040f78950ee864f5fa49411b8b35875d9e74d18c7ef6adb6e"
+    },
+    {
+      "version": "2025.12.3",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.3/src/main/rx/rx.h",
+      "sha256": "0dcee139f3c001bb01939882dc6c016be988979b633f7d10e4287f97acfbfbca"
+    },
+    {
+      "version": "2025.12.4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/cli/cli.c",
+      "sha256": "283ee0dd4f05cd6040f78950ee864f5fa49411b8b35875d9e74d18c7ef6adb6e"
+    },
+    {
+      "version": "2025.12.4",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.4/src/main/rx/rx.h",
+      "sha256": "0dcee139f3c001bb01939882dc6c016be988979b633f7d10e4287f97acfbfbca"
+    },
+    {
+      "version": "2025.12.5",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/cli/cli.c",
+      "sha256": "283ee0dd4f05cd6040f78950ee864f5fa49411b8b35875d9e74d18c7ef6adb6e"
+    },
+    {
+      "version": "2025.12.5",
+      "url": "https://raw.githubusercontent.com/betaflight/betaflight/2025.12.5/src/main/rx/rx.h",
+      "sha256": "0dcee139f3c001bb01939882dc6c016be988979b633f7d10e4287f97acfbfbca"
+    }
+  ]
+}

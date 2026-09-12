@@ -45,6 +45,23 @@ fn main() {
             .collect::<Vec<_>>()
             .join("\n");
     }
+    if std::env::args().any(|arg| arg == "--feature-differences") {
+        text.push_str("\nfeature OSD\nfeature -OSD\nfeature 3D\n");
+    }
+    if std::env::args().any(|arg| arg == "--port-differences") {
+        text.push_str("\nserial 0 1 115200 57600 0 115200\nserial 0 64 230400 57600 0 115200\nserial 1 0 115200 57600 0 115200\n");
+    }
+    if std::env::args().any(|arg| arg == "--mode-differences") {
+        text.push_str(
+            "\naux 0 0 0 1700 2100 0 0\naux 0 0 1 1600 2100 1 0\naux 2 2 14 900 900 0 0\n",
+        );
+    }
+    if std::env::args().any(|arg| arg == "--collection-baseline") {
+        text.push_str("\nvtxtable bands 5\nrxrange 0 1000 2000\n");
+    }
+    if std::env::args().any(|arg| arg == "--collection-differences") {
+        text.push_str("\nrxrange 0 1000 2000\nrxrange 0 1050 1950\nadjrange 0 0 0 900 900 0 0\n");
+    }
     let artifact = analyze(&text, "Synthetic smoke fixture", "virtual").unwrap();
     let Artifact::Config(d) = &artifact else {
         unreachable!()

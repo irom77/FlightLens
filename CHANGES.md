@@ -15,6 +15,40 @@ renamed to the version when the release is cut. Purely internal work
   identities are replaced before copying, and everything that leaves the app is
   shown for review first.
 
+- Compare final explicit `rxrange` endpoints by channel on matching verified
+  official 4.5.0–4.5.5 and 2025.12.1–2025.12.5 firmware versions, with filtering
+  and source lines. Resets and unverified syntax clear earlier knowledge; missing
+  ranges remain unknown. Vendor and cross-version comparisons remain uncertified.
+
+- Compare preserved CLI collection text for `vtxtable`, `vtx`, `rxfail`,
+  `rxrange`, and `adjrange`, with command filtering and source lines. Results
+  describe text differences only; missing groups remain unknown.
+
+- Compare same-version mode assignments by slot, including mode IDs, channels,
+  ranges, logic, and linked IDs, with filtering and source lines. Missing slots
+  and omitted logic/link fields stay unknown; cross-version assignments remain
+  not comparable.
+
+- Compare same-version serial-port declarations by identifier, function mask,
+  and all four baud settings, with filtering and source lines. Missing ports stay
+  unknown; cross-version allocations remain not comparable.
+
+- Compare final explicit feature declarations between backups on the same
+  firmware version, with enabled/disabled states, source lines, filtering, and
+  hidden equal values. Missing declarations stay unknown; cross-version feature
+  declarations remain not comparable.
+
+- Compare `motor_poles` and the maximum, minimum, and warning battery cell-voltage
+  thresholds across verified official Betaflight 4.5.0–4.5.5 and
+  2025.12.1–2025.12.5 releases. Other cross-version settings remain uncertified.
+
+- Validate GPS rescue minimum start distance against the verified Betaflight 4.4
+  patch bounds: 20–1000 in 4.4.0–4.4.1 and 10–30 in 4.4.2–4.4.3.
+
+- Accept the upstream LED strip `STATUS` profile on all supported Betaflight
+  lines. Preserve conditional lookup choices during schema generation, removing
+  false validation errors from backups made with LED status mode enabled.
+
 ## 0.5.0 — 2026-09-11
 
 - Recognize `feature 3D` and `feature -3D` as valid CLI commands, removing false

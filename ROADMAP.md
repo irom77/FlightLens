@@ -22,9 +22,8 @@ version bump; follow the [release policy](docs/releases/README.md).
 ### Betaflight compatibility follow-up — in progress
 
 - [x] Recognize prerelease and build suffixes in firmware headers, including
-  year-based custom builds. The parser fix is committed and unreleased; regression
-  tests and the full check script passed against the 13-file Windows DUMP_ALL
-  corpus. Version recognition does not certify firmware semantics or defaults.
+  year-based custom builds. Shipped in 0.5.0; regression tests and the full
+  check script passed against the Windows DUMP_ALL corpus. Version recognition does not certify firmware semantics or defaults.
 - [x] Investigate upstream 2025.12 compatibility and classify the local corpus
   diagnostics. Record source pins, serial syntax changes, and schema/rate
   verification requirements in [the investigation](docs/betaflight-2025.12-compatibility.md).
@@ -38,8 +37,12 @@ version bump; follow the [release policy](docs/releases/README.md).
 - [x] Accept numeric feature names such as `3D`, including disable commands.
   Removes all 14 feature syntax errors in the Windows corpus and their false
   OSD/serial export blocks.
-- [ ] Resolve the remaining 16 schema validation diagnostics
-  tracked in [TODO.md](TODO.md).
+- [x] Preserve conditional LED lookup choices, including `STATUS`, across all
+  five bundled firmware lines. Removes 14 false schema diagnostics.
+- [x] Correct GPS rescue validation with verified patch-specific bounds for
+  Betaflight 4.4.0–4.4.3, including vendor suffixes. The remaining corpus
+  diagnostic is an OSD units value outside the upstream choices.
+  LED and GPS fixes are completed locally and await release.
 
 ## Phase 2 — Workspace and comparison — in progress
 
@@ -70,7 +73,21 @@ Comparison progress and remaining work, in implementation order:
    the Windows/macOS module-resolution build fix in 0.4.1.
 3. [ ] Add certified cross-version parameter equivalence mappings and comparison
    of CLI collections. Compare versions only where bundled compatibility data
-   establishes equivalent semantics.
+   establishes equivalent semantics. Four mappings completed locally:
+   `motor_poles`, `vbat_max_cell_voltage`, `vbat_min_cell_voltage`, and
+   `vbat_warning_cell_voltage` across official 4.5.0–4.5.5 and 2025.12.1–2025.12.5.
+   Same-version feature declaration comparison is complete locally, including
+   final explicit states, unknown omissions, filtering, and source lines.
+   Same-version serial-port comparison is complete locally, including function
+   masks, all baud settings, missing ports, filtering, and source lines.
+   Same-version mode-assignment comparison is complete locally, including slot
+   matching, channels, ranges, logic, linked IDs, filtering, and source lines.
+   Source-text comparison of vtxtable, vtx, rxfail, rxrange, and adjrange is
+   complete locally, retaining duplicates and pre-reset lines without certifying
+   semantics. Same-version rxrange endpoint comparison is complete locally for
+   verified official 4.5.0–4.5.5 and 2025.12.1–2025.12.5, with resets, unknown
+   omissions, filtering, and source lines. Additional settings, cross-version features/ports/modes, and
+   semantic comparison of other CLI collections remain outstanding.
 4. [ ] Extend comparison to three selected configurations, including angular
    velocity overlays. Use an explicitly selected baseline for semantic differences,
    distinguishing changes on either side and conflicting changes. Comparison
