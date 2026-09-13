@@ -1,3 +1,4 @@
+import { ThreeCollectionTable } from "./ThreeCollectionTable";
 import { useState } from "react";
 import type { ConfigDocument } from "./bindings/core";
 import {
@@ -40,12 +41,28 @@ function VtxActivationValue({
 export function VtxActivationComparison({
   a,
   b,
+  c,
+  sides,
 }: {
   a: ConfigDocument;
   b: ConfigDocument;
+  c?: ConfigDocument;
+  sides?: [string, string, string];
 }) {
   const [query, setQuery] = useState("");
   const [hideEqual, setHideEqual] = useState(true);
+  const description = (
+    <p>
+      Final explicit vtx declarations by slot (0–9), on matching verified
+      official 4.5.0–4.5.5 versions. Ranges are clamped to 900–2100 µs and
+      rounded down to 25 µs steps. Nonzero selectors require preceding table
+      dimensions and bounds valid with or without table support; build-dependent
+      cases remain unknown. Resets and unverified activation syntax clear
+      earlier slot knowledge. Vendor, 2025.12 and cross-version comparisons are
+      not certified. Equal declarations do not establish equal RF behavior or
+      determine which overlapping activation wins.
+    </p>
+  );
   const rows = compareVtxActivations(a, b);
   const filtered = rows.filter(
     (row) =>
@@ -54,22 +71,28 @@ export function VtxActivationComparison({
       ) &&
       (!hideEqual || row.status !== "Equal"),
   );
+  if (c && sides)
+    return (
+      <ThreeCollectionTable
+        title="VTX activation comparison"
+        description={description}
+        documents={[a, b, c]}
+        sides={sides}
+        compare={compareVtxActivations}
+        rowKey={(row) => String(row.slot)}
+        renderValue={(value, _document, side) => (
+          <VtxActivationValue value={value} side={side} />
+        )}
+        textOnly={false}
+      />
+    );
   return (
     <section
       aria-label="VTX activation comparison"
       className="card parameter-table"
     >
       <h2>VTX activation comparison</h2>
-      <p>
-        Final explicit vtx declarations by slot (0–9), on matching verified
-        official 4.5.0–4.5.5 versions. Ranges are clamped to 900–2100 µs and
-        rounded down to 25 µs steps. Nonzero selectors require preceding table
-        dimensions and bounds valid with or without table support;
-        build-dependent cases remain unknown. Resets and unverified activation
-        syntax clear earlier slot knowledge. Vendor, 2025.12 and cross-version
-        comparisons are not certified. Equal declarations do not establish equal
-        RF behavior or determine which overlapping activation wins.
-      </p>
+      {description}
       <input
         className="search"
         aria-label="Filter compared VTX slots"

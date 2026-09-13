@@ -1,3 +1,4 @@
+import { ThreeCollectionTable } from "./ThreeCollectionTable";
 import { useState } from "react";
 import type { ConfigDocument } from "./bindings/core";
 import { compareVtxTables, type VtxTableValue } from "./compareVtxTables";
@@ -27,12 +28,26 @@ function TableValue({ value, side }: { value?: VtxTableValue; side: string }) {
 export function VtxTableComparison({
   a,
   b,
+  c,
+  sides,
 }: {
   a: ConfigDocument;
   b: ConfigDocument;
+  c?: ConfigDocument;
+  sides?: [string, string, string];
 }) {
   const [query, setQuery] = useState("");
   const [hideEqual, setHideEqual] = useState(true);
+  const description = (
+    <p>
+      Final explicit vtxtable declarations on matching verified official
+      4.5.0–4.5.5 or 2025.12.1–2025.12.5 versions. Dimensions must be known
+      before dependent entries. Resets, dimension changes and unverified syntax
+      can leave entries unknown. Vendor builds and cross-version comparisons are
+      not certified. Power values are stored numbers; matching declarations do
+      not establish equal RF output.
+    </p>
+  );
   const rows = compareVtxTables(a, b);
   const filtered = rows.filter(
     (row) =>
@@ -41,17 +56,25 @@ export function VtxTableComparison({
       ) &&
       (!hideEqual || row.status !== "Equal"),
   );
+  if (c && sides)
+    return (
+      <ThreeCollectionTable
+        title="VTX table comparison"
+        description={description}
+        documents={[a, b, c]}
+        sides={sides}
+        compare={compareVtxTables}
+        rowKey={(row) => String(row.key)}
+        renderValue={(value, _document, side) => (
+          <TableValue value={value} side={side} />
+        )}
+        textOnly={false}
+      />
+    );
   return (
     <section aria-label="VTX table comparison" className="card parameter-table">
       <h2>VTX table comparison</h2>
-      <p>
-        Final explicit vtxtable declarations on matching verified official
-        4.5.0–4.5.5 or 2025.12.1–2025.12.5 versions. Dimensions must be known
-        before dependent entries. Resets, dimension changes and unverified
-        syntax can leave entries unknown. Vendor builds and cross-version
-        comparisons are not certified. Power values are stored numbers; matching
-        declarations do not establish equal RF output.
-      </p>
+      {description}
       <input
         className="search"
         aria-label="Filter compared VTX table entries"

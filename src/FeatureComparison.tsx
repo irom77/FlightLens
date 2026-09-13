@@ -1,3 +1,4 @@
+import { ThreeCollectionTable } from "./ThreeCollectionTable";
 import { useState } from "react";
 import type { ConfigDocument } from "./bindings/core";
 import { compareFeatures } from "./compareFeatures";
@@ -39,27 +40,54 @@ function FeatureValue({
 export function FeatureComparison({
   a,
   b,
+  c,
+  sides,
 }: {
   a: ConfigDocument;
   b: ConfigDocument;
+  c?: ConfigDocument;
+  sides?: [string, string, string];
 }) {
   const [query, setQuery] = useState("");
   const [hideEqual, setHideEqual] = useState(true);
+  const description = (
+    <p>
+      Final explicit feature declarations on the same firmware version. Missing
+      declarations remain unknown. Cross-version features are not comparable.
+      These states do not establish hardware support or whether a feature is
+      active in flight.
+    </p>
+  );
   const rows = compareFeatures(a, b);
   const filtered = rows.filter(
     (row) =>
       row.name.toLowerCase().includes(query.toLowerCase()) &&
       (!hideEqual || row.status !== "Equal"),
   );
+  if (c && sides)
+    return (
+      <ThreeCollectionTable
+        title="Feature comparison"
+        description={description}
+        documents={[a, b, c]}
+        sides={sides}
+        compare={compareFeatures}
+        rowKey={(row) => String(row.name)}
+        renderValue={(value, document, side, row) => (
+          <FeatureValue
+            value={value}
+            side={side}
+            name={row.name}
+            document={document}
+          />
+        )}
+        textOnly={false}
+      />
+    );
   return (
     <section aria-label="Feature comparison" className="card parameter-table">
       <h2>Feature comparison</h2>
-      <p>
-        Final explicit feature declarations on the same firmware version.
-        Missing declarations remain unknown. Cross-version features are not
-        comparable. These states do not establish hardware support or whether a
-        feature is active in flight.
-      </p>
+      {description}
       <input
         className="search"
         aria-label="Filter compared features"

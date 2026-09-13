@@ -54,8 +54,8 @@ Phase 2 builds on foundations already shipped:
   preferences; persisted light/dark theme selection.
 - [x] Windows and macOS installer packaging and tag-triggered release workflows.
 
-Phase 2.5 implementation is complete. Resume Phase 2 at item 4; recursive indexing is not
-a prerequisite. Betaflight compatibility follow-up and native installer
+Phase 2.5 implementation is complete. Phase 2 items 4–6 are implemented locally;
+continue with item 7, native file associations and OS open-file routing. Betaflight compatibility follow-up and native installer
 validation remain tracked alongside feature development.
 
 Comparison progress and remaining work, in implementation order:
@@ -102,18 +102,54 @@ Comparison progress and remaining work, in implementation order:
    not prerequisites for this item or Phase 2. The dump-processing guide is a
    separate documentation task. Do not reopen this item for coverage expansion;
    defects in the delivered scope still require fixes.
-4. [ ] Extend comparison to three selected configurations, including angular
-   velocity overlays. Use an explicitly selected baseline for semantic differences,
+4. [x] Extend comparison to three selected configurations with independent rate
+   profile selections. Overlay each backup’s curves on shared graphs: one graph
+   per roll/pitch/yaw angular velocity axis (°/s), plus a separate throttle-command
+   graph with input/output percentage axes. Support these overlays for both two
+   and three backups, with distinct source/profile labels, consistent line styles,
+   and hover values at the same input. Preserve verified throttle release/input
+   gates and show per-backup unavailable reasons without hiding supported curves.
+   Implemented locally: two/three-backup graph overlays, independent rate/PID
+   selections, and an explicit baseline parameter table distinguishing one-sided
+   changes, matching changes and conflicts while preserving unknown/compatibility
+   gates. The same baseline now applies to features, ports, modes, receiver
+   ranges/failsafes, VTX tables/activations, adjustment ranges and collection text.
+   Text-only classification remains explicitly separate from semantic equivalence.
+   `./test.sh` (including 78 frontend and 21 browser tests) and both screenshot
+   checks passed at the 2026-09-13 checkpoint.
+   Packaged Windows/macOS validation remains tracked under item 8.
+   Use an explicitly selected baseline for semantic differences,
    distinguishing changes on either side and conflicting changes. Comparison
    remains read-only; it does not merge or apply configurations.
-5. [ ] Add recursive workspace indexing and searchable explorer navigation, with
+5. [x] Add recursive workspace indexing and searchable explorer navigation, with
    pagination, cancellation, bounded background work, and removable-media
    handling. Index metadata without keeping every backup open in memory.
-6. [ ] Add explicitly saved/opened `.flightlens` sessions for workspace locations,
+   Implemented locally: one selected folder, recursive file/path search, 50-file
+   pages, on-demand opening, partial-result status and reconnect/refresh errors.
+   Discovery stores metadata only, skips links and bounds workers, batches,
+   traversal depth and index size. Folder persistence belongs to item 6.
+   Rust/browser regression checks and Linux desktop compilation passed at the
+   2026-09-13 checkpoint. Packaged native checks remain under item 8. See
+   [workspace indexing](docs/workspace-indexing.md) for limits and recovery.
+6. [x] Add explicitly saved/opened `.flightlens` sessions for workspace locations,
    document references, comparison/profile selections, and layout preferences.
-   Define format versioning, compatibility, relative-path resolution, and recovery
-   for moved or changed files. Automatic `session.json` restore is already present;
-   portable sessions are not.
+   **Completion boundary:** version-1, reference-only sessions for file-backed
+   CLI and recognized firmware text backups; layout means active document,
+   inspector tab and theme. Save As creates a new manifest. Open is additive,
+   confirms referenced locations, and restores matching backups, workspace,
+   rate/PID profiles, comparison order and baseline.
+   Strict bounded validation, format compatibility, relative/absolute paths,
+   missing/changed-file warnings, retry, and hash-checked relinking are implemented.
+   Save As preserves unresolved references and unavailable selections, with
+   explicit controls to replace selections or workspace locations.
+   Pasted inputs must first be saved separately and reopened; they are never
+   embedded or silently omitted. Header-only Blackbox imports are explicitly
+   rejected at save time; full-file telemetry references are deferred to Phase 3.
+   Window geometry, transient filters/search, and per-location permission controls
+   are outside this boundary. OS associations belong to item 7 and packaged
+   Windows/macOS validation to item 8.
+   Implemented and verified locally on 2026-09-13; released in 0.9.0.
+   See [completion criteria and evidence](docs/portable-sessions.md#item-6-completion-boundary).
 7. [ ] Add native file associations and OS open-file routing, including opening
    files in an already-running app. Keep firmware and telemetry capability checks
    explicit when a recognized format is not yet supported.
@@ -124,18 +160,17 @@ Comparison progress and remaining work, in implementation order:
    Linux/WSL restore checks cover duplicate, changed, missing, and unreadable
    sources; Windows/macOS restore and disconnected sources remain to be checked.
 
-Signing and notarization remain a separate distribution decision tracked in
-[TODO.md](TODO.md); initial installer packaging is already delivered. Phase 2 is
+Installers remain unsigned and macOS notarization is absent; these are not
+currently planned tasks. Initial installer packaging is already delivered. Phase 2 is
 complete when items 1–8 are implemented and verified, with saved-data
 compatibility and platform limitations documented. Item 3 has a fixed coverage
 boundary above; further comparison research does not block items 4–8. The next
-Phase 2 feature unit is item 4, baseline-based three-backup comparison, after
-Phase 2.5 is complete.
+Phase 2 feature unit is item 7, native file associations and OS open-file routing.
 
 ## Phase 2.5 — Feedback and inspection improvements — implemented
 
 Phase 2.5 collects user-facing improvements that do not depend on the Phase 3
-telemetry pipeline. Both items are implemented. Resume Phase 2 at item 4. Outstanding
+telemetry pipeline. Both items are implemented. Phase 2 items 4–6 are also implemented locally; continue at item 7. Outstanding
 packaged Windows/macOS checks remain tracked in TODO and Phase 2 item 8.
 
 1. [x] Add a feedback button that collects a subject, a body, and optionally the

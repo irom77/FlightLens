@@ -6,6 +6,80 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## 0.9.0 — 2026-09-13
+
+- Remove the planned MIT relicensing and installer-signing tasks. The existing
+  GPL-3.0-or-later license and unsigned distribution remain unchanged.
+
+- Complete Phase 2 item 6 locally with a documented reference-only session
+  contract, acceptance evidence, and explicit pasted/Blackbox input limits.
+  Native OS file routing and packaged platform validation remain separate items.
+
+- Allow portable sessions to save file-backed recognized iNav and ArduPilot text
+  backups, including their active selection and original content hashes. They
+  remain recognition-only; pasted backups and Blackbox imports are still excluded.
+
+- Add Relink session backups to locate moved files through native file pickers.
+  Only identical contents are accepted; saved profiles and comparison selections
+  restore, and Save As records replacement locations without changing backups.
+
+- Add Retry session to reread the last confirmed portable session without a file
+  picker, repeating reference confirmation and hash checks before restoring its
+  saved selections. Cancelled or invalid opens keep the previous retry target.
+
+- Retain unavailable active-backup and comparison selections, including graph
+  order and baseline, through portable-session Save As. A checkbox lets users
+  save current selections instead, and a new available comparison takes
+  precedence over the retained comparison.
+
+- Keep an unavailable session workspace folder when saving a new session, with
+  its path adjusted for the new location. Choosing a workspace folder replaces
+  the retained location; cancelling or refreshing leaves it intact. The restore
+  message explains which folder Save As will retain.
+
+- Preserve failed backup references from the last confirmed portable session
+  during the app run and carry them into Save As with rebased paths and original
+  hashes/profiles. Conflicting references or incompatible foreign paths block
+  saving instead of silently losing references. Reopen a saved session to retry.
+
+- Save and restore two- or three-backup comparison order, baseline, and each
+  backup's selected rate/PID profiles in portable sessions. Profile selections
+  now persist across inspector/comparison navigation and are shared by both
+  views. Unavailable saved profiles produce explicit fallback messages; a
+  comparison with missing or duplicate backups is not silently substituted.
+
+- Add native Save Session As and Open Session controls for file-backed CLI
+  documents, active document, tab and theme. Save references to a new file;
+  confirm referenced locations before opening matching backups. Report missing
+  or changed backups individually and preserve existing open documents. Restore
+  the saved workspace folder with bounded metadata indexing after confirmation;
+  unavailable folders preserve the current explorer.
+
+- Document and implement the version-1 portable session format foundation, with
+  bounded metadata validation and relative-path resolution.
+
+- Add a recursive, metadata-only workspace explorer with file/path search,
+  50-file pages, on-demand opening, cancellable background batches and refresh
+  after files change or drives reconnect. Index one selected folder without
+  opening its backups; report skipped entries and scan limits (10,000 backups,
+  100,000 directory entries and 64 levels). Links are skipped. Workspace folder
+  selection can be retained in portable sessions.
+
+- Add optional third-backup selection with angular velocity and throttle overlays
+  and independent profiles. Add an explicitly selected baseline for three-way
+  parameter comparison, separating one-sided changes, matching changes and
+  conflicts while retaining unknown values, compatibility gates and source links.
+  Apply the same baseline to features, ports, modes, receiver ranges/failsafes,
+  VTX tables/activations, adjustment ranges and CLI collection text. Preserve
+  declaration normalization and resets; label text-only differences separately
+  from semantic equivalence.
+
+- Overlay both selected backups’ throttle curves in Compare, using independent
+  rate profiles, shared percentage axes, source labels and hover values. Show
+  unavailable reasons per backup using the existing verified throttle mapping.
+- Expand Phase 2’s three-backup comparison scope to require shared angular
+  velocity and throttle graphs for both two and three selected CLI backups.
+
 ## 0.8.0 — 2026-09-12
 
 - Add a read-only Throttle Curve Preview beside angular velocity in the Rates

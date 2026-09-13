@@ -17,7 +17,8 @@ pub struct SourceRegistry {
     documents: BTreeMap<PathBuf, String>,
 }
 impl SourceRegistry {
-    /// Only native dialogs/drop events may call this; no webview path grant command exists.
+    /// Paths come from native dialogs/drop events or an entry in a native-granted
+    /// workspace. No webview path grant command exists.
     pub fn register(&mut self, path: PathBuf) -> Result<SourceDescriptor, String> {
         let path = path
             .canonicalize()
@@ -45,6 +46,14 @@ impl SourceRegistry {
     pub fn forget_document(&mut self, document_id: &str, session: &mut Vec<PathBuf>) {
         session.retain(|path| self.documents.get(path).is_none_or(|id| id != document_id));
         self.documents.retain(|_, id| id != document_id);
+    }
+
+    /// A previously imported file reference, without rereading potentially changed bytes.
+    pub fn document_path(&self, document_id: &str) -> Result<PathBuf, String> {
+        self.documents
+            .iter()
+            .find_map(|(path, id)| (id == document_id).then(|| path.clone()))
+            .ok_or("No open file reference for this document".into())
     }
 
     pub fn path(&self, id: &str) -> Result<PathBuf, String> {

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { listen } from "@tauri-apps/api/event";
 import type {
   Artifact,
+  WorkspacePage,
   ConfigDocument,
   Derived,
   ExportRequest,
@@ -14,6 +15,8 @@ import type {
 import { api, desktopAvailable } from "./ipc/client";
 import { savedActive, tabs, useWorkspace } from "./stores/workspace";
 import { useTheme } from "./stores/theme";
+import { WorkspaceExplorer } from "./WorkspaceExplorer";
+import { defaultProfiles, restoredProfiles, useProfiles, useSelections } from "./stores/selections";
 import { Comparison } from "./Comparison";
 import { Feedback } from "./Feedback";
 import { Plot } from "./Plots";
@@ -53,6 +56,10 @@ export default function App() {
   const [label, setLabel] = useState("Pasted config 1");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [sessionWorkspace, setSessionWorkspace] = useState<WorkspacePage | null>(null);
+  const [canRetrySession, setCanRetrySession] = useState(false);
+  const [sessionStatus, setSessionStatus] = useState("");
+  const [preserveUnavailableSelections, setPreserveUnavailableSelections] = useState(true);
   const desktop = desktopAvailable();
   const add = (artifact: Artifact) => {
     repository.current.set(artifact.document.id, artifact);
@@ -147,6 +154,30 @@ export default function App() {
   }, []);
   const artifact = repository.current.get(workspace.activeId ?? "");
   void revision;
+  const openSession = (retry: boolean, relink = false) => run(async () => {
+    setSessionStatus("");
+    const result = await api.openPortableSession(retry, relink);
+    if (!result) return;
+    setCanRetrySession(true);
+    setPreserveUnavailableSelections(true);
+    if (result.workspace) setSessionWorkspace(result.workspace);
+    for (const artifact of result.artifacts) add(artifact);
+    if (result.activeId) workspace.activate(result.activeId);
+    if (tabs.some((tab) => tab === result.tab)) workspace.setTab(result.tab as (typeof tabs)[number]);
+    if (result.theme === "dark" || result.theme === "light") theme.setTheme(result.theme);
+    const warnings = [...result.warnings];
+    const profiles = { ...useSelections.getState().profiles };
+    for (const entry of result.profiles ?? []) {
+      const artifact = repository.current.get(entry.documentId);
+      if (artifact?.kind !== "config") continue;
+      const restored = restoredProfiles(artifact.document, { rate: entry.rateProfile, pid: entry.pidProfile });
+      profiles[entry.documentId] = restored.profiles;
+      warnings.push(...restored.warnings);
+    }
+    useSelections.setState({ profiles, comparison: result.comparison ?? null });
+    setComparing(Boolean(result.comparison));
+    setSessionStatus([`Opened ${result.artifacts.length} session backups.`, ...warnings].join("\n"));
+  });
   return (
     <div className="app">
       <aside className="sidebar">
@@ -184,6 +215,49 @@ export default function App() {
         <button onClick={() => setComparing(!comparing)} aria-pressed={comparing}>
           {comparing ? "Back to inspector" : "Compare backups"}
         </button>
+        <details className="notice" aria-label="Portable sessions">
+          <summary>Portable sessions</summary>
+          <p>Save file-backed CLI and recognized firmware text backups, tab and theme. Pasted backups and Blackbox files must be closed before saving. Workspace folders are restored. Rate/PID profiles are shared between inspection and comparison and saved with comparison selections. Opening adds matching backups to this workspace.</p>
+          <button disabled={!desktop || busy} onClick={() => void openSession(false)}>Open session…</button>
+          <button disabled={!desktop || busy || !canRetrySession} onClick={() => void openSession(true)}>Retry session</button>
+          <button disabled={!desktop || busy || !canRetrySession} onClick={() => void openSession(true, true)}>Relink session backups…</button>
+          <small>Relink retries the saved session and asks for identical replacements for unavailable backups. Save As keeps the new locations.</small>
+          <p>Retry rereads the last confirmed session and restores its saved selections.</p>
+          <button disabled={!desktop || busy} onClick={() => void run(async () => {
+            setSessionStatus("");
+            const selections = useSelections.getState();
+            const documentIds = workspace.documents.map((d) => d.id);
+            const comparison = comparing ? selections.comparison ?? {
+              documents: Array.from(repository.current.values()).flatMap((a) => a.kind === "config" ? [a.document.id] : []).slice(0, 2),
+              baseline: null,
+            } : null;
+            if (comparison && (comparison.documents.filter(Boolean).length < 2 ||
+                comparison.documents.filter(Boolean).some((id) => !documentIds.includes(id)) ||
+                !comparison.documents[0] || !comparison.documents[1])) {
+              throw new Error("Select two or three available comparison backups before saving, or return to the inspector.");
+            }
+            const saved = await api.savePortableSession({
+              preserveUnavailableSelections,
+              documentIds, activeId: workspace.activeId, tab: workspace.tab, theme: theme.theme,
+              profiles: documentIds.map((documentId) => {
+                const artifact = repository.current.get(documentId);
+                const selected = selections.profiles[documentId] ?? (artifact?.kind === "config" ? defaultProfiles(artifact.document) : { rate: 0, pid: 0 });
+                return { documentId, rateProfile: selected.rate, pidProfile: selected.pid };
+              }),
+              comparison: comparison ? { ...comparison, documents: comparison.documents.filter(Boolean) } : null,
+            });
+            setSessionStatus(saved ? "Saved session references to a new file." : "Session save cancelled.");
+          })}>Save session as…</button>
+          <label><input type="checkbox" disabled={busy} checked={preserveUnavailableSelections} onChange={(event) => setPreserveUnavailableSelections(event.target.checked)} /> Keep unavailable active/comparison selections when saving</label>
+        </details>
+        <WorkspaceExplorer
+          restoredPage={sessionWorkspace}
+          disabled={!desktop || busy}
+          onOpen={(artifact) => {
+            add(artifact);
+            setComparing(false);
+          }}
+        />
         <div className="section-label">
           OPEN DOCUMENTS <span>{workspace.documents.length}</span>
         </div>
@@ -256,6 +330,7 @@ export default function App() {
             <span className="pill">● Offline</span>
           </div>
         </header>
+        {sessionStatus && <p className="notice" role="status" style={{ whiteSpace: "pre-wrap" }}>{sessionStatus}</p>}
         {error && (
           <div className="error" role="alert">
             {error}
@@ -513,8 +588,9 @@ function Inspector({
   // Keep original CLI numbers, but skip sections with no inspection data.
   const pidProfiles = populatedProfiles(d, "pid");
   const rateProfiles = populatedProfiles(d, "rate");
-  const [pid, setPid] = useState(() => defaultProfile(pidProfiles));
-  const [rate, setRate] = useState(() => defaultProfile(rateProfiles));
+  const { pid, rate, setPid, setRate } = useProfiles(d);
+  if (!pidProfiles.includes(pid)) pidProfiles.push(pid);
+  if (!rateProfiles.includes(rate)) rateProfiles.push(rate);
   const [inspection, setInspection] = useState<Inspection>(empty);
   const [rateInspections, setRateInspections] = useState<
     Record<number, Inspection>

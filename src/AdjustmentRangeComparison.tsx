@@ -1,3 +1,4 @@
+import { ThreeCollectionTable } from "./ThreeCollectionTable";
 import { useState } from "react";
 import type { ConfigDocument } from "./bindings/core";
 import {
@@ -41,12 +42,27 @@ function AdjustmentRangeValue({
 export function AdjustmentRangeComparison({
   a,
   b,
+  c,
+  sides,
 }: {
   a: ConfigDocument;
   b: ConfigDocument;
+  c?: ConfigDocument;
+  sides?: [string, string, string];
 }) {
   const [query, setQuery] = useState("");
   const [hideEqual, setHideEqual] = useState(true);
+  const description = (
+    <p>
+      Final explicit adjrange declarations by slot (0–29), on matching verified
+      official 4.5.0–4.5.5 and 2025.12.1–2025.12.5 versions. Ranges are clamped
+      to 900–2100 µs and rounded down to 25 µs steps. Omitted center and scale
+      values are zero. Resets and unverified syntax clear earlier slot
+      knowledge. Vendor and cross-version comparisons are not certified. Equal
+      stored declarations do not establish equal in-flight effects or predict
+      resulting gains, active profiles, or overlapping adjustments.
+    </p>
+  );
   const rows = compareAdjustmentRanges(a, b);
   const filtered = rows.filter(
     (row) =>
@@ -55,22 +71,28 @@ export function AdjustmentRangeComparison({
       ) &&
       (!hideEqual || row.status !== "Equal"),
   );
+  if (c && sides)
+    return (
+      <ThreeCollectionTable
+        title="Adjustment range comparison"
+        description={description}
+        documents={[a, b, c]}
+        sides={sides}
+        compare={compareAdjustmentRanges}
+        rowKey={(row) => String(row.slot)}
+        renderValue={(value, _document, side) => (
+          <AdjustmentRangeValue value={value} side={side} />
+        )}
+        textOnly={false}
+      />
+    );
   return (
     <section
       aria-label="Adjustment range comparison"
       className="card parameter-table"
     >
       <h2>Adjustment range comparison</h2>
-      <p>
-        Final explicit adjrange declarations by slot (0–29), on matching
-        verified official 4.5.0–4.5.5 and 2025.12.1–2025.12.5 versions. Ranges
-        are clamped to 900–2100 µs and rounded down to 25 µs steps. Omitted
-        center and scale values are zero. Resets and unverified syntax clear
-        earlier slot knowledge. Vendor and cross-version comparisons are not
-        certified. Equal stored declarations do not establish equal in-flight
-        effects or predict resulting gains, active profiles, or overlapping
-        adjustments.
-      </p>
+      {description}
       <input
         className="search"
         aria-label="Filter compared adjustment slots"

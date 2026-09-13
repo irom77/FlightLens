@@ -9,8 +9,10 @@ import { PortComparison } from "./PortComparison";
 import { FeatureComparison } from "./FeatureComparison";
 import { useEffect, useState } from "react";
 import type { ConfigDocument, Inspection } from "./bindings/core";
+import { useProfiles, useSelections } from "./stores/selections";
 import { api } from "./ipc/client";
 import { Plot } from "./Plots";
+import { ThreeParameterComparison } from "./ThreeParameterComparison";
 import { ParameterComparison } from "./ParameterComparison";
 
 function useRates(document: ConfigDocument | undefined, profile: number) {
@@ -35,8 +37,22 @@ function useRates(document: ConfigDocument | undefined, profile: number) {
 }
 
 export function Comparison({ documents }: { documents: ConfigDocument[] }) {
-  const [left, setLeft] = useState(documents[0]?.id ?? "");
-  const [right, setRight] = useState(documents[1]?.id ?? "");
+  const { comparison, setComparison } = useSelections();
+  const ids = comparison?.documents ?? [
+    documents[0]?.id ?? "",
+    documents[1]?.id ?? "",
+    "",
+  ];
+  const [left = "", right = "", third = ""] = ids;
+  const choose = (slot: number, value: string) => {
+    const next = [left, right, third];
+    next[slot] = value;
+    setComparison({ documents: next, baseline: null });
+  };
+  const setLeft = (value: string) => choose(0, value);
+  const setRight = (value: string) => choose(1, value);
+  const setThird = (value: string) => choose(2, value);
+  const c = documents.find((d) => d.id === third);
   const a = documents.find((d) => d.id === left);
   const b = documents.find((d) => d.id === right);
   return (
@@ -44,8 +60,9 @@ export function Comparison({ documents }: { documents: ConfigDocument[] }) {
       <h1>Compare backups</h1>
       <p>
         Calculated angular velocity (°/s) versus stick input, not measured
-        flight motion. Choose two backups and a rate profile for each. Hover a
-        plot to compare values at the same stick position.
+        flight motion. Choose two or three backups and a rate profile for each.
+        Hover a plot to compare values at the same input. Throttle graphs show
+        calculated throttle command (%) versus normalized throttle input (%).
       </p>
       {documents.length < 2 && (
         <p role="status">
@@ -56,8 +73,9 @@ export function Comparison({ documents }: { documents: ConfigDocument[] }) {
       <div className="profile-controls">
         {(
           [
-            ["A", left, setLeft, right],
-            ["B", right, setRight, left],
+            ["A", left, setLeft, [right, third]],
+            ["B", right, setRight, [left, third]],
+            ["C", third, setThird, [left, right]],
           ] as const
         ).map(([side, id, select, other]) => (
           <label className="profile" key={side}>
@@ -69,7 +87,7 @@ export function Comparison({ documents }: { documents: ConfigDocument[] }) {
             >
               <option value="">Select a backup</option>
               {documents.map((d) => (
-                <option key={d.id} value={d.id} disabled={d.id === other}>
+                <option key={d.id} value={d.id} disabled={other.includes(d.id)}>
                   {d.title} · {d.id.slice(0, 8)}
                 </option>
               ))}
@@ -77,20 +95,56 @@ export function Comparison({ documents }: { documents: ConfigDocument[] }) {
           </label>
         ))}
       </div>
-      <RateComparison key={`${a?.id}:${b?.id}`} a={a} b={b} />
+      <RateComparison key={`${a?.id}:${b?.id}:${c?.id}`} a={a} b={b} c={c} />
     </section>
   );
 }
 
-function RateComparison({ a, b }: { a?: ConfigDocument; b?: ConfigDocument }) {
-  const [pa, setPa] = useState(a?.rateProfiles[0] ?? 0);
-  const [pb, setPb] = useState(b?.rateProfiles[0] ?? 0);
+function RateComparison({
+  a,
+  b,
+  c,
+}: {
+  a?: ConfigDocument;
+  b?: ConfigDocument;
+  c?: ConfigDocument;
+}) {
+  const { comparison, setComparison } = useSelections();
+  const baselineIndex = [a?.id, b?.id, c?.id].indexOf(
+    comparison?.baseline ?? "",
+  );
+  const baseline = baselineIndex < 0 ? "" : String(baselineIndex);
+  const setBaseline = (value: string) =>
+    setComparison({
+      documents: [a?.id ?? "", b?.id ?? "", c?.id ?? ""],
+      baseline:
+        value === "" ? null : ([a?.id, b?.id, c?.id][Number(value)] ?? null),
+    });
+  const { rate: pa, setRate: setPa } = useProfiles(a);
+  const { rate: pb, setRate: setPb } = useProfiles(b);
+  const { rate: pc, setRate: setPc } = useProfiles(c);
+  const rc = useRates(c, pc);
   const ra = useRates(a, pa);
   const rb = useRates(b, pb);
   const sources = [
     { side: "A", document: a, profile: pa, select: setPa, result: ra },
     { side: "B", document: b, profile: pb, select: setPb, result: rb },
+    ...(c
+      ? [{ side: "C", document: c, profile: pc, select: setPc, result: rc }]
+      : []),
   ];
+  const order = [
+    Number(baseline),
+    ...[0, 1, 2].filter((i) => i !== Number(baseline)),
+  ];
+  const selected = [a, b, c];
+  const collectionDocuments = c ? order.map((i) => selected[i]) : selected;
+  const collectionProps = {
+    a: collectionDocuments[0]!,
+    b: collectionDocuments[1]!,
+    c: collectionDocuments[2],
+    sides: order.map((i) => ["A", "B", "C"][i]) as [string, string, string],
+  };
   return (
     <>
       <div className="profile-controls">
@@ -129,16 +183,60 @@ function RateComparison({ a, b }: { a?: ConfigDocument; b?: ConfigDocument }) {
             ),
         )}
       </div>
-      {a && b && <ParameterComparison a={a} b={b} rateA={pa} rateB={pb} />}
-      {a && b && <FeatureComparison a={a} b={b} />}
-      {a && b && <PortComparison a={a} b={b} />}
-      {a && b && <ModeComparison a={a} b={b} />}
-      {a && b && <RxRangeComparison a={a} b={b} />}
-      {a && b && <RxFailComparison a={a} b={b} />}
-      {a && b && <VtxTableComparison a={a} b={b} />}
-      {a && b && <VtxActivationComparison a={a} b={b} />}
-      {a && b && <AdjustmentRangeComparison a={a} b={b} />}
-      {a && b && <CollectionComparison a={a} b={b} />}
+      {a &&
+        b &&
+        (c ? (
+          <ThreeParameterComparison
+            documents={[a, b, c]}
+            rates={[pa, pb, pc]}
+            baseline={baseline}
+            setBaseline={setBaseline}
+          />
+        ) : (
+          <ParameterComparison a={a} b={b} rateA={pa} rateB={pb} />
+        ))}
+      {a && b && (!c || baseline !== "") && (
+        <>
+          <FeatureComparison {...collectionProps} />
+          <PortComparison {...collectionProps} />
+          <ModeComparison {...collectionProps} />
+          <RxRangeComparison {...collectionProps} />
+          <RxFailComparison {...collectionProps} />
+          <VtxTableComparison {...collectionProps} />
+          <VtxActivationComparison {...collectionProps} />
+          <AdjustmentRangeComparison {...collectionProps} />
+          <CollectionComparison {...collectionProps} />
+        </>
+      )}
+      {a && b && (
+        <section aria-label="Throttle comparison">
+          <h2>Throttle · command %</h2>
+          <p>
+            Static response from imported MID, EXPO and throttle limit settings.
+            This does not predict motor output or thrust; runtime overrides are
+            excluded.
+          </p>
+          <Plot
+            throttle
+            curves={sources.map(({ side, document, profile, result }) => {
+              const curve = result?.inspection?.throttle;
+              return {
+                name: `${side}: ${document?.title} · Profile ${profile + 1}`,
+                points: curve?.points ?? [],
+                derivedInputs: curve?.derivedInputs ?? [],
+                reason:
+                  curve?.reason ??
+                  (!curve
+                    ? (result?.error ??
+                      (result?.inspection
+                        ? "Throttle unavailable for this backup/profile"
+                        : "Loading…"))
+                    : null),
+              };
+            })}
+          />
+        </section>
+      )}
       {a && b ? (
         ["roll", "pitch", "yaw"].map((axis) => (
           <section key={axis} aria-label={`${axis} comparison`}>

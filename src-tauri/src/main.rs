@@ -1,4 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+mod portable;
 use flightlens_core::{
     analysis::{self, Inspection, Point},
     export::{self, ExportRequest, ValidatedSnippet},
@@ -10,17 +11,145 @@ use std::{
     collections::BTreeMap,
     io::Write,
     path::{Path, PathBuf},
-    sync::Mutex,
+    sync::{
+        atomic::{AtomicBool, AtomicU64, Ordering},
+        Mutex,
+    },
 };
 use tauri::{Emitter, Manager, State};
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_opener::OpenerExt;
+// One index worker or picker at a time, including calls queued by the renderer.
+struct IndexPermit(tauri::AppHandle);
+impl IndexPermit {
+    fn acquire(app: &tauri::AppHandle) -> Result<Self, String> {
+        app.state::<AppState>()
+            .index_busy
+            .compare_exchange(false, true, Ordering::SeqCst, Ordering::SeqCst)
+            .map_err(|_| "Workspace operation is still running")?;
+        Ok(Self(app.clone()))
+    }
+}
+impl Drop for IndexPermit {
+    fn drop(&mut self) {
+        self.0
+            .state::<AppState>()
+            .index_busy
+            .store(false, Ordering::SeqCst);
+    }
+}
+#[tauri::command]
+async fn choose_workspace(
+    app: tauri::AppHandle,
+    refresh: bool,
+) -> Result<Option<flightlens_core::workspace::WorkspacePage>, String> {
+    let permit = IndexPermit::acquire(&app)?;
+    app.state::<AppState>()
+        .index_cancelled
+        .store(false, Ordering::SeqCst);
+    tauri::async_runtime::spawn_blocking(move || {
+        let _permit = permit;
+        let state = app.state::<AppState>();
+        let root = if refresh {
+            state
+                .index
+                .lock()
+                .map_err(|_| "Workspace unavailable")?
+                .as_ref()
+                .map(|i| i.root())
+        } else {
+            app.dialog()
+                .file()
+                .blocking_pick_folder()
+                .map(|f| {
+                    f.into_path()
+                        .map_err(|_| "Only local folders are supported")
+                })
+                .transpose()?
+        };
+        let Some(root) = root else {
+            return Ok(None);
+        };
+        let generation = state.index_generation.fetch_add(1, Ordering::SeqCst) + 1;
+        let index = flightlens_core::workspace::WorkspaceIndex::new(root, generation)?;
+        let page = index.page("", 0);
+        *state.index.lock().map_err(|_| "Workspace unavailable")? = Some(index);
+        if !refresh {
+            if let Some(recovery) = state
+                .unresolved_session
+                .lock()
+                .map_err(|_| "Session recovery unavailable")?
+                .as_mut()
+            {
+                recovery.workspace = None;
+            }
+        }
+        Ok(Some(page))
+    })
+    .await
+    .map_err(|_| "Workspace worker failed")?
+}
+#[tauri::command]
+async fn workspace_page(
+    app: tauri::AppHandle,
+    query: String,
+    offset: usize,
+) -> Result<Option<flightlens_core::workspace::WorkspacePage>, String> {
+    let permit = IndexPermit::acquire(&app)?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _permit = permit;
+        let state = app.state::<AppState>();
+        let mut index = state.index.lock().map_err(|_| "Workspace unavailable")?;
+        Ok(index.as_mut().map(|index| {
+            index.advance(&state.index_cancelled);
+            index.page(&query, offset)
+        }))
+    })
+    .await
+    .map_err(|_| "Workspace worker failed")?
+}
+#[tauri::command]
+fn cancel_workspace(state: State<AppState>) {
+    state.index_cancelled.store(true, Ordering::SeqCst);
+}
+#[tauri::command]
+async fn open_workspace_entry(app: tauri::AppHandle, entry_id: String) -> Result<Artifact, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let state = app.state::<AppState>();
+        let path = state
+            .index
+            .lock()
+            .map_err(|_| "Workspace unavailable")?
+            .as_ref()
+            .ok_or("Choose a workspace folder first")?
+            .path(&entry_id)?;
+        let source = state
+            .sources
+            .lock()
+            .map_err(|_| "Source registry unavailable")?
+            .register(path.clone())?;
+        let artifact = keep(&state, source::open_path(&path, &source.id)?)?;
+        let id = match &artifact {
+            Artifact::Config(d) => &d.id,
+            Artifact::Recognized(d) => &d.id,
+        };
+        remember(&app, &source.id, id);
+        Ok(artifact)
+    })
+    .await
+    .map_err(|_| "Import worker failed")?
+}
 /// How many backups a saved session may reopen. The document repository caps
 /// an open workspace at 32, so a session that grew past it could never restore
 /// in full anyway.
 const SESSION_LIMIT: usize = 32;
 #[derive(Default)]
 struct AppState {
+    unresolved_session: Mutex<Option<portable::UnresolvedSession>>,
+    index: Mutex<Option<flightlens_core::workspace::WorkspaceIndex>>,
+    index_busy: AtomicBool,
+    index_cancelled: AtomicBool,
+    index_generation: AtomicU64,
     sources: Mutex<SourceRegistry>,
     documents: Mutex<BTreeMap<String, ConfigDocument>>,
     pending: Mutex<Vec<SourceDescriptor>>,
@@ -400,6 +529,12 @@ fn main() {
             }
         })
         .invoke_handler(tauri::generate_handler![
+            portable::save_portable_session,
+            portable::open_portable_session,
+            choose_workspace,
+            workspace_page,
+            cancel_workspace,
+            open_workspace_entry,
             ingest_text,
             choose_files,
             open_source,

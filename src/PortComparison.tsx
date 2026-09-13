@@ -1,3 +1,4 @@
+import { ThreeCollectionTable } from "./ThreeCollectionTable";
 import { useState } from "react";
 import type { ConfigDocument, Port } from "./bindings/core";
 import { comparePorts } from "./comparePorts";
@@ -42,12 +43,25 @@ function PortValue({
 export function PortComparison({
   a,
   b,
+  c,
+  sides,
 }: {
   a: ConfigDocument;
   b: ConfigDocument;
+  c?: ConfigDocument;
+  sides?: [string, string, string];
 }) {
   const [query, setQuery] = useState("");
   const [hideEqual, setHideEqual] = useState(true);
+  const description = (
+    <p>
+      Final explicit serial allocations, matched by port identifier on the same
+      firmware version. Function masks and all four baud settings are compared.
+      Missing ports remain unknown; cross-version allocations are not
+      comparable. Matching allocations do not establish identical board wiring
+      or resource assignments.
+    </p>
+  );
   const rows = comparePorts(a, b);
   const filtered = rows.filter(
     (row) =>
@@ -56,19 +70,28 @@ export function PortComparison({
       ) &&
       (!hideEqual || row.status !== "Equal"),
   );
+  if (c && sides)
+    return (
+      <ThreeCollectionTable
+        title="Serial-port comparison"
+        description={description}
+        documents={[a, b, c]}
+        sides={sides}
+        compare={comparePorts}
+        rowKey={(row) => String(row.identifier)}
+        renderValue={(value, document, side) => (
+          <PortValue value={value} side={side} document={document} />
+        )}
+        textOnly={false}
+      />
+    );
   return (
     <section
       aria-label="Serial-port comparison"
       className="card parameter-table"
     >
       <h2>Serial-port comparison</h2>
-      <p>
-        Final explicit serial allocations, matched by port identifier on the
-        same firmware version. Function masks and all four baud settings are
-        compared. Missing ports remain unknown; cross-version allocations are
-        not comparable. Matching allocations do not establish identical board
-        wiring or resource assignments.
-      </p>
+      {description}
       <input
         className="search"
         aria-label="Filter compared ports"

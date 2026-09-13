@@ -2,6 +2,8 @@ use flightlens_core::{analysis::*, export::*, feedback::*, *};
 use ts_rs::TS;
 fn main() {
     let declarations = [
+        workspace::WorkspaceEntry::decl(),
+        workspace::WorkspacePage::decl(),
         Value::decl(),
         Scope::decl(),
         Parameter::decl(),

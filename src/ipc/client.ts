@@ -1,6 +1,7 @@
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import type {
   Artifact,
+  WorkspacePage,
   ExportRequest,
   FeedbackReport,
   FeedbackRequest,
@@ -11,8 +12,41 @@ import type {
   SourceDescriptor,
   ValidatedSnippet,
 } from "../bindings/core";
+type SessionProfiles = {
+  documentId: string;
+  rateProfile: number;
+  pidProfile: number;
+};
+type SessionComparison = { documents: string[]; baseline: string | null };
 export const desktopAvailable = isTauri;
 export const api = {
+  savePortableSession: (request: {
+    preserveUnavailableSelections: boolean;
+    documentIds: string[];
+    profiles: SessionProfiles[];
+    comparison: SessionComparison | null;
+    activeId: string | null;
+    tab: string;
+    theme: string;
+  }) => invoke<boolean>("save_portable_session", { request }),
+  openPortableSession: (retry = false, relink = false) =>
+    invoke<{
+      workspace: WorkspacePage | null;
+      artifacts: Artifact[];
+      profiles: SessionProfiles[];
+      comparison: SessionComparison | null;
+      activeId: string | null;
+      tab: string;
+      theme: string;
+      warnings: string[];
+    } | null>("open_portable_session", { retry, relink }),
+  chooseWorkspace: (refresh = false) =>
+    invoke<WorkspacePage | null>("choose_workspace", { refresh }),
+  workspacePage: (query: string, offset: number) =>
+    invoke<WorkspacePage | null>("workspace_page", { query, offset }),
+  cancelWorkspace: () => invoke<void>("cancel_workspace"),
+  openWorkspaceEntry: (entryId: string) =>
+    invoke<Artifact>("open_workspace_entry", { entryId }),
   ingest: (text: string, label: string) =>
     invoke<Artifact>("ingest_text", { text, label }),
   chooseFiles: () => invoke<SourceDescriptor[]>("choose_files"),

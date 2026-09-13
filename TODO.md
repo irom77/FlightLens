@@ -7,11 +7,13 @@ file holds only what is actionable now.
 
 ## Next
 
-- Implement Phase 2 item 4: three-backup comparison with an explicit baseline,
-  independent profile selections, angular velocity overlays, and separate
-  one-sided changes and conflicts. Reuse existing compatibility and unknown-value
-  rules; keep the comparison read-only. Item 3 is complete within its fixed
-  [roadmap boundary](ROADMAP.md); broader mapping research is deferred.
+- Validate Phase 2 item 5 (released in 0.9.0): recursive workspace explorer. Check native
+  folder selection and removable-drive disconnect/reconnect on Windows/macOS.
+- Validate Phase 2 item 6 (released in 0.9.0): reference-only
+  portable sessions. Native Windows/macOS checks remain under item 8; see
+  [the completion boundary](docs/portable-sessions.md#item-6-completion-boundary).
+- Implement Phase 2 item 7: native file associations and OS open-file routing,
+  including delivery to an already-running app.
 
 - Develop a guide explaining how FlightLens processes Betaflight (BF) CLI dumps,
   building on the existing research and comparison documentation in `docs/`.
@@ -52,14 +54,6 @@ file holds only what is actionable now.
 - Decide what to do about `pnpm format:check`, which fails on `src/App.tsx` and
   `tests/inspector.spec.ts`. Both deviations predate the current work; either
   reformat them in a commit of their own or drop them from the check.
-- Relicense from GPL-3.0-or-later to MIT. The license is declared in `LICENSE`,
-  `Cargo.toml`, `package.json`, `src-tauri/tauri.conf.json`, `README.md`,
-  `DEVELOPMENT.md` and `THIRD_PARTY_NOTICES.md`. Settle the scope first: the
-  bundled compatibility schemas and the rate equations are derived from
-  Betaflight, and `src/assets/osd-default.mcm` is an unmodified resource from
-  Betaflight Configurator, all GPL-3.0-or-later. MIT can cover FlightLens's own
-  code, but the distributed application stays GPL unless that derived material
-  is replaced or regenerated from a source that permits it.
 - Add free security checks, release gating and status badges to CI. Nothing here
   costs anything on a public repository: `cargo audit` or `cargo deny` against
   the Rust advisory database, `pnpm audit` for JavaScript, CodeQL for Rust and
@@ -68,15 +62,6 @@ file holds only what is actionable now.
   have yet; today CI only runs on `v*` tags. Make the two release workflows
   depend on it so a tag with a failing check publishes no installer, and put the
   badges in the README.
-- Sign the Windows installers. They are unsigned today, so SmartScreen warns on
-  first run, and no free path clears that: it takes an OV or EV code-signing
-  certificate or an Azure Trusted Signing subscription, both paid, and a
-  self-signed certificate does not help. macOS is the same problem and stricter:
-  an unsigned `.dmg`/`.app` is refused by Gatekeeper until the user opens it
-  through the right-click override, and clearing that needs a paid Apple
-  Developer Program membership for a Developer ID certificate plus notarization
-  with `xcrun notarytool`. Decide whether to pay for either; until then document
-  the override steps for both platforms in the README.
 
 ## Later
 
@@ -84,9 +69,9 @@ file holds only what is actionable now.
   curve after separate implementation and differential validation. Keep it
   explicitly unavailable in the initial legacy preview; this does not block
   Phase 2.5 completion or resuming Phase 2 item 4.
-- After three-backup comparison, complete Phase 2 workspace indexing, portable
-  `.flightlens` sessions, native file associations, and desktop validation in
-  roadmap order. Saved comparison selections belong to the session work.
+- Extend portable sessions to full-file Blackbox references with Phase 3
+  telemetry work. Consider embedded pasted contents or finer location controls
+  separately; neither blocks the completed reference-only item 6.
 - Expand comparison coverage after Phase 2: additional parameter mappings,
   certified cross-version features/ports/modes and CLI collections, and additional
   rxrange/rxfail firmware coverage. These do not block Phase 2 item 3 completion.

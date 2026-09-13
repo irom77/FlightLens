@@ -1,3 +1,4 @@
+import { ThreeCollectionTable } from "./ThreeCollectionTable";
 import { useState } from "react";
 import type { ConfigDocument } from "./bindings/core";
 import { compareRxRanges, type RxRange } from "./compareRxRanges";
@@ -26,12 +27,27 @@ function RxRangeValue({ value, side }: { value?: RxRange; side: string }) {
 export function RxRangeComparison({
   a,
   b,
+  c,
+  sides,
 }: {
   a: ConfigDocument;
   b: ConfigDocument;
+  c?: ConfigDocument;
+  sides?: [string, string, string];
 }) {
   const [query, setQuery] = useState("");
   const [hideEqual, setHideEqual] = useState(true);
+  const description = (
+    <p>
+      Final explicit rxrange endpoints by channel index (0–3), on matching
+      verified official 4.5.0–4.5.5 or 2025.12.1–2025.12.5 versions. Resets and
+      unverified syntax clear earlier knowledge; omitted ranges remain unknown.
+      Vendor builds and cross-version comparisons are not certified. Matching
+      endpoints do not establish receiver calibration or channel-map
+      equivalence. Equal or reversed endpoints are preserved as declared,
+      without claiming they are usable calibration.
+    </p>
+  );
   const rows = compareRxRanges(a, b);
   const filtered = rows.filter(
     (row) =>
@@ -40,21 +56,28 @@ export function RxRangeComparison({
       ) &&
       (!hideEqual || row.status !== "Equal"),
   );
+  if (c && sides)
+    return (
+      <ThreeCollectionTable
+        title="Receiver-range comparison"
+        description={description}
+        documents={[a, b, c]}
+        sides={sides}
+        compare={compareRxRanges}
+        rowKey={(row) => String(row.channel)}
+        renderValue={(value, _document, side) => (
+          <RxRangeValue value={value} side={side} />
+        )}
+        textOnly={false}
+      />
+    );
   return (
     <section
       aria-label="Receiver-range comparison"
       className="card parameter-table"
     >
       <h2>Receiver-range comparison</h2>
-      <p>
-        Final explicit rxrange endpoints by channel index (0–3), on matching
-        verified official 4.5.0–4.5.5 or 2025.12.1–2025.12.5 versions. Resets
-        and unverified syntax clear earlier knowledge; omitted ranges remain
-        unknown. Vendor builds and cross-version comparisons are not certified.
-        Matching endpoints do not establish receiver calibration or channel-map
-        equivalence. Equal or reversed endpoints are preserved as declared,
-        without claiming they are usable calibration.
-      </p>
+      {description}
       <input
         className="search"
         aria-label="Filter compared receiver channels"

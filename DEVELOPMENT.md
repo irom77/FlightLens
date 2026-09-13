@@ -235,7 +235,7 @@ The corresponding source repository is [irom77/fpv_cli_dumps](https://github.com
 - `TODO.md`, `CHANGES.md`, `docs/releases`: outstanding work, the user-visible change log, and the release policy and milestone release notes.
 - `fixtures`: synthetic configurations, malformed inputs and pinned C rate reference vectors.
 
-GPL-3.0-or-later. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Windows and macOS installer packaging is already delivered. Native integration validation remains in Phase 2; signing and notarization are tracked separately in [TODO.md](TODO.md).
+GPL-3.0-or-later. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Windows and macOS installer packaging is already delivered. Native integration validation remains in Phase 2; installers remain unsigned and macOS notarization is absent; neither is currently planned.
 
 ### Capturing complete inspection input
 

@@ -1,3 +1,4 @@
+import { ThreeCollectionTable } from "./ThreeCollectionTable";
 import { useState } from "react";
 import type { ConfigDocument } from "./bindings/core";
 import { compareRxFails, type RxFail } from "./compareRxFails";
@@ -26,12 +27,26 @@ function RxFailValue({ value, side }: { value?: RxFail; side: string }) {
 export function RxFailComparison({
   a,
   b,
+  c,
+  sides,
 }: {
   a: ConfigDocument;
   b: ConfigDocument;
+  c?: ConfigDocument;
+  sides?: [string, string, string];
 }) {
   const [query, setQuery] = useState("");
   const [hideEqual, setHideEqual] = useState(true);
+  const description = (
+    <p>
+      Final explicit rxfail declarations by channel index (0–17), on matching
+      verified official 4.5.0–4.5.5 or 2025.12.1–2025.12.5 versions. Set values
+      are normalized down to 25 µs steps. Resets and unverified syntax clear
+      earlier knowledge; omitted declarations remain unknown. Vendor builds and
+      cross-version comparisons are not certified. Equal declarations do not
+      establish equal flight behavior or validate failsafe configuration.
+    </p>
+  );
   const rows = compareRxFails(a, b);
   const filtered = rows.filter(
     (row) =>
@@ -40,21 +55,28 @@ export function RxFailComparison({
       ) &&
       (!hideEqual || row.status !== "Equal"),
   );
+  if (c && sides)
+    return (
+      <ThreeCollectionTable
+        title="Receiver failsafe comparison"
+        description={description}
+        documents={[a, b, c]}
+        sides={sides}
+        compare={compareRxFails}
+        rowKey={(row) => String(row.channel)}
+        renderValue={(value, _document, side) => (
+          <RxFailValue value={value} side={side} />
+        )}
+        textOnly={false}
+      />
+    );
   return (
     <section
       aria-label="Receiver failsafe comparison"
       className="card parameter-table"
     >
       <h2>Receiver failsafe comparison</h2>
-      <p>
-        Final explicit rxfail declarations by channel index (0–17), on matching
-        verified official 4.5.0–4.5.5 or 2025.12.1–2025.12.5 versions. Set
-        values are normalized down to 25 µs steps. Resets and unverified syntax
-        clear earlier knowledge; omitted declarations remain unknown. Vendor
-        builds and cross-version comparisons are not certified. Equal
-        declarations do not establish equal flight behavior or validate failsafe
-        configuration.
-      </p>
+      {description}
       <input
         className="search"
         aria-label="Filter compared receiver channels"

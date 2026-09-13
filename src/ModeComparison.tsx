@@ -1,3 +1,4 @@
+import { ThreeCollectionTable } from "./ThreeCollectionTable";
 import { useState } from "react";
 import type { ConfigDocument, Mode } from "./bindings/core";
 import { compareModes } from "./compareModes";
@@ -44,12 +45,26 @@ function ModeValue({
 export function ModeComparison({
   a,
   b,
+  c,
+  sides,
 }: {
   a: ConfigDocument;
   b: ConfigDocument;
+  c?: ConfigDocument;
+  sides?: [string, string, string];
 }) {
   const [query, setQuery] = useState("");
   const [hideEqual, setHideEqual] = useState(true);
+  const description = (
+    <p>
+      Final explicit mode assignments, matched by slot index on the same
+      firmware version. Mode IDs, channels, ranges, logic and linked mode IDs
+      are compared. Missing slots or omitted logic/link fields remain unknown;
+      cross-version assignments are not comparable. Slot differences do not
+      establish different flight behavior, and matching declarations do not
+      establish receiver or switch equivalence.
+    </p>
+  );
   const rows = compareModes(a, b);
   const filtered = rows.filter(
     (row) =>
@@ -58,20 +73,28 @@ export function ModeComparison({
       ) &&
       (!hideEqual || row.status !== "Equal"),
   );
+  if (c && sides)
+    return (
+      <ThreeCollectionTable
+        title="Mode-assignment comparison"
+        description={description}
+        documents={[a, b, c]}
+        sides={sides}
+        compare={compareModes}
+        rowKey={(row) => String(row.index)}
+        renderValue={(value, document, side) => (
+          <ModeValue value={value} side={side} document={document} />
+        )}
+        textOnly={false}
+      />
+    );
   return (
     <section
       aria-label="Mode-assignment comparison"
       className="card parameter-table"
     >
       <h2>Mode-assignment comparison</h2>
-      <p>
-        Final explicit mode assignments, matched by slot index on the same
-        firmware version. Mode IDs, channels, ranges, logic and linked mode IDs
-        are compared. Missing slots or omitted logic/link fields remain unknown;
-        cross-version assignments are not comparable. Slot differences do not
-        establish different flight behavior, and matching declarations do not
-        establish receiver or switch equivalence.
-      </p>
+      {description}
       <input
         className="search"
         aria-label="Filter compared modes"

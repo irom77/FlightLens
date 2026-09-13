@@ -1,8 +1,9 @@
+import { useProfiles } from "./stores/selections";
 import { useState } from "react";
 import type { ConfigDocument } from "./bindings/core";
 import { compareParameters, type ComparisonValue } from "./compareParameters";
 
-function Cell({
+export function ParameterValueCell({
   value,
   document,
   side,
@@ -60,8 +61,8 @@ export function ParameterComparison({
   rateA: number;
   rateB: number;
 }) {
-  const [pidA, setPidA] = useState(a.pidProfiles[0] ?? 0);
-  const [pidB, setPidB] = useState(b.pidProfiles[0] ?? 0);
+  const { pid: pidA, setPid: setPidA } = useProfiles(a);
+  const { pid: pidB, setPid: setPidB } = useProfiles(b);
   const [query, setQuery] = useState("");
   const [differencesOnly, setDifferencesOnly] = useState(true);
   const rows = compareParameters(
@@ -155,10 +156,10 @@ export function ParameterComparison({
                 <small> · {row.scope}</small>
               </td>
               <td>
-                <Cell value={row.a} document={a} side="A" />
+                <ParameterValueCell value={row.a} document={a} side="A" />
               </td>
               <td>
-                <Cell value={row.b} document={b} side="B" />
+                <ParameterValueCell value={row.b} document={b} side="B" />
               </td>
               <td>{row.status}</td>
             </tr>

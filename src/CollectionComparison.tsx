@@ -1,3 +1,4 @@
+import { ThreeCollectionTable } from "./ThreeCollectionTable";
 import { useState } from "react";
 import type { ConfigDocument, SyntaxLine } from "./bindings/core";
 import { compareCollections } from "./compareCollections";
@@ -28,33 +29,54 @@ function CollectionValue({
 export function CollectionComparison({
   a,
   b,
+  c,
+  sides,
 }: {
   a: ConfigDocument;
   b: ConfigDocument;
+  c?: ConfigDocument;
+  sides?: [string, string, string];
 }) {
   const [query, setQuery] = useState("");
   const [hideEqual, setHideEqual] = useState(true);
+  const description = (
+    <p>
+      Source-text comparison of vtxtable, vtx, rxfail, rxrange, and adjrange.
+      All recognized lines are grouped by command, retaining their order,
+      duplicates, whitespace, and lines before resets. Missing groups remain
+      unknown. Matching text does not establish valid commands, final settings,
+      or equivalent behavior on either firmware version. Ordering between
+      different command groups is not compared; use raw source for full context.
+    </p>
+  );
   const rows = compareCollections(a, b);
   const filtered = rows.filter(
     (row) =>
       row.name.toLowerCase().includes(query.toLowerCase()) &&
       (!hideEqual || row.status !== "Matching text"),
   );
+  if (c && sides)
+    return (
+      <ThreeCollectionTable
+        title="CLI collection text comparison"
+        description={description}
+        documents={[a, b, c]}
+        sides={sides}
+        compare={compareCollections}
+        rowKey={(row) => String(row.name)}
+        renderValue={(value, _document, side) => (
+          <CollectionValue value={value} side={side} />
+        )}
+        textOnly={true}
+      />
+    );
   return (
     <section
       aria-label="CLI collection text comparison"
       className="card parameter-table"
     >
       <h2>CLI collection text comparison</h2>
-      <p>
-        Source-text comparison of vtxtable, vtx, rxfail, rxrange, and adjrange.
-        All recognized lines are grouped by command, retaining their order,
-        duplicates, whitespace, and lines before resets. Missing groups remain
-        unknown. Matching text does not establish valid commands, final
-        settings, or equivalent behavior on either firmware version. Ordering
-        between different command groups is not compared; use raw source for
-        full context.
-      </p>
+      {description}
       <input
         className="search"
         aria-label="Filter compared collections"

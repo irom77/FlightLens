@@ -5,8 +5,10 @@ pub mod export;
 pub mod feedback;
 pub mod model;
 pub mod parser;
+pub mod session;
 pub mod source;
 pub mod throttle;
+pub mod workspace;
 pub use model::*;
 pub use parser::analyze;
 

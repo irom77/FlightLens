@@ -256,6 +256,7 @@ p {
   position: sticky;
   top: 0;
   height: 100vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
@@ -318,6 +319,8 @@ kbd {
   margin: 29px 5px 15px;
 }
 .documents {
+  flex-shrink: 0;
+  max-height: 30vh;
   overflow: auto;
 }
 .document {
@@ -1208,4 +1211,32 @@ summary {
 
 .comparison-toggle input {
   width: auto;
+}
+
+.workspace-explorer {
+  flex-shrink: 0;
+  border-block: 1px solid var(--border);
+  padding-block: 12px;
+  font-size: 12px;
+}
+.workspace-explorer > button,
+.workspace-explorer input {
+  width: 100%;
+}
+.workspace-explorer p {
+  overflow-wrap: anywhere;
+}
+.workspace-explorer nav {
+  max-height: 300px;
+  overflow: auto;
+}
+.workspace-explorer nav button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  overflow-wrap: anywhere;
+  margin-block: 4px;
+}
+.workspace-explorer small {
+  display: block;
 }
