@@ -6,6 +6,7 @@ pub mod feedback;
 pub mod model;
 pub mod parser;
 pub mod source;
+pub mod throttle;
 pub use model::*;
 pub use parser::analyze;
 

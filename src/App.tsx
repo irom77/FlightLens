@@ -21,7 +21,17 @@ import { OsdGlyphs } from "./OsdGlyphs";
 import logo from "./assets/flightlens-logo.svg";
 import packageJson from "../package.json";
 import sample from "../fixtures/configs/betaflight-4.5.0.dump?raw";
-const empty: Inspection = { rates: [], osd: [], audits: [] };
+const empty: Inspection = {
+  rates: [],
+  throttle: {
+    name: "throttle",
+    points: [],
+    reason: "Loading throttle preview",
+    derivedInputs: [],
+  },
+  osd: [],
+  audits: [],
+};
 const value = (p: Parameter) => String(p.value.value);
 const message = (e: unknown) =>
   typeof e === "string"
@@ -761,6 +771,47 @@ function Inspector({
               </div>
               <Plot curves={inspection.rates} />
             </div>
+            <section className="card" aria-label="Throttle Curve Preview">
+              <div className="card-heading">
+                Throttle Curve Preview <span>throttle command (%)</span>
+              </div>
+              <div className="stats">
+                {[
+                  ["thr_mid", "Throttle MID"],
+                  ["thr_expo", "Throttle EXPO"],
+                  ["throttle_limit_type", "Throttle limit"],
+                  ["throttle_limit_percent", "Limit percent"],
+                ].map(([key, label]) => {
+                  const parameter = profileValue("rate", rate, key);
+                  return (
+                    <div className="stat" key={key}>
+                      <span>{label}</span>
+                      <strong>
+                        {parameter ? value(parameter) : "Unknown"}
+                      </strong>
+                      {parameter && (
+                        <button
+                          className="source-value"
+                          onClick={() => source(parameter.line)}
+                        >
+                          Line {parameter.line}
+                        </button>
+                      )}
+                      {parameter &&
+                        (!parameter.valid || !parameter.supported) && (
+                          <small>Invalid or unsupported input</small>
+                        )}
+                    </div>
+                  );
+                })}
+              </div>
+              <Plot curves={[inspection.throttle]} throttle />
+              <p className="muted">
+                Configured throttle curve and limit from this rate profile.
+                Excludes runtime effects such as smoothing, boost and RPM-limit
+                bypass; this is not motor output or thrust.
+              </p>
+            </section>
             {inspection.rates.some((curve) => curve.points.length === 0) && (
               <MissingSettingsNotice />
             )}

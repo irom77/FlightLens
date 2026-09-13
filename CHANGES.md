@@ -6,6 +6,19 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## 0.8.0 — 2026-09-12
+
+- Add a read-only Throttle Curve Preview beside angular velocity in the Rates
+  tab, with imported MID, EXPO and limit values, source-line links, and normalized
+  input/throttle-command percentage axes. Support verified official Betaflight
+  4.2.0, 4.3.0, 4.4.0 and 4.5.0–4.5.5; missing or invalid inputs, vendor builds,
+  other releases and the unsupported MID=100 edge show an unavailable reason.
+  Validate calculations against 28,512 compiled upstream C reference vectors.
+  The separate 2025.12 hover model remains deferred.
+
+- Prioritize Phase 2.5's Throttle Curve Preview before resuming Phase 2 with
+  three-backup comparison; retain the completed comparison coverage boundary.
+
 ## 0.7.0 — 2026-09-12
 
 - Define the completed Phase 2 comparison coverage boundary and defer broader

@@ -54,9 +54,9 @@ Phase 2 builds on foundations already shipped:
   preferences; persisted light/dark theme selection.
 - [x] Windows and macOS installer packaging and tag-triggered release workflows.
 
-Comparison extensions remain the Phase 2 feature priority; recursive indexing is
-not a prerequisite. Betaflight compatibility follow-up and native installer
-validation continue alongside feature development.
+Phase 2.5 implementation is complete. Resume Phase 2 at item 4; recursive indexing is not
+a prerequisite. Betaflight compatibility follow-up and native installer
+validation remain tracked alongside feature development.
 
 Comparison progress and remaining work, in implementation order:
 
@@ -129,12 +129,14 @@ Signing and notarization remain a separate distribution decision tracked in
 complete when items 1–8 are implemented and verified, with saved-data
 compatibility and platform limitations documented. Item 3 has a fixed coverage
 boundary above; further comparison research does not block items 4–8. The next
-feature unit is item 4, baseline-based three-backup comparison.
+Phase 2 feature unit is item 4, baseline-based three-backup comparison, after
+Phase 2.5 is complete.
 
-## Phase 2.5 — Feedback and inspection improvements
+## Phase 2.5 — Feedback and inspection improvements — implemented
 
 Phase 2.5 collects user-facing improvements that do not depend on the Phase 3
-telemetry pipeline. Items are independent and may ship in any order.
+telemetry pipeline. Both items are implemented. Resume Phase 2 at item 4. Outstanding
+packaged Windows/macOS checks remain tracked in TODO and Phase 2 item 8.
 
 1. [x] Add a feedback button that collects a subject, a body, and optionally the
    current configuration. The app opens a prefilled GitHub issue in the browser
@@ -148,12 +150,23 @@ telemetry pipeline. Items are independent and may ship in any order.
    Review fixes complete locally: submission requires a matching preview and
    attachment size checks include the report text. Opening the browser and reaching the clipboard remain to be
    checked in packaged Windows and macOS builds (see TODO).
-2. [ ] Add a Throttle Curve Preview to the Rate Profile tab, alongside the
+2. [x] Add a Throttle Curve Preview to the Rate Profile tab, alongside the
    existing Rates Preview, with Throttle Limit, Throttle MID, and Throttle EXPO
    controls, so pilots can visualize throttle response next to stick rates.
    The preview is read-only and derived from imported `thr_mid`, `thr_expo`,
    `throttle_limit_type`, and `throttle_limit_percent` values; versions without a
    verified throttle mapping report the preview as unavailable.
+   Source review is documented in [throttle preview evidence](docs/throttle-curve-preview.md).
+   Calculation checkpoint complete: Rust legacy lookup and limit calculation,
+   exact release/schema gates, explicit profile inputs, and regression tests.
+   Upstream C differential validation is complete: 28,512 vectors across all
+   nine supported releases. Inspector integration, read-only values with source
+   links, percentage axes, and profile/unavailable-state browser coverage complete.
+   The initial implementation uses the verified legacy mapping; 2025.12's
+   different `thr_hover`-dependent curve is deferred and must report unavailable.
+   Completed with upstream differential fixtures, profile/provenance and
+   unavailable-state coverage, and a read-only preview with percentage axes.
+   Additional firmware coverage does not block resuming Phase 2 item 4.
 
 ## Phase 3 — Blackbox telemetry and diagnostics
 

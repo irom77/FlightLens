@@ -55,3 +55,26 @@ it("preserves the second source style when the first curve is unavailable", () =
   expect(html).toContain('class="series-1"');
   expect(html).toContain('stroke-dasharray="7 3"');
 });
+it("plots throttle on percentage axes without signed-stick scaling", () => {
+  const html = renderToStaticMarkup(
+    <Plot
+      throttle
+      curves={[
+        {
+          name: "throttle",
+          reason: null,
+          derivedInputs: [],
+          points: [
+            { x: 0, y: 0 },
+            { x: 100, y: 50 },
+          ],
+        },
+      ]}
+    />,
+  );
+  expect(html).toContain('d="M62,314 L772,170"');
+  expect(html).toContain("Normalized throttle input (%)");
+  expect(html).toContain("throttle command (%)");
+  expect(html).not.toContain("-100%");
+  expect(html).not.toContain("°/s");
+});

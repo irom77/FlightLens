@@ -105,6 +105,9 @@ fn main() {
     if std::env::args().any(|arg| arg == "--collection-differences") {
         text.push_str("\nrxrange 0 1000 2000\nrxrange 0 1050 1950\nadjrange 0 0 0 900 900 0 0\n");
     }
+    if std::env::args().any(|arg| arg == "--throttle-preview") {
+        text.push_str("\nrateprofile 0\nset thr_mid = 50\nset thr_expo = 50\nset throttle_limit_type = SCALE\nset throttle_limit_percent = 50\nrateprofile 1\nset thr_mid = 30\nset thr_expo = 70\nset throttle_limit_type = CLIP\nset throttle_limit_percent = 75\nrateprofile 2\nset thr_mid = 100\nset thr_expo = 50\nset throttle_limit_type = OFF\nset throttle_limit_percent = 100\nrateprofile 3\nset thr_mid = 50\nrateprofile 0\n");
+    }
     let artifact = analyze(&text, "Synthetic smoke fixture", "virtual").unwrap();
     let Artifact::Config(d) = &artifact else {
         unreachable!()

@@ -86,7 +86,7 @@ export type OsdElement = { key: string, packed: number, x: number, y: number, vi
 
 export type RuleEvaluation = { id: string, status: string, severity: string, explanation: string, lines: Array<number>, reference: string, };
 
-export type Inspection = { rates: Array<Curve>, osd: Array<OsdElement>, audits: Array<RuleEvaluation>, };
+export type Inspection = { rates: Array<Curve>, throttle: Curve, osd: Array<OsdElement>, audits: Array<RuleEvaluation>, };
 
 export type ExportRequest = { groups: Array<string>, pidProfile: number, rateProfile: number, destinationHeader: string, includeSave: boolean, };
 

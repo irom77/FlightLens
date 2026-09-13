@@ -44,6 +44,7 @@ pub struct RuleEvaluation {
 #[serde(rename_all = "camelCase")]
 pub struct Inspection {
     pub rates: Vec<Curve>,
+    pub throttle: Curve,
     pub osd: Vec<OsdElement>,
     pub audits: Vec<RuleEvaluation>,
 }
@@ -217,6 +218,7 @@ pub fn inspect(d: &ConfigDocument, profile: u8) -> Inspection {
         .collect();
     Inspection {
         rates: rates(d, profile),
+        throttle: crate::throttle::preview(d, profile),
         osd,
         audits: audit(d),
     }

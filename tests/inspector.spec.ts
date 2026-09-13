@@ -190,7 +190,7 @@ for (const [skipEmpty, firmware42] of [
     await expect(page.locator(".profile-card")).toHaveCount(2);
     const plot = page.getByRole("img", { name: /Rate curves/ });
     await expect(plot.locator("path")).toHaveCount(3);
-    await expect(page.locator(".stats .stat strong")).toHaveText([
+    await expect(page.locator(".stats").first().locator(".stat strong")).toHaveText([
       "800 °/s",
       "800 °/s",
       "650 °/s",
@@ -201,7 +201,7 @@ for (const [skipEmpty, firmware42] of [
       })
       .click();
     await expect(plot.locator("path")).toHaveCount(1);
-    await expect(page.locator(".stats .stat strong")).toHaveText([
+    await expect(page.locator(".stats").first().locator(".stat strong")).toHaveText([
       "667 °/s",
       "Unavailable",
       "Unavailable",
@@ -303,7 +303,7 @@ for (const scenario of ["--vendor-missing-expo", "--zero-expo"]) {
       .getByRole("button", { name: "Explore a synthetic example" })
       .click();
     const missing = scenario === "--vendor-missing-expo";
-    const stats = page.locator(".stats .stat");
+    const stats = page.locator(".stats").first().locator(".stat");
     await expect(stats).toHaveCount(3);
     for (let axis = 0; axis < 3; axis++) {
       await expect(stats.nth(axis)).toContainText(
@@ -321,7 +321,7 @@ for (const scenario of ["--vendor-missing-expo", "--zero-expo"]) {
         page.getByText(/For complete inspection, capture/),
       ).toContainText("dump all");
     } else {
-      await expect(page.locator(".stats")).not.toContainText("Unavailable");
+      await expect(page.locator(".stats").first()).not.toContainText("Unavailable");
     }
   });
 }

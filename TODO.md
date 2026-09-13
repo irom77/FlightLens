@@ -80,6 +80,10 @@ file holds only what is actionable now.
 
 ## Later
 
+- Extend throttle preview to Betaflight 2025.12's different `thr_hover`-dependent
+  curve after separate implementation and differential validation. Keep it
+  explicitly unavailable in the initial legacy preview; this does not block
+  Phase 2.5 completion or resuming Phase 2 item 4.
 - After three-backup comparison, complete Phase 2 workspace indexing, portable
   `.flightlens` sessions, native file associations, and desktop validation in
   roadmap order. Saved comparison selections belong to the session work.
