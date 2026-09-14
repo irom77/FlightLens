@@ -1,5 +1,9 @@
 # Portable sessions
 
+Open session and Save session as are visible above the main content in both the
+inspector and Compare backups views. Session options contains retry, relinking
+and unavailable-selection recovery controls.
+
 Phase 2 item 6 is implemented in FlightLens 0.9.0 within the boundary below;
 packaged Windows/macOS validation remains pending. Native Save Session As/Open Session controls save
 file-backed CLI and recognized firmware text references and restore matching documents, workspace folder,

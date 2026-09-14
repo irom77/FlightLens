@@ -37,7 +37,8 @@ in AGENTS.md and the release policy still apply.
 - Validate Phase 2 item 5 (released in 0.9.0): recursive workspace explorer. Check native
   folder selection and removable-drive disconnect/reconnect on Windows/macOS.
 - Validate Phase 2 item 6 (released in 0.9.0): reference-only
-  portable sessions. Native Windows/macOS checks remain under item 8; see
+  portable sessions, including the main-area session controls in inspector and comparison.
+  Native Windows/macOS checks remain under item 8; see
   [the completion boundary](docs/portable-sessions.md#item-6-completion-boundary).
 - Manually check the new comparison view in packaged Windows/macOS builds.
 - Manually check the feedback hand-off in packaged Windows/macOS builds, including

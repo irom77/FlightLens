@@ -215,41 +215,6 @@ export default function App() {
         <button onClick={() => setComparing(!comparing)} aria-pressed={comparing}>
           {comparing ? "Back to inspector" : "Compare backups"}
         </button>
-        <details className="notice" aria-label="Portable sessions">
-          <summary>Portable sessions</summary>
-          <p>Save file-backed CLI and recognized firmware text backups, tab and theme. Pasted backups and Blackbox files must be closed before saving. Workspace folders are restored. Rate/PID profiles are shared between inspection and comparison and saved with comparison selections. Opening adds matching backups to this workspace.</p>
-          <button disabled={!desktop || busy} onClick={() => void openSession(false)}>Open session…</button>
-          <button disabled={!desktop || busy || !canRetrySession} onClick={() => void openSession(true)}>Retry session</button>
-          <button disabled={!desktop || busy || !canRetrySession} onClick={() => void openSession(true, true)}>Relink session backups…</button>
-          <small>Relink retries the saved session and asks for identical replacements for unavailable backups. Save As keeps the new locations.</small>
-          <p>Retry rereads the last confirmed session and restores its saved selections.</p>
-          <button disabled={!desktop || busy} onClick={() => void run(async () => {
-            setSessionStatus("");
-            const selections = useSelections.getState();
-            const documentIds = workspace.documents.map((d) => d.id);
-            const comparison = comparing ? selections.comparison ?? {
-              documents: Array.from(repository.current.values()).flatMap((a) => a.kind === "config" ? [a.document.id] : []).slice(0, 2),
-              baseline: null,
-            } : null;
-            if (comparison && (comparison.documents.filter(Boolean).length < 2 ||
-                comparison.documents.filter(Boolean).some((id) => !documentIds.includes(id)) ||
-                !comparison.documents[0] || !comparison.documents[1])) {
-              throw new Error("Select two or three available comparison backups before saving, or return to the inspector.");
-            }
-            const saved = await api.savePortableSession({
-              preserveUnavailableSelections,
-              documentIds, activeId: workspace.activeId, tab: workspace.tab, theme: theme.theme,
-              profiles: documentIds.map((documentId) => {
-                const artifact = repository.current.get(documentId);
-                const selected = selections.profiles[documentId] ?? (artifact?.kind === "config" ? defaultProfiles(artifact.document) : { rate: 0, pid: 0 });
-                return { documentId, rateProfile: selected.rate, pidProfile: selected.pid };
-              }),
-              comparison: comparison ? { ...comparison, documents: comparison.documents.filter(Boolean) } : null,
-            });
-            setSessionStatus(saved ? "Saved session references to a new file." : "Session save cancelled.");
-          })}>Save session as…</button>
-          <label><input type="checkbox" disabled={busy} checked={preserveUnavailableSelections} onChange={(event) => setPreserveUnavailableSelections(event.target.checked)} /> Keep unavailable active/comparison selections when saving</label>
-        </details>
         <WorkspaceExplorer
           restoredPage={sessionWorkspace}
           disabled={!desktop || busy}
@@ -330,6 +295,45 @@ export default function App() {
             <span className="pill">● Offline</span>
           </div>
         </header>
+        <section className="session-controls" aria-label="Portable sessions">
+          <div className="session-actions">
+            <button disabled={!desktop || busy} onClick={() => void openSession(false)}>Open session…</button>
+            <button disabled={!desktop || busy} onClick={() => void run(async () => {
+              setSessionStatus("");
+              const selections = useSelections.getState();
+              const documentIds = workspace.documents.map((d) => d.id);
+              const comparison = comparing ? selections.comparison ?? {
+                documents: Array.from(repository.current.values()).flatMap((a) => a.kind === "config" ? [a.document.id] : []).slice(0, 2),
+                baseline: null,
+              } : null;
+              if (comparison && (comparison.documents.filter(Boolean).length < 2 ||
+                  comparison.documents.filter(Boolean).some((id) => !documentIds.includes(id)) ||
+                  !comparison.documents[0] || !comparison.documents[1])) {
+                throw new Error("Select two or three available comparison backups before saving, or return to the inspector.");
+              }
+              const saved = await api.savePortableSession({
+                preserveUnavailableSelections,
+                documentIds, activeId: workspace.activeId, tab: workspace.tab, theme: theme.theme,
+                profiles: documentIds.map((documentId) => {
+                  const artifact = repository.current.get(documentId);
+                  const selected = selections.profiles[documentId] ?? (artifact?.kind === "config" ? defaultProfiles(artifact.document) : { rate: 0, pid: 0 });
+                  return { documentId, rateProfile: selected.rate, pidProfile: selected.pid };
+                }),
+                comparison: comparison ? { ...comparison, documents: comparison.documents.filter(Boolean) } : null,
+              });
+              setSessionStatus(saved ? "Saved session references to a new file." : "Session save cancelled.");
+            })}>Save session as…</button>
+          </div>
+          <details>
+            <summary>Session options</summary>
+            <p>Save your open backups, profiles, comparison and workspace location for later. Sessions reference your backup files; they do not copy them. Close pasted backups and Blackbox files before saving.</p>
+            <button disabled={!desktop || busy || !canRetrySession} onClick={() => void openSession(true)}>Retry session</button>
+            <button disabled={!desktop || busy || !canRetrySession} onClick={() => void openSession(true, true)}>Relink session backups…</button>
+            <small>Relink retries the saved session and asks for identical replacements for unavailable backups. Save As keeps the new locations.</small>
+            <p>Retry rereads the last confirmed session and restores its saved selections.</p>
+            <label><input type="checkbox" disabled={busy} checked={preserveUnavailableSelections} onChange={(event) => setPreserveUnavailableSelections(event.target.checked)} /> Keep unavailable active/comparison selections when saving</label>
+          </details>
+        </section>
         {sessionStatus && <p className="notice" role="status" style={{ whiteSpace: "pre-wrap" }}>{sessionStatus}</p>}
         {error && (
           <div className="error" role="alert">

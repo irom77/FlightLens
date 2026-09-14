@@ -6,6 +6,10 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## 0.10.1 — 2026-09-14
+
+- Move session controls from the sidebar into the main area in inspection and comparison. Keep Open and Save visible, with recovery controls under Session options.
+
 ## 0.10.0 — 2026-09-14
 
 - Fix empty throttle graphs for ProSpec on `4.5.3.KAACK_V19` and ProSpec2 on

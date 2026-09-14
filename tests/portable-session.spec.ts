@@ -94,7 +94,7 @@ test("portable session controls preserve state on cancel and report partial rest
     };
   });
   await page.goto("/");
-  await page.getByText("Portable sessions", { exact: true }).click();
+  await page.getByText("Session options", { exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Retry session", exact: true }),
   ).toBeDisabled();

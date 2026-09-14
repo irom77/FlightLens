@@ -243,7 +243,7 @@ test("portable session round-trips graph order, baseline and profiles", async ({
   await page.getByLabel("Rate profile A", { exact: true }).selectOption("1");
   const pid = String(fixtures[1].artifact.document.pidProfiles.at(-1));
   await page.getByLabel("PID profile B", { exact: true }).selectOption(pid);
-  await page.getByText("Portable sessions", { exact: true }).click();
+  await page.getByText("Session options", { exact: true }).click();
   await page.getByRole("button", { name: "Save session as…" }).click();
   await expect(
     page.getByRole("status").filter({ hasText: "Saved session references" }),
