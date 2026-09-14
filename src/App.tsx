@@ -855,6 +855,9 @@ function Inspector({
                 {[
                   ["thr_mid", "Throttle MID"],
                   ["thr_expo", "Throttle EXPO"],
+                  ...(d.firmware.version === "2025.12.3-alpha.KAACK_V19"
+                    ? [["thr_hover", "Throttle hover"]]
+                    : []),
                   ["throttle_limit_type", "Throttle limit"],
                   ["throttle_limit_percent", "Limit percent"],
                 ].map(([key, label]) => {

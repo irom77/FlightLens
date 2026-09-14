@@ -44,7 +44,7 @@ version bump; follow the [release policy](docs/releases/README.md).
   diagnostic is an OSD units value outside the upstream choices.
   LED and GPS fixes are completed locally and await release.
 
-## Phase 2 — Workspace and comparison — in progress
+## Phase 2 — Workspace and comparison — completed (revised scope)
 
 Phase 2 builds on foundations already shipped:
 
@@ -54,9 +54,11 @@ Phase 2 builds on foundations already shipped:
   preferences; persisted light/dark theme selection.
 - [x] Windows and macOS installer packaging and tag-triggered release workflows.
 
-Phase 2.5 implementation is complete. Phase 2 items 4–6 are implemented locally;
-continue with item 7, native file associations and OS open-file routing. Betaflight compatibility follow-up and native installer
-validation remain tracked alongside feature development.
+Phase 2 and Phase 2.5 implementation are complete within their documented
+boundaries. Items 4–6 shipped in 0.9.0. On 2026-09-13, items 7 and 8 were
+postponed to [TODO.md](TODO.md#deferred-native-integration-former-phase-2-items-7-and-8)
+and removed from the Phase 2 completion boundary. Native integration and packaged
+platform validation remain unfinished; required release checks still apply.
 
 Comparison progress and remaining work, in implementation order:
 
@@ -150,28 +152,23 @@ Comparison progress and remaining work, in implementation order:
    Windows/macOS validation to item 8.
    Implemented and verified locally on 2026-09-13; released in 0.9.0.
    See [completion criteria and evidence](docs/portable-sessions.md#item-6-completion-boundary).
-7. [ ] Add native file associations and OS open-file routing, including opening
-   files in an already-running app. Keep firmware and telemetry capability checks
-   explicit when a recognized format is not yet supported.
-8. [ ] Validate the desktop workflow on Windows and macOS: compile the desktop
-   crate before release publication and record native smoke checks for picking,
-   dropping, OS file opening, restore, clipboard, and snippet saving. Existing
-   installer builds and browser tests do not replace native integration checks.
-   Linux/WSL restore checks cover duplicate, changed, missing, and unreadable
-   sources; Windows/macOS restore and disconnected sources remain to be checked.
+Former items 7 (native file associations and OS open-file routing) and 8
+(Windows/macOS native workflow validation) are deferred in
+[TODO.md](TODO.md#deferred-native-integration-former-phase-2-items-7-and-8).
+References to these item numbers above identify the deferred work.
 
 Installers remain unsigned and macOS notarization is absent; these are not
-currently planned tasks. Initial installer packaging is already delivered. Phase 2 is
-complete when items 1–8 are implemented and verified, with saved-data
-compatibility and platform limitations documented. Item 3 has a fixed coverage
-boundary above; further comparison research does not block items 4–8. The next
-Phase 2 feature unit is item 7, native file associations and OS open-file routing.
+currently planned tasks. Phase 2 completion covers implemented and locally
+verified items 1–6, with saved-data compatibility and platform limitations
+documented. It does not imply completed native smoke checks or 1.0 readiness.
+Further comparison research remains follow-up work. The next roadmap unit is
+Phase 3's native Rust Blackbox indexing and header-defined decoding.
 
 ## Phase 2.5 — Feedback and inspection improvements — implemented
 
 Phase 2.5 collects user-facing improvements that do not depend on the Phase 3
-telemetry pipeline. Both items are implemented. Phase 2 items 4–6 are also implemented locally; continue at item 7. Outstanding
-packaged Windows/macOS checks remain tracked in TODO and Phase 2 item 8.
+telemetry pipeline. Both items are implemented. Phase 2 items 1–6 are complete. Native integration
+and packaged Windows/macOS checks are deferred in TODO (former items 7 and 8).
 
 1. [x] Add a feedback button that collects a subject, a body, and optionally the
    current configuration. The app opens a prefilled GitHub issue in the browser

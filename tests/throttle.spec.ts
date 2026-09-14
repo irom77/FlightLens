@@ -1,8 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { execFileSync } from "node:child_process";
 
-for (const vendor of [false, true]) {
-  test(`throttle preview uses imported profiles and provenance; vendor=${vendor}`, async ({
+for (const variant of ["official", "vendor", "hover"]) {
+  test(`throttle preview uses imported profiles and provenance; variant=${variant}`, async ({
     page,
   }) => {
     const fixture = JSON.parse(
@@ -17,7 +17,8 @@ for (const vendor of [false, true]) {
           "preview_fixture",
           "--",
           "--throttle-preview",
-          ...(vendor ? ["--vendor-missing-expo"] : []),
+          ...(variant === "vendor" ? ["--vendor-missing-expo"] : []),
+          ...(variant === "hover" ? ["--hover-throttle"] : []),
         ],
         { encoding: "utf8" },
       ),
@@ -48,12 +49,9 @@ for (const vendor of [false, true]) {
     });
     await expect(preview).toContainText("SCALE");
     await expect(preview.getByRole("textbox")).toHaveCount(0);
-    if (vendor) {
-      await expect(preview).toContainText(
-        "not verified for this firmware release",
-      );
-      await expect(preview.locator("path")).toHaveCount(0);
-      return;
+    if (variant === "hover") {
+      await expect(preview).toContainText("Throttle hover");
+      await expect(preview).toContainText("30");
     }
     await expect(preview.getByRole("img")).toHaveAccessibleName(
       /normalized throttle input.*throttle command/,
@@ -69,8 +67,12 @@ for (const vendor of [false, true]) {
     await expect(page.locator(`#line-${line}`)).toHaveClass("highlight-line");
     await page.getByRole("tab", { name: "Rates", exact: true }).click();
     await page.getByRole("button", { name: /^Profile 3 / }).click();
-    await expect(preview).toContainText("thr_mid=100");
-    await expect(preview.locator("path")).toHaveCount(0);
+    if (variant === "hover") {
+      await expect(preview.locator("path")).toHaveCount(1);
+    } else {
+      await expect(preview).toContainText("thr_mid=100");
+      await expect(preview.locator("path")).toHaveCount(0);
+    }
     await page.getByRole("button", { name: /^Profile 4 / }).click();
     await expect(preview).toContainText("thr_expo is missing");
     await expect(preview.locator("path")).toHaveCount(0);

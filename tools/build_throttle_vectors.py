@@ -28,23 +28,32 @@ def block(source, marker):
 # Keep the immutable release identities in the reviewed evidence document.
 releases = re.findall(r'\| (4\.[2345]\.\d+) \| `([a-f0-9]{40})`',
                       (ROOT / 'docs/throttle-curve-preview.md').read_text())
-assert len(releases) == 9
+assert len(releases) == 10
+releases = [(v, c, "betaflight/betaflight") for v, c in releases]
+releases += [
+    ("4.5.3.KAACK_V19", "8cd44381217948c0b2b5087f12e17dde15d6a25c", "limonspb/betaflight"),
+    ("2025.12.3-alpha.KAACK_V19", "3b419ca431ba5ea791d7924c8c5b266b911da5b1", "limonspb/betaflight"),
+]
 result = []
-for version, commit in releases:
+for version, commit, repo in releases:
+    hover = version == "2025.12.3-alpha.KAACK_V19"
     sources = {}
     hashes = {}
-    for path in ['fc/rc.c', 'flight/mixer.c']:
-        url = f'https://raw.githubusercontent.com/betaflight/betaflight/{commit}/src/main/{path}'
+    for path in ['fc/rc.c', 'flight/mixer.c'] + (['common/maths.c'] if hover else []):
+        url = f'https://raw.githubusercontent.com/{repo}/{commit}/src/main/{path}'
         data = urllib.request.urlopen(url, timeout=30).read()
         sources[path] = data.decode()
         hashes[path] = hashlib.sha256(data).hexdigest()
     rc = sources['fc/rc.c']
     loop = block(rc[rc.index('void initRcProcessing(void)'):],
                  'for (int i = 0; i < THROTTLE_LOOKUP_LENGTH; i++)')
+    if hover:
+        loop = rc[rc.index('    float thrMid   ='):rc.index('    switch (currentControlRateProfile->rates_type)', rc.index('void initRcProcessing(void)'))]
     lookup = block(rc, 'static int16_t rcLookupThrottle(')
     limit = block(sources['flight/mixer.c'], 'static float applyThrottleLimit(')
     shim = '''#include <stdint.h>
 #include <stdio.h>
+#include <math.h>
 #define THROTTLE_LOOKUP_LENGTH 12
 #define PWM_RANGE_MIN 1000
 #define PWM_RANGE_MAX 2000
@@ -54,7 +63,7 @@ for version, commit in releases:
 #define THROTTLE_LIMIT_TYPE_CLIP 2
 #define MIN(a,b) ((a)<(b)?(a):(b))
 static int16_t lookupThrottleRC[THROTTLE_LOOKUP_LENGTH];
-struct Profile { uint8_t thrMid8, thrExpo8, throttle_limit_type, throttle_limit_percent; };
+struct Profile { uint8_t thrMid8, thrExpo8, thrHover8, throttle_limit_type, throttle_limit_percent; };
 static struct Profile profile;
 static struct Profile *currentControlRateProfile = &profile;
 '''
@@ -76,18 +85,28 @@ applyThrottleLimit(command/1000.0f)*100.0f);
 }}
 }
 '''
+    if hover:
+        shim += "\nstatic float constrainf(float x, float lo, float hi) { return x < lo ? lo : (x > hi ? hi : x); }\n"
+        for marker in ['float scaleRangef(', 'int scaleRange(']:
+            # scaleRange uses int in this pinned source.
+            shim += block(sources['common/maths.c'], marker) + '\n'
+        shim += block(rc, 'float quadraticBezier(') + '\n'
+        main = main.replace('{99,100},{73,37}', '{99,100},{100,100}')
+        main = main.replace('for(int c=0;c<8;c++) {', 'for(int h=0;h<=100;h+=10) for(int c=0;c<8;c++) { profile.thrHover8=h;')
+        main = main.replace('if(t%100>1 && t%100<99 && t!=250 && t!=750) continue;', 'if(t%100>1 && t%100<99 && t!=250 && t!=750 && (t*11)%1000>11 && (t*11)%1000<989) continue;')
+        main = main.replace('%.9g\\n', '%.9g,%d\\n').replace('applyThrottleLimit(command/1000.0f)*100.0f);', 'applyThrottleLimit(command/1000.0f)*100.0f, h);')
     with tempfile.TemporaryDirectory() as tmp:
         path = pathlib.Path(tmp)
         (path / 'reference.c').write_text(shim + '\nvoid initialize(void) {\n' + loop + '\n}\n' + lookup + '\n' + limit + main)
         subprocess.run(['cc', '-O0', '-fsanitize=undefined', '-fno-sanitize-recover=all',
-                        str(path / 'reference.c'), '-o', str(path / 'reference')], check=True)
+                        str(path / 'reference.c'), '-lm', '-o', str(path / 'reference')], check=True)
         output = subprocess.check_output([str(path / 'reference')], text=True)
     vectors = []
     for line in output.splitlines():
-        mid, expo, mode, percent, t, command, y = line.split(',')
-        vectors.append([int(mid), int(expo), int(mode), int(percent), int(t), int(command), float(y)])
-    result.append({'version': version, 'commit': commit, 'sourceSha256': hashes,
-                   'columns': ['mid', 'expo', 'mode', 'percent', 'input', 'command', 'outputPercent'],
+        mid, expo, mode, percent, t, command, y, *extra = line.split(',')
+        vectors.append([int(mid), int(expo), int(mode), int(percent), int(t), int(command), float(y)] + [int(v) for v in extra])
+    result.append({'version': version, 'commit': commit, 'repository': repo, 'sourceSha256': hashes,
+                   'columns': ['mid', 'expo', 'mode', 'percent', 'input', 'command', 'outputPercent'] + (['hover'] if hover else []),
                    'vectors': vectors})
     print(f'{version}: {len(vectors)} upstream C vectors')
 (ROOT / 'fixtures/throttle-vectors.json').write_text(json.dumps(result, separators=(',', ':')) + '\n')

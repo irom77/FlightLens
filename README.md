@@ -146,6 +146,6 @@ FlightLens is an inspection and export assistant. It does not connect to a fligh
 
 ## Roadmap
 
-See the [FlightLens roadmap](ROADMAP.md) for the planned releases and implementation details. Phase 1, the Betaflight inspection MVP, is complete. Phase 2 is in progress: automatic restore and installer packaging are present; workspace indexing, semantic comparison, portable sessions, and native integration validation remain. Blackbox telemetry and diagnostics are planned for Phase 3, followed by iNAV and ArduPilot adapters in Phase 4.
+See the [FlightLens roadmap](ROADMAP.md) for the planned releases and implementation details. Phase 1, the Betaflight inspection MVP, is complete. Phase 2 is complete within its revised items 1–6 scope: automatic restore, workspace indexing, semantic comparison, and portable sessions are delivered. Native file routing and packaged Windows/macOS smoke validation are postponed in [TODO.md](TODO.md#deferred-native-integration-former-phase-2-items-7-and-8). Blackbox telemetry and diagnostics are planned for Phase 3, followed by iNAV and ArduPilot adapters in Phase 4.
 
 <p align="center"><sub>FlightLens keeps your backup local, legible, and honest.</sub></p>

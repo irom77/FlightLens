@@ -6,6 +6,23 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## 0.10.0 — 2026-09-14
+
+- Fix empty throttle graphs for ProSpec on `4.5.3.KAACK_V19` and ProSpec2 on
+  `2025.12.3-alpha.KAACK_V19`, including the latter’s hover-dependent curve and
+  read-only hover setting with source navigation.
+
+- Support throttle previews for official Betaflight 4.3.2 backups with explicit
+  throttle settings, using verified upstream calculations.
+
+- Keep the Betaflight dump-processing guide as the next TODO task; defer broader
+  export/schema coverage, formatting cleanup and security CI work. Record the
+  existing out-of-range `osd_units` diagnostic as an accepted limitation.
+
+- Postpone Phase 2 items 7 and 8 (native file routing and packaged platform smoke
+  validation) to TODO. Mark Phase 2 complete within the revised items 1–6 scope;
+  deferred native checks remain unfinished and release checks remain required.
+
 ## 0.9.0 — 2026-09-13
 
 - Remove the planned MIT relicensing and installer-signing tasks. The existing

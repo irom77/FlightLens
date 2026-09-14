@@ -138,9 +138,9 @@ Changed contents are inspected by opening the file separately; relinking only
 accepts the saved hash. Save As and opening the new manifest establish a new
 session/retry target.
 
-OS associations and delivery to an already-running app remain Phase 2 item 7.
+OS associations and delivery to an already-running app are deferred in TODO (former Phase 2 item 7).
 Packaged Windows/macOS dialogs, drive disconnect/reconnect, cancellation and
-cross-platform path smoke checks remain Phase 2 item 8. Local completion does
+cross-platform path smoke checks are deferred in TODO (former Phase 2 item 8). Local completion does
 not claim those platform checks or release publication have happened.
 
 ## Validation

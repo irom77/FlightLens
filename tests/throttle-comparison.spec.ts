@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { execFileSync } from "node:child_process";
 
-const fixtures = [[], ["--zero-expo"], ["--vendor-missing-expo"]].map((flags) =>
+const fixtures = [[], ["--zero-expo"], ["--vendor-missing-expo", "--unverified-throttle"]].map((flags) =>
   JSON.parse(
     execFileSync(
       process.env.FLIGHTLENS_CARGO ?? "cargo",

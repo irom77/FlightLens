@@ -6,12 +6,14 @@ input-validation and profile-isolation tests. Compiled upstream C differential
 validation and inspector integration are complete. Browser coverage checks
 profile switching, source links, unsupported firmware, missing input and MID=100.
 
-## Recommended first implementation
+## Supported previews
 
 Plot normalized throttle input against configured throttle command for exact
-reviewed official releases **4.2.0, 4.3.0, 4.4.0, and 4.5.0–4.5.5**. Require a
+reviewed official releases **4.2.0, 4.3.0, 4.3.2, 4.4.0, and 4.5.0–4.5.5**. Require a
 compatible Betaflight schema pack and explicit, valid values from the selected
-rate profile. Do not infer support for other patch releases, vendor suffixes,
+rate profile. Exact KAACK releases `4.5.3.KAACK_V19` (legacy) and
+`2025.12.3-alpha.KAACK_V19` (hover-dependent) are also supported, as reviewed
+below. Do not infer support for other patch releases, vendor suffixes,
 unknown versions, iNav, or ArduPilot. Missing settings remain unknown rather than
 silently using firmware defaults.
 
@@ -152,13 +154,13 @@ Research downloaded only public source files, five per exact tag:
 Reproduce the numerical fixtures with `python3 tools/build_throttle_vectors.py`
 (requires Python, a C compiler, and network access to public upstream source).
 The developer tool extracts the unmodified lookup initialization loop,
-`rcLookupThrottle`, and `applyThrottleLimit` at the nine immutable legacy commits
+`rcLookupThrottle`, and `applyThrottleLimit` at the ten immutable legacy commits
 below, compiles them with undefined-behavior sanitization, and records source
 SHA-256 hashes in `fixtures/throttle-vectors.json`. A minimal shim supplies the
 reviewed constants/profile fields and selects the ordinary non-RPM-limited path.
 It does not compile the entire firmware or independently verify CLI declarations.
 
-The checked-in fixture contains 28,512 vectors covering eight midpoint/expo
+The checked-in fixture contains 90,816 vectors (34,848 legacy and 55,968 hover-dependent) covering eight midpoint/expo
 pairs, all three limit modes, four percentages, endpoints, lookup knots and their
 neighbors, and intermediate inputs. The Rust differential test consumes these
 fixtures offline, checks exact pre-limit integer results, and allows 0.00002
@@ -204,6 +206,7 @@ on 2026-09-12. Use the commit in source URLs for immutable reproduction.
 | --- | --- |
 | 4.2.0 | `8f2d21460a9913d58bd1c33f8348c3791451fb45` |
 | 4.3.0 | `229ac667552827c6288550964a0ef877c04bf8ab` |
+| 4.3.2 | `60c9521da6072e6c891bd30fd772e91a790f0b53` |
 | 4.4.0 | `4605309d8253db0113d4c54d31fe8bd998f46401` |
 | 4.5.0 | `c155f5830d0ffdee1c34071dd21f174ffc374c81` |
 | 4.5.1 | `77d01ba3b76a22909d5f09cb0628820141f95eaa` |
@@ -216,3 +219,101 @@ on 2026-09-12. Use the commit in source URLs for immutable reproduction.
 | 2025.12.3 | `db7df6e48b9727d5984e18c906bf0e4769b2abf1` |
 | 2025.12.4 | `c2af58a0cbe060bd44ee2eb53baf0f42baf7d15e` |
 | 2025.12.5 | `7348054f268f0058574719c134e9f149565bb8ea` |
+
+## ProSpec release coverage follow-up — 2026-09-13
+
+Added exact official **4.3.2** support. Its lookup initialization loop,
+`rcLookupThrottle`, and `applyThrottleLimit` are byte-identical to the reviewed
+4.3.0 functions. The lookup length remains 12; profile fields remain uint8;
+MID/EXPO remain rate-profile values with bounds 0–100, and limits retain the
+OFF/SCALE/CLIP enum and 25–100 percent bounds. Sources at the pinned revision:
+[rc.c](https://github.com/betaflight/betaflight/blob/60c9521da6072e6c891bd30fd772e91a790f0b53/src/main/fc/rc.c),
+[mixer.c](https://github.com/betaflight/betaflight/blob/60c9521da6072e6c891bd30fd772e91a790f0b53/src/main/flight/mixer.c),
+[profile fields](https://github.com/betaflight/betaflight/blob/60c9521da6072e6c891bd30fd772e91a790f0b53/src/main/fc/controlrate_profile.h),
+and [CLI declarations](https://github.com/betaflight/betaflight/blob/60c9521da6072e6c891bd30fd772e91a790f0b53/src/main/cli/settings.c).
+The generator now compiles that release as well, adding 3,168 differential vectors.
+
+**Historical checkpoint: 4.5.3.KAACK_V19 was unavailable in the app.** The initial search did not
+locate its source; the source-discovery checkpoint below supersedes that finding.
+
+Local read-only verification found that the older ProSpec 4.3.2 backup passes
+the expanded release gate but lacks explicit `thr_mid` in the selected profile.
+It therefore still has no curve, with the specific missing-input reason. This
+checkpoint adds release support, not omitted throttle-default recovery. The six
+KAACK backups retain the unverified-release reason. No backup contents were
+sent to external services or added to fixtures.
+
+## Exact KAACK source discovery — 2026-09-14
+
+Read-only inspection of the user-designated Windows `FPVBackup/DUMP_ALL` folder
+identified both current dumps. The second filename uses `PRO-SPEC2`, so an earlier
+literal `prospec2` search missed it. No configurations were modified or transmitted;
+public branch histories were downloaded and build revisions matched locally.
+
+- ProSpec: `4.5.3.KAACK_V19`, matching public commit
+  `8cd44381217948c0b2b5087f12e17dde15d6a25c` in `limonspb/betaflight`.
+  The [version declaration](https://github.com/limonspb/betaflight/blob/8cd44381217948c0b2b5087f12e17dde15d6a25c/src/main/build/version.h)
+  confirms the exact release. The initialization loop and `rcLookupThrottle` in
+  [rc.c](https://github.com/limonspb/betaflight/blob/8cd44381217948c0b2b5087f12e17dde15d6a25c/src/main/fc/rc.c),
+  and `applyThrottleLimit` in
+  [mixer.c](https://github.com/limonspb/betaflight/blob/8cd44381217948c0b2b5087f12e17dde15d6a25c/src/main/flight/mixer.c)
+  are byte-identical to the corresponding pinned stock 4.5.3 blocks.
+- ProSpec2: `2025.12.3-alpha.KAACK_V19`, matching public commit
+  `3b419ca431ba5ea791d7924c8c5b266b911da5b1` in the same repository.
+  Its [rc.c](https://github.com/limonspb/betaflight/blob/3b419ca431ba5ea791d7924c8c5b266b911da5b1/src/main/fc/rc.c)
+  uses `thrHover8`, quadratic Bézier helpers, and `lrintf` when building the
+  lookup. It requires a separate model; the legacy formula is insufficient.
+
+Both current dumps contain explicit declarations of all four legacy throttle
+settings. This is not the older 4.3.2 backup's omitted-default problem. Input
+validity, selected-profile coverage, and ProSpec2's hover value still need
+parser-to-preview validation.
+
+The NewBeeDrone `KAACK-4.5.0` branch was also checked at
+`d18730f401a634e17287e38ad07116dd308b9496`; it declares 4.5.0.KAACK_V14 and is
+not the source for either current dump. The matching revisions above resolve
+the source-location blocker, but do not yet constitute full preview certification.
+Next: review ProSpec's field/CLI declarations and generate vendor C vectors,
+then implement and validate the distinct ProSpec2 model.
+
+## KAACK previews implemented — 2026-09-14
+
+Both exact KAACK identities above now pass the release gate with their matching
+schema packs. Other suffixes and 2025.12 releases remain unavailable. Defaults
+are not inferred. The field types, profile scope, CLI bounds and OFF/SCALE/CLIP
+ordering were checked in `fc/controlrate_profile.h` and `cli/settings.c` at both
+pinned vendor commits: MID/EXPO/hover are uint8 rate values in 0–100; limit
+percent is 25–100. Hover is required only for the reviewed 2025.12 identity.
+
+The hover model ports `quadraticBezier`, lookup initialization, and interpolation
+from the pinned vendor `fc/rc.c`. It preserves f32 arithmetic, the helper's
+1e-6 degeneracy threshold, parameter clamping, 12 equally spaced knots,
+`scaleRangef` mapping to 1000–2000, and `lrintf` ties-to-even rounding. Lookup
+interpolation uses integer division after scaling input by 11. Limits follow
+lookup. MID=0 and MID=100 follow this model's degenerate-segment behavior;
+the legacy MID=100 exclusion does not apply. At MID=100, the full-input command
+can equal hover rather than 100%, exactly as the firmware calculates.
+
+`tools/build_throttle_vectors.py` fetches both pinned vendor revisions and
+compiles their original C blocks, including the hover model's mathematical
+helpers from `common/maths.c`, with undefined-behavior sanitization. The shim
+selects ordinary throttle limiting, excluding the RPM-limit bypass. The retained
+vendor fixtures cover 3,168 legacy cases and 55,968 hover cases: eleven hover
+values from 0 to 100, midpoint/expo extremes including MID=100, all limit modes,
+four percentages, input endpoints, and both interpolation and lookup boundaries.
+The initial exhaustive-input run also passed 1,057,056 hover comparisons before
+reducing the retained fixture to boundary-focused samples. Pre-limit integer
+commands match exactly; limited float outputs use the existing 0.00002-percent
+tolerance. Fixtures contain synthetic inputs only.
+
+The inspector displays the imported hover value with source navigation for the
+reviewed hover model. Browser coverage exercises both vendor versions, profile
+switching, populated plots and the hover model's MID=100 behavior. A temporary
+local parser-to-preview test confirmed both current Windows dumps produce 1,001
+finite points in their selected profiles; it was removed after verification.
+No backup contents were added to fixtures or transmitted.
+
+Validation: `./test.sh` and `pnpm screenshots:check` pass. The full check includes
+Rust formatting/core tests, generated bindings, TypeScript, frontend tests, browser
+behavior, and the read-only backup corpus check. Existing numerical vectors were
+confirmed unchanged. No commit or release was made in this checkpoint.

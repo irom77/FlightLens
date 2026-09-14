@@ -44,7 +44,7 @@ fn documented_integer_vectors_and_limit_ordering() {
 #[test]
 fn supported_releases_and_identity_gates() {
     for version in [
-        "4.2.0", "4.3.0", "4.4.0", "4.5.0", "4.5.1", "4.5.2", "4.5.3", "4.5.4", "4.5.5",
+        "4.2.0", "4.3.0", "4.3.2", "4.4.0", "4.5.0", "4.5.1", "4.5.2", "4.5.3", "4.5.4", "4.5.5",
     ] {
         assert!(
             preview(&config(version, &settings(50, 50, "OFF", 100)), 0)
@@ -57,6 +57,9 @@ fn supported_releases_and_identity_gates() {
         "4.2.1",
         "4.5.6",
         "4.5.3.KAACK_V18",
+        "4.5.3.KAACK_V20",
+        "2025.12.3-alpha.KAACK_V18",
+        "2025.12.3.KAACK_V19",
         "4.5.3-RC1",
         "2025.12.1",
         "2025.12.5",
@@ -143,7 +146,7 @@ fn zero_expo_is_linear_and_curves_are_bounded_monotonic() {
 fn matches_pinned_upstream_c_lookup_and_limits() {
     let releases: serde_json::Value =
         serde_json::from_str(include_str!("../../../fixtures/throttle-vectors.json")).unwrap();
-    assert_eq!(releases.as_array().unwrap().len(), 9);
+    assert_eq!(releases.as_array().unwrap().len(), 12);
     for release in releases.as_array().unwrap() {
         let version = release["version"].as_str().unwrap();
         let mut previous = None;
@@ -155,12 +158,19 @@ fn matches_pinned_upstream_c_lookup_and_limits() {
             let mode = values[2].as_u64().unwrap() as usize;
             let percent = values[3].as_u64().unwrap() as u8;
             let input = values[4].as_u64().unwrap() as usize;
-            let case = (mid, expo, mode, percent);
+            let hover = values.get(7).and_then(|v| v.as_u64());
+            let case = (mid, expo, mode, percent, hover);
             if previous != Some(case) {
                 curve = Some(preview(
                     &config(
                         version,
-                        &settings(mid, expo, ["OFF", "SCALE", "CLIP"][mode], percent),
+                        &format!(
+                            "{}{}",
+                            settings(mid, expo, ["OFF", "SCALE", "CLIP"][mode], percent),
+                            hover
+                                .map(|h| format!("set thr_hover = {h}\n"))
+                                .unwrap_or_default()
+                        ),
                     ),
                     0,
                 ));
@@ -177,5 +187,30 @@ fn matches_pinned_upstream_c_lookup_and_limits() {
                 assert_eq!(point.y, values[5].as_f64().unwrap() / 10.0);
             }
         }
+    }
+}
+
+#[test]
+fn kaack_models_require_their_own_inputs() {
+    let body = settings(50, 50, "OFF", 100);
+    assert_eq!(
+        preview(&config("4.5.3.KAACK_V19", &body), 0).points.len(),
+        1001
+    );
+    let version = "2025.12.3-alpha.KAACK_V19";
+    assert!(preview(&config(version, &body), 0)
+        .reason
+        .unwrap()
+        .contains("thr_hover"));
+    let d = config(version, &format!("{body}set thr_hover = 30\n"));
+    assert_eq!(preview(&d, 0).points.len(), 1001);
+    assert!(preview(&d, 1).points.is_empty());
+    for value in ["invalid", "101", "-1", "1.5"] {
+        assert!(preview(
+            &config(version, &format!("{body}set thr_hover = {value}\n")),
+            0
+        )
+        .points
+        .is_empty());
     }
 }

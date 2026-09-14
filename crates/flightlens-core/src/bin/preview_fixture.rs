@@ -108,6 +108,14 @@ fn main() {
     if std::env::args().any(|arg| arg == "--throttle-preview") {
         text.push_str("\nrateprofile 0\nset thr_mid = 50\nset thr_expo = 50\nset throttle_limit_type = SCALE\nset throttle_limit_percent = 50\nrateprofile 1\nset thr_mid = 30\nset thr_expo = 70\nset throttle_limit_type = CLIP\nset throttle_limit_percent = 75\nrateprofile 2\nset thr_mid = 100\nset thr_expo = 50\nset throttle_limit_type = OFF\nset throttle_limit_percent = 100\nrateprofile 3\nset thr_mid = 50\nrateprofile 0\n");
     }
+    if std::env::args().any(|arg| arg == "--unverified-throttle") {
+        text = text.replace("4.5.3.KAACK_V19 Jan", "4.5.3.KAACK_V18 Jan");
+    }
+    if std::env::args().any(|arg| arg == "--hover-throttle") {
+        text = text.replace("4.5.0 Jan", "2025.12.3-alpha.KAACK_V19 Jan");
+        text.push_str("\nrateprofile 0\nset thr_hover = 30\nrateprofile 1\nset thr_hover = 65\nrateprofile 2\nset thr_hover = 50\nrateprofile 0\n");
+    }
+
     let artifact = analyze(&text, "Synthetic smoke fixture", "virtual").unwrap();
     let Artifact::Config(d) = &artifact else {
         unreachable!()
