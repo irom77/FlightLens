@@ -1,6 +1,7 @@
+import { sourceLine } from "./documentView";
+import type { ComparisonDocument } from "./documentView";
 import { useProfiles } from "./stores/selections";
 import { useState } from "react";
-import type { ConfigDocument } from "./bindings/core";
 import { compareParameters, type ComparisonValue } from "./compareParameters";
 
 export function ParameterValueCell({
@@ -9,7 +10,7 @@ export function ParameterValueCell({
   side,
 }: {
   value?: ComparisonValue;
-  document: ConfigDocument;
+  document: ComparisonDocument;
   side: string;
 }) {
   const declared = value?.declared;
@@ -32,7 +33,7 @@ export function ParameterValueCell({
             {side}: Line {declared.line}
           </summary>
           <pre>
-            {document.syntax.find((line) => line.line === declared.line)?.raw ??
+            {sourceLine(document, declared.line)?.raw ??
               "Source line unavailable"}
           </pre>
         </details>
@@ -56,8 +57,8 @@ export function ParameterComparison({
   rateA,
   rateB,
 }: {
-  a: ConfigDocument;
-  b: ConfigDocument;
+  a: ComparisonDocument;
+  b: ComparisonDocument;
   rateA: number;
   rateB: number;
 }) {

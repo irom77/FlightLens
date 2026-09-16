@@ -19,12 +19,20 @@ const openExample = async (page: Page, theme: "dark" | "light") => {
       win.__TAURI_EVENT_PLUGIN_INTERNALS__ = { unregisterListener: () => {} };
       win.__TAURI_INTERNALS__ = {
         transformCallback: () => 1,
-        invoke: async (command: string) => {
+        invoke: async (
+          command: string,
+          args: { offset?: number; count?: number },
+        ) => {
           if (command === "pending_sources" || command === "choose_files")
             return [];
           if (command === "restore_session")
             return { sources: [], unavailable: [] };
           if (command === "ingest_text") return f.fixture.artifact;
+          if (command === "raw_page")
+            return f.fixture.rawSyntax.slice(
+              args.offset,
+              (args.offset ?? 0) + (args.count ?? 500),
+            );
           if (command === "inspect_config") return f.fixture.inspection;
           if (command === "export_snippet") return f.fixture.snippet;
           return 1;
@@ -60,6 +68,11 @@ for (const theme of ["dark", "light"] as const) {
         .getByRole("tab", { name: tab, exact: tab !== "Audit" })
         .click();
       await expect(page.getByRole("tabpanel", { name: tab })).toBeVisible();
+      if (tab === "Raw")
+        await expect(page.locator(".raw-source")).toHaveAttribute(
+          "aria-busy",
+          "false",
+        );
       await capture(page, `${tab.toLowerCase()}-${theme}`);
     }
   });

@@ -7,8 +7,34 @@ file holds actionable tasks and explicitly deferred follow-up work.
 
 ## Next
 
+- Extend vendor rate-default certification only with pinned source evidence.
+  D2 covers exactly `4.5.3.KAACK_V19` and `2025.12.3-alpha.KAACK_V19`;
+  other vendor versions and vendor PID defaults remain unverified. See
+  [vendor recovery evidence](docs/vendor-rate-defaults.md).
+
+- Measure packaged Windows/macOS memory and interaction latency after C2's
+  compact-document/raw-paging change. Runtime implementation and synthetic
+  full-versus-compact payload/JS-heap probes are complete; the 128 MiB input
+  budget is not a total-memory cap. See [document IPC costs](docs/document-ipc-cost.md).
+
+- Extend the pinned mode-name tables when certifying additional firmware releases
+  (`python3 tools/verify_mode_names.py --check`). Unverified builds keep the
+  historical fallback labels; custom USER1–4 display names are not interpreted.
+
+- Validate the D4 save-dialog retry on packaged Windows and macOS: select an
+  existing file, confirm the native prompt, check the explanatory retry title
+  and suggested name, then retry in another folder or cancel. Rust tests cover
+  collision safety, cancellation and rebuilding contents for the destination.
+
+- Extend PID default coverage beyond the ten build-invariant gains on official
+  4.5.0–4.5.5. Roll/pitch D and D-min/D-max require stronger build provenance;
+  other firmware lines need independent verification. Non-default simplified
+  tuning replay remains unsupported (host fast-math results differ).
+  See [PID recovery evidence](docs/pid-default-recovery.md).
+
 - Add source-verified omitted throttle-default recovery for official releases.
-  The older ProSpec 4.3.2 backup now passes the release gate but still lacks
+  Official 4.2.0–4.2.11, 4.3.0–4.3.2 and 4.4.0–4.4.3 now pass the
+  verified preview gate. The older ProSpec 4.3.2 backup still lacks
   explicit `thr_mid` in its selected profile, so its graph remains unavailable.
   Preserve missing/invalid distinctions and do not infer defaults for forks.
 
@@ -41,6 +67,10 @@ in AGENTS.md and the release policy still apply.
   Native Windows/macOS checks remain under item 8; see
   [the completion boundary](docs/portable-sessions.md#item-6-completion-boundary).
 - Manually check the new comparison view in packaged Windows/macOS builds.
+- Validate native modal focus trapping, Escape dismissal and focus restoration in
+  packaged Windows/macOS builds; automated keyboard checks run in Chromium.
+  Also verify native touch opening and scrolling of plot sample-value tables
+  (review E2); keyboard expansion and focus are covered by browser tests.
 - Manually check the feedback hand-off in packaged Windows/macOS builds, including
   the upfront GitHub account notice, attachment toggles during preview preparation
   and near-limit file guidance. The
@@ -60,6 +90,11 @@ in AGENTS.md and the release policy still apply.
 
 ## Later
 
+- Consider a clipboard fallback for feedback descriptions that exceed the encoded
+  URL limit. The dialog now gives a calculated shortening instruction; preserving
+  the full description would require preview and clipboard guidance that also
+  handles an attached configuration.
+
 - Complete 2025.12 export coverage for the 12 settings listed in the bundled
   pack's `unresolved_bounds`: build-dependent OSD/TPA/VTX limits, telemetry sensor
   masks, and unsigned 32-bit settings. The current integer model is signed 32-bit;
@@ -67,17 +102,16 @@ in AGENTS.md and the release policy still apply.
   schema entries and arrays also remain outside certified export coverage.
 - Extend patch-specific schema verification beyond the known 4.4 GPS rescue
   bound change; unverified patches continue to use the base firmware-line schema.
-- Decide what to do about `pnpm format:check`, which fails on `src/App.tsx` and
-  `tests/inspector.spec.ts`. Both deviations predate the current work; either
-  reformat them in a commit of their own or drop them from the check.
 - Add free security checks, release gating and status badges to CI. Nothing here
   costs anything on a public repository: `cargo audit` or `cargo deny` against
   the Rust advisory database, `pnpm audit` for JavaScript, CodeQL for Rust and
   TypeScript, `gitleaks` for secrets, and Dependabot for updates. This needs a
-  workflow that runs on push and pull requests, which the repository does not
-  have yet; today CI only runs on `v*` tags. Make the two release workflows
-  depend on it so a tag with a failing check publishes no installer, and put the
-  badges in the README.
+  security gate shared with the two release workflows so a tag with a failing
+  security check publishes no installer, and badges in the README. Branch-push
+  and pull-request checks now cover Windows/macOS formatting, Clippy, core tests,
+  JavaScript/TypeScript and React hook linting, bindings, TypeScript and frontend
+  tests; release jobs run those gates too.
+  Verify the new workflow on GitHub after the next authorized push.
 
 - Extend the verified hover-dependent throttle model to official Betaflight
   2025.12 releases after exact source review and differential validation. Only

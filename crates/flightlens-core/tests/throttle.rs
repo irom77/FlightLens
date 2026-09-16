@@ -44,7 +44,9 @@ fn documented_integer_vectors_and_limit_ordering() {
 #[test]
 fn supported_releases_and_identity_gates() {
     for version in [
-        "4.2.0", "4.3.0", "4.3.2", "4.4.0", "4.5.0", "4.5.1", "4.5.2", "4.5.3", "4.5.4", "4.5.5",
+        "4.2.0", "4.2.1", "4.2.2", "4.2.3", "4.2.4", "4.2.5", "4.2.6", "4.2.7", "4.2.8", "4.2.9",
+        "4.2.10", "4.2.11", "4.3.1", "4.4.1", "4.4.2", "4.4.3", "4.3.0", "4.3.2", "4.4.0", "4.5.0",
+        "4.5.1", "4.5.2", "4.5.3", "4.5.4", "4.5.5",
     ] {
         assert!(
             preview(&config(version, &settings(50, 50, "OFF", 100)), 0)
@@ -54,7 +56,7 @@ fn supported_releases_and_identity_gates() {
         );
     }
     for version in [
-        "4.2.1",
+        "4.2.12",
         "4.5.6",
         "4.5.3.KAACK_V18",
         "4.5.3.KAACK_V20",
@@ -146,7 +148,7 @@ fn zero_expo_is_linear_and_curves_are_bounded_monotonic() {
 fn matches_pinned_upstream_c_lookup_and_limits() {
     let releases: serde_json::Value =
         serde_json::from_str(include_str!("../../../fixtures/throttle-vectors.json")).unwrap();
-    assert_eq!(releases.as_array().unwrap().len(), 12);
+    assert_eq!(releases.as_array().unwrap().len(), 27);
     for release in releases.as_array().unwrap() {
         let version = release["version"].as_str().unwrap();
         let mut previous = None;

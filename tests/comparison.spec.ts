@@ -11,7 +11,7 @@ const fixtures = [
     "--mode-differences",
     "--collection-differences",
   ],
-  ["--vendor-missing-expo"],
+  ["--vendor-missing-expo", "--unverified-throttle"],
 ].map((flags) =>
   JSON.parse(
     execFileSync(

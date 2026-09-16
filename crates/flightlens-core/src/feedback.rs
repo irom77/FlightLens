@@ -428,8 +428,22 @@ pub fn build_report(
         encode(&body)
     );
     if url.len() > URL_LIMIT {
+        // Count complete Unicode characters from the end, using their actual
+        // encoded size so following the guidance makes this report fit.
+        let mut excess = url.len() - URL_LIMIT;
+        let mut remove = 0;
+        for character in request.body.trim().chars().rev() {
+            remove += 1;
+            excess = excess.saturating_sub(encode(&character.to_string()).len());
+            if excess == 0 {
+                break;
+            }
+        }
+        if excess > 0 || request.body.trim().chars().count().saturating_sub(remove) < 20 {
+            return Err("This report's subject or environment leaves too little room for a description. Shorten the subject or file without an open backup.".into());
+        }
         return Err(format!(
-            "This report is too long to prefill. Shorten the description to under {BODY_LIMIT} characters."
+            "This report is too long to prefill after URL encoding. Remove at least {remove} characters from the end of the description, or shorten it elsewhere, then try again."
         ));
     }
     Ok(FeedbackReport {

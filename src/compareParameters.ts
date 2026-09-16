@@ -1,10 +1,6 @@
+import type { ComparisonDocument } from "./documentView";
 import equivalence from "./parameterEquivalence.json";
-import type {
-  ConfigDocument,
-  Derived,
-  Parameter,
-  Scope,
-} from "./bindings/core";
+import type { Derived, Parameter, Scope } from "./bindings/core";
 
 export type ProfileSelection = { pid: number; rate: number };
 export type ComparisonValue = { declared?: Parameter; derived?: Derived };
@@ -20,7 +16,7 @@ function selected(scope: Scope, profiles: ProfileSelection) {
   return !("index" in scope) || scope.index === profiles[scope.kind];
 }
 
-function values(document: ConfigDocument, profiles: ProfileSelection) {
+function values(document: ComparisonDocument, profiles: ProfileSelection) {
   const result = new Map<string, ComparisonValue>();
   for (const derived of Object.values(document.derived)) {
     if (derived && selected(derived.scope, profiles))
@@ -36,8 +32,8 @@ function values(document: ConfigDocument, profiles: ProfileSelection) {
 }
 
 export function compareParameters(
-  a: ConfigDocument,
-  b: ConfigDocument,
+  a: ComparisonDocument,
+  b: ComparisonDocument,
   pa: ProfileSelection,
   pb: ProfileSelection,
 ): ParameterDifference[] {
@@ -51,7 +47,7 @@ export function compareParameters(
       a.firmware.version &&
       a.firmware.version === b.firmware.version,
   );
-  const certifiedRelease = (document: ConfigDocument) => {
+  const certifiedRelease = (document: ComparisonDocument) => {
     const { family, version, packId } = document.firmware;
     return (
       family === equivalence.family &&

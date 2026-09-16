@@ -1,4 +1,6 @@
-import type { ConfigDocument, SyntaxLine } from "./bindings/core";
+import { comparisonSyntax } from "./documentView";
+import type { ComparisonDocument } from "./documentView";
+import type { SyntaxLine } from "./bindings/core";
 import compatibility from "./rxrangeCompatibility.json";
 
 export type RxRange = {
@@ -8,9 +10,9 @@ export type RxRange = {
   source: SyntaxLine;
 };
 
-function ranges(document: ConfigDocument) {
+function ranges(document: ComparisonDocument) {
   const values = new Map<number, RxRange>();
-  for (const source of document.syntax) {
+  for (const source of comparisonSyntax(document)) {
     const command = source.command;
     if (
       command.kind === "defaults" ||
@@ -47,9 +49,9 @@ function ranges(document: ConfigDocument) {
   return values;
 }
 
-export function compareRxRanges(a: ConfigDocument, b: ConfigDocument) {
+export function compareRxRanges(a: ComparisonDocument, b: ComparisonDocument) {
   const releases: Record<string, string | undefined> = compatibility.releases;
-  const certified = (document: ConfigDocument) =>
+  const certified = (document: ComparisonDocument) =>
     Boolean(
       document.firmware.family === compatibility.family &&
         document.firmware.version &&

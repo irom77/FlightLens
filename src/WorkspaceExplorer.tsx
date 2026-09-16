@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { api } from "./ipc/client";
-import type { Artifact, WorkspacePage } from "./bindings/core";
+import type { ArtifactView, WorkspacePage } from "./bindings/core";
 
 export function WorkspaceExplorer({
   disabled,
@@ -9,7 +9,7 @@ export function WorkspaceExplorer({
 }: {
   disabled: boolean;
   restoredPage?: WorkspacePage | null;
-  onOpen: (artifact: Artifact) => void;
+  onOpen: (artifact: ArtifactView) => void;
 }) {
   const [page, setPage] = useState<WorkspacePage | null>(null);
   const [query, setQuery] = useState("");

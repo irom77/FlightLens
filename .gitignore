@@ -7,3 +7,6 @@ src-tauri/gen/
 test-results/
 playwright-report/
 PROMPTS.md
+
+# Python verification-tool caches
+__pycache__/

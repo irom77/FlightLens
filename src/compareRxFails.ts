@@ -1,4 +1,6 @@
-import type { ConfigDocument, SyntaxLine } from "./bindings/core";
+import { comparisonSyntax } from "./documentView";
+import type { ComparisonDocument } from "./documentView";
+import type { SyntaxLine } from "./bindings/core";
 import compatibility from "./rxfailCompatibility.json";
 
 export type RxFail = {
@@ -8,9 +10,9 @@ export type RxFail = {
   source: SyntaxLine;
 };
 
-function failsafes(document: ConfigDocument) {
+function failsafes(document: ComparisonDocument) {
   const values = new Map<number, RxFail>();
-  for (const source of document.syntax) {
+  for (const source of comparisonSyntax(document)) {
     const command = source.command;
     if (
       command.kind === "defaults" ||
@@ -57,9 +59,9 @@ function failsafes(document: ConfigDocument) {
   return values;
 }
 
-export function compareRxFails(a: ConfigDocument, b: ConfigDocument) {
+export function compareRxFails(a: ComparisonDocument, b: ComparisonDocument) {
   const releases: Record<string, string | undefined> = compatibility.releases;
-  const certified = (document: ConfigDocument) =>
+  const certified = (document: ComparisonDocument) =>
     Boolean(
       document.firmware.family === compatibility.family &&
         document.firmware.version &&

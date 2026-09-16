@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type {
   FeedbackReport,
   FeedbackRequest,
   ReportKind,
 } from "./bindings/core";
 import { api } from "./ipc/client";
+import { Modal } from "./Modal";
 
 const message = (e: unknown) =>
   typeof e === "string"
@@ -49,34 +50,41 @@ export function Feedback({
   const [filed, setFiled] = useState(false);
   // The app version and platform are stamped by the desktop shell, which knows
   // what is actually running; whatever is sent from here is discarded.
-  const request: FeedbackRequest = {
-    kind,
-    subject,
-    body,
-    includeConfig,
-    appVersion: "",
-    platform: "",
-  };
+  const request = useMemo<FeedbackRequest>(
+    () => ({
+      kind,
+      subject,
+      body,
+      includeConfig,
+      appVersion: "",
+      platform: "",
+    }),
+    [kind, subject, body, includeConfig],
+  );
   const requestKey = JSON.stringify([configId, request]);
   const report = prepared?.key === requestKey ? prepared.report : null;
   useEffect(() => {
     let current = true;
-    api
-      .feedbackReport(configId, request)
-      .then((r) => {
-        if (!current) return;
-        setPrepared({ key: requestKey, report: r });
-        setIncomplete("");
-      })
-      .catch((e) => {
-        if (!current) return;
-        setPrepared(null);
-        setIncomplete(message(e));
-      });
+    setIncomplete("");
+    const timer = window.setTimeout(() => {
+      api
+        .feedbackReport(configId, request)
+        .then((r) => {
+          if (!current) return;
+          setPrepared({ key: requestKey, report: r });
+          setIncomplete("");
+        })
+        .catch((e) => {
+          if (!current) return;
+          setPrepared(null);
+          setIncomplete(message(e));
+        });
+    }, 250);
     return () => {
+      window.clearTimeout(timer);
       current = false;
     };
-  }, [configId, kind, subject, body, includeConfig]);
+  }, [configId, request, requestKey]);
   const file = async () => {
     if (!report || filing) return;
     setFiling(true);
@@ -102,145 +110,138 @@ export function Feedback({
     }
   };
   return (
-    <div className="modal-backdrop">
-      <section
-        className="modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="feedback-title"
-      >
-        <div className="section-heading">
-          <h2 id="feedback-title">Send feedback</h2>
-          <button aria-label="Close feedback dialog" onClick={onClose}>
-            ×
-          </button>
-        </div>
-        {filed ? (
-          <>
-            <p>
-              The prefilled issue is open in your browser. Review it, then
-              submit it from your own GitHub account.
-              {report?.clipboard &&
-                " The redacted configuration is on your clipboard; paste it into the issue where the body asks for it."}
-            </p>
-            <div className="actions">
-              <button className="primary" onClick={onClose}>
-                Done
-              </button>
-            </div>
-          </>
-        ) : (
-          <>
-            <p>Submitting feedback requires a GitHub account.</p>
-            <p>
-              FlightLens does not send anything. The issue opens prefilled in
-              your browser and you file it yourself; an attached configuration
-              is copied to your clipboard for you to paste.
-            </p>
-            <fieldset className="feedback-kind" disabled={filing}>
-              <legend>What is this?</legend>
-              <label>
-                <input
-                  type="radio"
-                  name="feedback-kind"
-                  checked={kind === "bug"}
-                  onChange={() => setKind("bug")}
-                />
-                Something is wrong
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="feedback-kind"
-                  checked={kind === "feature"}
-                  onChange={() => setKind("feature")}
-                />
-                Request a feature
-              </label>
-            </fieldset>
+    <Modal labelledBy="feedback-title" onClose={onClose}>
+      <div className="section-heading">
+        <h2 id="feedback-title">Send feedback</h2>
+        <button aria-label="Close feedback dialog" onClick={onClose}>
+          ×
+        </button>
+      </div>
+      {filed ? (
+        <>
+          <p>
+            The prefilled issue is open in your browser. Review it, then submit
+            it from your own GitHub account.
+            {report?.clipboard &&
+              " The redacted configuration is on your clipboard; paste it into the issue where the body asks for it."}
+          </p>
+          <div className="actions">
+            <button className="primary" onClick={onClose}>
+              Done
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <p>Submitting feedback requires a GitHub account.</p>
+          <p>
+            FlightLens does not send anything. The issue opens prefilled in your
+            browser and you file it yourself; an attached configuration is
+            copied to your clipboard for you to paste.
+          </p>
+          <fieldset className="feedback-kind" disabled={filing}>
+            <legend>What is this?</legend>
             <label>
-              Subject
               <input
-                disabled={filing}
-                autoFocus
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                maxLength={120}
-                placeholder="Rates preview stays blank"
+                type="radio"
+                name="feedback-kind"
+                checked={kind === "bug"}
+                onChange={() => setKind("bug")}
               />
+              Something is wrong
             </label>
-            <label className="feedback-description">
-              Description
-              <textarea
-                disabled={filing}
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                maxLength={2000}
-                placeholder="What you did, what you expected, and what happened instead."
-              />
-            </label>
-            <label className="checkbox">
+            <label>
               <input
-                type="checkbox"
-                checked={includeConfig}
-                disabled={!configId || filing}
-                onChange={(e) => setIncludeConfig(e.target.checked)}
+                type="radio"
+                name="feedback-kind"
+                checked={kind === "feature"}
+                onChange={() => setKind("feature")}
               />
-              Attach the open configuration
-              {configId ? ` (${documentTitle})` : " (no backup is open)"}
+              Request a feature
             </label>
-            {report && (
-              <details className="feedback-preview" open={includeConfig}>
-                <summary>Review what leaves this app</summary>
-                <h3>Issue body</h3>
-                <pre>{report.issueBody}</pre>
-                {report.clipboard !== null && (
-                  <>
-                    <h3>
-                      Configuration copied to your clipboard
-                      {report.removed.length > 0 &&
-                        `, with ${report.removed.length} value(s) removed`}
-                    </h3>
-                    {report.removed.length > 0 && (
-                      <ul className="feedback-removed">
-                        {report.removed.map((r) => (
-                          <li key={`${r.line}:${r.key}`}>
-                            Line {r.line}: {r.key} ({categories[r.category]})
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    {report.oversized && (
-                      <p className="notice">
-                        This configuration and report exceed the GitHub issue
-                        body limit. Save it from your clipboard and attach it to
-                        the issue as a file instead of pasting it.
-                      </p>
-                    )}
-                    <pre>{report.clipboard}</pre>
-                  </>
-                )}
-              </details>
-            )}
-            {error && (
-              <p className="notice" role="alert">
-                {error}
-              </p>
-            )}
-            <div className="actions">
-              <span className="feedback-status">{incomplete}</span>
-              <button onClick={onClose}>Cancel</button>
-              <button
-                className="primary"
-                disabled={!report || filing}
-                onClick={() => void file()}
-              >
-                Continue to GitHub
-              </button>
-            </div>
-          </>
-        )}
-      </section>
-    </div>
+          </fieldset>
+          <label>
+            Subject
+            <input
+              disabled={filing}
+              data-modal-initial-focus
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              maxLength={120}
+              placeholder="Rates preview stays blank"
+            />
+          </label>
+          <label className="feedback-description">
+            Description
+            <textarea
+              disabled={filing}
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              maxLength={2000}
+              placeholder="What you did, what you expected, and what happened instead."
+            />
+          </label>
+          <label className="checkbox">
+            <input
+              type="checkbox"
+              checked={includeConfig}
+              disabled={!configId || filing}
+              onChange={(e) => setIncludeConfig(e.target.checked)}
+            />
+            Attach the open configuration
+            {configId ? ` (${documentTitle})` : " (no backup is open)"}
+          </label>
+          {report && (
+            <details className="feedback-preview" open={includeConfig}>
+              <summary>Review what leaves this app</summary>
+              <h3>Issue body</h3>
+              <pre>{report.issueBody}</pre>
+              {report.clipboard !== null && (
+                <>
+                  <h3>
+                    Configuration copied to your clipboard
+                    {report.removed.length > 0 &&
+                      `, with ${report.removed.length} value(s) removed`}
+                  </h3>
+                  {report.removed.length > 0 && (
+                    <ul className="feedback-removed">
+                      {report.removed.map((r) => (
+                        <li key={`${r.line}:${r.key}`}>
+                          Line {r.line}: {r.key} ({categories[r.category]})
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {report.oversized && (
+                    <p className="notice">
+                      This configuration and report exceed the GitHub issue body
+                      limit. Save it from your clipboard and attach it to the
+                      issue as a file instead of pasting it.
+                    </p>
+                  )}
+                  <pre>{report.clipboard}</pre>
+                </>
+              )}
+            </details>
+          )}
+          {error && (
+            <p className="notice" role="alert">
+              {error}
+            </p>
+          )}
+          <div className="actions">
+            <span className="feedback-status">{incomplete}</span>
+            <button onClick={onClose}>Cancel</button>
+            <button
+              className="primary"
+              disabled={!report || filing}
+              onClick={() => void file()}
+            >
+              Continue to GitHub
+            </button>
+          </div>
+        </>
+      )}
+    </Modal>
   );
 }

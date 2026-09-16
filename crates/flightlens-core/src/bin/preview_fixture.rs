@@ -1,7 +1,19 @@
 //! Emits only the built-in synthetic fixture for renderer smoke tests, never user input.
-use flightlens_core::{analysis, analyze, export, Artifact};
+use flightlens_core::{analysis, analyze, export, Artifact, ArtifactView};
 fn main() {
     let mut text = include_str!("../../../../fixtures/configs/betaflight-4.5.0.dump").to_owned();
+    if std::env::args().any(|arg| arg == "--pid-defaults") {
+        let gain_keys: Vec<_> = ["roll", "pitch", "yaw"]
+            .into_iter()
+            .flat_map(|axis| ["p", "i", "d", "f"].map(move |gain| format!("set {gain}_{axis} =")))
+            .collect();
+        text = text
+            .lines()
+            .filter(|line| !gain_keys.iter().any(|key| line.starts_with(key)))
+            .collect::<Vec<_>>()
+            .join("\n");
+        text.push_str("\nprofile 1\nset p_roll = 0\nset i_roll = invalid\nprofile 0\n");
+    }
     if std::env::args().any(|arg| arg == "--explicit-only") {
         text = text.replace(
             "defaults nosave",
@@ -41,8 +53,13 @@ fn main() {
             .replace("profile 0", "profile 2");
         text.push_str("\nprofile 0\nrateprofile 0\nprofile 1\nrateprofile 1\n");
     }
-    if std::env::args().any(|arg| arg == "--vendor-missing-expo") {
+    if std::env::args().any(|arg| arg == "--vendor-rates" || arg == "--vendor-missing-expo") {
         text = text.replace("4.5.0 Jan", "4.5.3.KAACK_V19 Jan");
+    }
+    if std::env::args().any(|arg| arg == "--vendor-year-defaults") {
+        text = text.replace("4.5.3.KAACK_V19 Jan", "2025.12.3-alpha.KAACK_V19 Jan");
+    }
+    if std::env::args().any(|arg| arg == "--vendor-missing-expo") {
         text = text
             .lines()
             .filter(|line| !line.starts_with("set ") || !line.contains("_expo ="))
@@ -132,6 +149,6 @@ fn main() {
         .iter()
         .map(|profile| (*profile, analysis::inspect(d, *profile)))
         .collect();
-    let output = serde_json::json!({"artifact":artifact,"inspection":analysis::inspect(d,0),"inspections":inspections,"snippet":export::export(d,&request).ok()});
+    let output = serde_json::json!({"artifact":ArtifactView::Config(Box::new(d.document_view())),"rawSyntax":d.syntax,"inspection":analysis::inspect(d,0),"inspections":inspections,"snippet":export::export(d,&request).ok()});
     println!("{}", serde_json::to_string(&output).unwrap());
 }

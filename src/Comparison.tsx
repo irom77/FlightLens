@@ -1,3 +1,4 @@
+import type { ComparisonDocument } from "./documentView";
 import { AdjustmentRangeComparison } from "./AdjustmentRangeComparison";
 import { VtxActivationComparison } from "./VtxActivationComparison";
 import { VtxTableComparison } from "./VtxTableComparison";
@@ -8,14 +9,15 @@ import { ModeComparison } from "./ModeComparison";
 import { PortComparison } from "./PortComparison";
 import { FeatureComparison } from "./FeatureComparison";
 import { useEffect, useState } from "react";
-import type { ConfigDocument, Inspection } from "./bindings/core";
+import type { Inspection } from "./bindings/core";
 import { useProfiles, useSelections } from "./stores/selections";
 import { api } from "./ipc/client";
 import { Plot } from "./Plots";
 import { ThreeParameterComparison } from "./ThreeParameterComparison";
 import { ParameterComparison } from "./ParameterComparison";
 
-function useRates(document: ConfigDocument | undefined, profile: number) {
+function useRates(document: ComparisonDocument | undefined, profile: number) {
+  const documentId = document?.id;
   const key = document ? `${document.id}:${profile}` : "";
   const [result, setResult] = useState<{
     key: string;
@@ -23,20 +25,20 @@ function useRates(document: ConfigDocument | undefined, profile: number) {
     error?: string;
   }>();
   useEffect(() => {
-    if (!document) return;
+    if (!documentId) return;
     let current = true;
-    api.inspect(document.id, profile).then(
+    api.inspect(documentId, profile).then(
       (inspection) => current && setResult({ key, inspection }),
       (error: unknown) => current && setResult({ key, error: String(error) }),
     );
     return () => {
       current = false;
     };
-  }, [document?.id, profile, key]);
+  }, [documentId, profile, key]);
   return result?.key === key ? result : undefined;
 }
 
-export function Comparison({ documents }: { documents: ConfigDocument[] }) {
+export function Comparison({ documents }: { documents: ComparisonDocument[] }) {
   const { comparison, setComparison } = useSelections();
   const ids = comparison?.documents ?? [
     documents[0]?.id ?? "",
@@ -105,9 +107,9 @@ function RateComparison({
   b,
   c,
 }: {
-  a?: ConfigDocument;
-  b?: ConfigDocument;
-  c?: ConfigDocument;
+  a?: ComparisonDocument;
+  b?: ComparisonDocument;
+  c?: ComparisonDocument;
 }) {
   const { comparison, setComparison } = useSelections();
   const baselineIndex = [a?.id, b?.id, c?.id].indexOf(

@@ -1,0 +1,191 @@
+[
+  {
+    "version": "4.5.3.KAACK_V19",
+    "commit": "8cd44381217948c0b2b5087f12e17dde15d6a25c",
+    "packVersion": "4.5.0",
+    "upstreamCommit": "c155f5830d0ffdee1c34071dd21f174ffc374c81",
+    "vendorArchive": {
+      "url": "https://codeload.github.com/limonspb/betaflight/tar.gz/8cd44381217948c0b2b5087f12e17dde15d6a25c",
+      "sha256": "21e35e39f2762f7c792f5ca18c212be7f7ffce0e29e0b2524b713a936257f5f5"
+    },
+    "upstreamArchive": {
+      "url": "https://codeload.github.com/betaflight/betaflight/tar.gz/c155f5830d0ffdee1c34071dd21f174ffc374c81",
+      "sha256": "b5932fe3002738e754f011dca9a5d2faf62d230efb6f9a5a5eab8fd62f6cf987"
+    },
+    "sources": {
+      "build/version.h": {
+        "vendorSha256": "1ee9df4a7e0b8a099692c593abe9137c14fcd1559f1352f000623aa5ba3bacb1"
+      },
+      "fc/controlrate_profile.h": {
+        "vendorSha256": "7445019cdb9313a6b17739b48870feca7741b319ea3c3db22328a85c47140f5f",
+        "upstreamSha256": "7445019cdb9313a6b17739b48870feca7741b319ea3c3db22328a85c47140f5f"
+      },
+      "common/axis.h": {
+        "vendorSha256": "f9d068203f2a6f46cc19b039e9fd651b24b836a12dbb6962909bca96885e3f77",
+        "upstreamSha256": "f9d068203f2a6f46cc19b039e9fd651b24b836a12dbb6962909bca96885e3f77"
+      },
+      "config/config_reset.h": {
+        "vendorSha256": "a9126f166fd363294201a63489ef4103d8350d95f5e50380f4a1fcc72aebe5fe",
+        "upstreamSha256": "a9126f166fd363294201a63489ef4103d8350d95f5e50380f4a1fcc72aebe5fe"
+      },
+      "pg/pg.c": {
+        "vendorSha256": "52a892ff093febe32188aa4776c135589d298b8bb125b58edbe9a442d0a1b976",
+        "upstreamSha256": "52a892ff093febe32188aa4776c135589d298b8bb125b58edbe9a442d0a1b976"
+      },
+      "pg/pg.h": {
+        "vendorSha256": "14e913719743e300fb76f7ffccc2cf422d018e99b41870549ce9a6d1402e243c",
+        "upstreamSha256": "14e913719743e300fb76f7ffccc2cf422d018e99b41870549ce9a6d1402e243c"
+      },
+      "fc/controlrate_profile.c": {
+        "vendorSha256": "adf8ae7ce41e806ba011f5b51d6684e72964febef7aff12be1a2fcec905ca547",
+        "upstreamSha256": "adf8ae7ce41e806ba011f5b51d6684e72964febef7aff12be1a2fcec905ca547"
+      },
+      "config/config.c": {
+        "vendorSha256": "3c0f6b94d6d3a09b5a1bd5eaf8f015ff92446751e6e64fdb1c5ae32c45cb9b5f",
+        "upstreamSha256": "a09ae1b81edaa6f7db4a1e40a88da235c0e0ea1c9a9e40c59b8e2c32ba84de29"
+      },
+      "cli/cli.c": {
+        "vendorSha256": "032294f0073c2f4bff6a5d780689a8e286676f4ecd31ea3ad7aea4f8cf58a13e",
+        "upstreamSha256": "c4cc447bb7308c22385ea46666ba7e38c4a5357be22eb977dbe72b916a1b86e9"
+      },
+      "cli/settings.c": {
+        "vendorSha256": "48a4fae71c9b8188c0d68dd7b9e02354cb4153374074b2025c42e339643f5ab8",
+        "upstreamSha256": "904a5e0935176f5d03eb7e9ae496b176df7dda0e61b5c66b7678f97354c2a3eb"
+      },
+      "cli/settings.h": {
+        "vendorSha256": "dfb6825ed75ac04a6131fa57424fd3fee284f6c5a5a3fcb159a4003a4639df8e",
+        "upstreamSha256": "dfb6825ed75ac04a6131fa57424fd3fee284f6c5a5a3fcb159a4003a4639df8e"
+      },
+      "fc/parameter_names.h": {
+        "vendorSha256": "354936f5494affbd5eb713510fad0671e1e631fb284e8a5d897b794b6e85ca5e",
+        "upstreamSha256": "354936f5494affbd5eb713510fad0671e1e631fb284e8a5d897b794b6e85ca5e"
+      },
+      "fc/rc_controls.h": {
+        "vendorSha256": "775d23ec7e36804acb2c18032e7a08f0d9027ccef38c0b5f877c75549a69c9a2",
+        "upstreamSha256": "775d23ec7e36804acb2c18032e7a08f0d9027ccef38c0b5f877c75549a69c9a2"
+      },
+      "target/common_pre.h": {
+        "vendorSha256": "27530cd939fc7edee755a4544f2cd02312bb0c123850cbe0922f18ae5fd9dcca",
+        "upstreamSha256": "23fbf11ee4416e33be94ba77dd2307e45ac52262070ce14d05175eb25119457c"
+      }
+    },
+    "buildSourceManifestSha256": "8bb35a14d764f35f407ebad24f578e4e64e7b2591808f6333c3057776fbd5b0d",
+    "targetConfigurationDefinitions": [],
+    "resetSha256": "b6890c50ec4d762798f65753641bc9c6ab3433c49af9501af72c1b50b5c921bf",
+    "values": {
+      "pitch_expo": "0",
+      "pitch_rate_limit": "1998",
+      "pitch_rc_rate": "7",
+      "pitch_srate": "67",
+      "quickrates_rc_expo": "OFF",
+      "rates_type": "ACTUAL",
+      "roll_expo": "0",
+      "roll_rate_limit": "1998",
+      "roll_rc_rate": "7",
+      "roll_srate": "67",
+      "thr_expo": "0",
+      "thr_mid": "50",
+      "throttle_limit_percent": "100",
+      "throttle_limit_type": "OFF",
+      "yaw_expo": "0",
+      "yaw_rate_limit": "1998",
+      "yaw_rc_rate": "7",
+      "yaw_srate": "67"
+    }
+  },
+  {
+    "version": "2025.12.3-alpha.KAACK_V19",
+    "commit": "3b419ca431ba5ea791d7924c8c5b266b911da5b1",
+    "packVersion": "2025.12.1",
+    "upstreamCommit": "85d201376a1fc33b223c27448808c2cc7b8f2743",
+    "vendorArchive": {
+      "url": "https://codeload.github.com/limonspb/betaflight/tar.gz/3b419ca431ba5ea791d7924c8c5b266b911da5b1",
+      "sha256": "cadbfe786592a62e711c553c467fc58660c7c5e2ea751985d45c86b18500f73a"
+    },
+    "upstreamArchive": {
+      "url": "https://codeload.github.com/betaflight/betaflight/tar.gz/85d201376a1fc33b223c27448808c2cc7b8f2743",
+      "sha256": "2444794d4b5576183e3c150c7785c6a6b1cf3e94ab43d89984ee8622dfde704f"
+    },
+    "sources": {
+      "build/version.h": {
+        "vendorSha256": "6fc62528311e4cf784af6938e3a11d01b33831f9b71567246bc6f26445ba8a25"
+      },
+      "fc/controlrate_profile.h": {
+        "vendorSha256": "1eab97b905334a23abd5f664095ec824b1ce243b5ca31c5d3239a4979395ddf6",
+        "upstreamSha256": "1eab97b905334a23abd5f664095ec824b1ce243b5ca31c5d3239a4979395ddf6"
+      },
+      "common/axis.h": {
+        "vendorSha256": "4511700e92aac76a42605247813c8fd046c92bd1cad08ce40a294d3a5f5dd4f2",
+        "upstreamSha256": "4511700e92aac76a42605247813c8fd046c92bd1cad08ce40a294d3a5f5dd4f2"
+      },
+      "config/config_reset.h": {
+        "vendorSha256": "a9126f166fd363294201a63489ef4103d8350d95f5e50380f4a1fcc72aebe5fe",
+        "upstreamSha256": "a9126f166fd363294201a63489ef4103d8350d95f5e50380f4a1fcc72aebe5fe"
+      },
+      "pg/pg.c": {
+        "vendorSha256": "52a892ff093febe32188aa4776c135589d298b8bb125b58edbe9a442d0a1b976",
+        "upstreamSha256": "52a892ff093febe32188aa4776c135589d298b8bb125b58edbe9a442d0a1b976"
+      },
+      "pg/pg.h": {
+        "vendorSha256": "e9e42a5412f254a70a0074ad21871b2e97dbf2c315e16bbd17870e77c42f05c7",
+        "upstreamSha256": "e9e42a5412f254a70a0074ad21871b2e97dbf2c315e16bbd17870e77c42f05c7"
+      },
+      "fc/controlrate_profile.c": {
+        "vendorSha256": "81885ec3ae55e5dbfc7f50bd27fec4b9e67ec63002dae34e7aba204dcb80174e",
+        "upstreamSha256": "81885ec3ae55e5dbfc7f50bd27fec4b9e67ec63002dae34e7aba204dcb80174e"
+      },
+      "config/config.c": {
+        "vendorSha256": "8cb5394658235df4cb0d26158cbef9d352f18b38699153c3ccdb804a2b94b915",
+        "upstreamSha256": "a601174ab718e1990b7fbfddeb43eac0d18a904e569179a4fab960a192d0b20a"
+      },
+      "cli/cli.c": {
+        "vendorSha256": "283ee0dd4f05cd6040f78950ee864f5fa49411b8b35875d9e74d18c7ef6adb6e",
+        "upstreamSha256": "283ee0dd4f05cd6040f78950ee864f5fa49411b8b35875d9e74d18c7ef6adb6e"
+      },
+      "cli/settings.c": {
+        "vendorSha256": "64c91cbb826415174e78767b29e04f4eea88a23a8877202790dc34f3446290ea",
+        "upstreamSha256": "094138fafac50a9e92b0d9829887ccd7b17d0afbaf5cc70f8f40de0fb6ffbe38"
+      },
+      "cli/settings.h": {
+        "vendorSha256": "b72b582f0062cadb431a2df9e2ff2842d866dbf7f758d0570964556402dbc880",
+        "upstreamSha256": "b72b582f0062cadb431a2df9e2ff2842d866dbf7f758d0570964556402dbc880"
+      },
+      "fc/parameter_names.h": {
+        "vendorSha256": "58b3563ba5134c126cbf1bff9161bc5a079eaee6a20900c6f1dc070bc2218dac",
+        "upstreamSha256": "58b3563ba5134c126cbf1bff9161bc5a079eaee6a20900c6f1dc070bc2218dac"
+      },
+      "fc/rc_controls.h": {
+        "vendorSha256": "0245d103e0ced0e05e6085bc0fad2dbe9bd116ceb97b8b8095f66cba15af46a1",
+        "upstreamSha256": "0245d103e0ced0e05e6085bc0fad2dbe9bd116ceb97b8b8095f66cba15af46a1"
+      },
+      "target/common_pre.h": {
+        "vendorSha256": "5a21128713338397ba65ea029ca6ae78b9842e51d085f7055cf7df01a79d275d",
+        "upstreamSha256": "48c96fd6c7b444630f8b743f6b4b68771e1eab065723e0a5e9fb3101d434f696"
+      }
+    },
+    "buildSourceManifestSha256": "51c59f4c84fbc95e83174d80b44d90254ee9085e36b37ce99efe7598a173cb02",
+    "targetConfigurationDefinitions": [],
+    "resetSha256": "aa019675df66f7c5d90f31166a4027b7ea5fee2629ef498b5d5dbe5d7cd48e34",
+    "values": {
+      "pitch_expo": "0",
+      "pitch_rate_limit": "1998",
+      "pitch_rc_rate": "7",
+      "pitch_srate": "67",
+      "quickrates_rc_expo": "OFF",
+      "rates_type": "ACTUAL",
+      "roll_expo": "0",
+      "roll_rate_limit": "1998",
+      "roll_rc_rate": "7",
+      "roll_srate": "67",
+      "thr_expo": "0",
+      "thr_hover": "50",
+      "thr_mid": "50",
+      "throttle_limit_percent": "100",
+      "throttle_limit_type": "OFF",
+      "yaw_expo": "0",
+      "yaw_rate_limit": "1998",
+      "yaw_rc_rate": "7",
+      "yaw_srate": "67"
+    }
+  }
+]

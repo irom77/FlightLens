@@ -310,6 +310,36 @@ fn export_blocks_missing_rates_cross_target_and_invalid_values() {
     assert!(export(&d, &r).unwrap().text.ends_with("save\n"));
 }
 #[test]
+fn audit_references_use_the_matched_schema_tag() {
+    for (version, tag) in [
+        ("4.5.3.KAACK_V19", "4.5.0"),
+        ("2025.12.3-alpha.KAACK_V19", "2025.12.1"),
+        ("4.4.3", "4.4.0"),
+    ] {
+        let d = config(&format!("# Betaflight / STM32F405 {version}\n"));
+        assert_eq!(d.firmware.version.as_deref(), Some(version));
+        for rule in inspect(&d, 0).audits {
+            assert!(
+                rule.reference.starts_with(&format!(
+                    "https://github.com/betaflight/betaflight/blob/{tag}/src/main/"
+                )),
+                "{}",
+                rule.reference
+            );
+        }
+    }
+    for header in [
+        "# Betaflight / STM32F405 2026.1.0",
+        "# Betaflight / STM32F405",
+    ] {
+        let d = config(&format!("{header}\nset motor_poles = 14\n"));
+        for rule in inspect(&d, 0).audits {
+            assert_eq!(rule.status, "not_applicable");
+            assert!(rule.reference.is_empty());
+        }
+    }
+}
+#[test]
 fn audit_positive_negative_insufficient() {
     let missing = with("");
     let finding = with("set motor_poles = 13\n");
@@ -588,12 +618,12 @@ fn omitted_rate_values_are_read_back_only_from_a_declared_baseline() {
 }
 
 #[test]
-fn vendor_builds_and_invalid_values_are_never_filled_in() {
+fn unverified_vendor_builds_and_invalid_values_are_never_filled_in() {
     // A vendor build resolves to its major/minor schema for syntax and bounds,
     // which a custom build cannot change -- but it can change any default, and
     // nothing in the dump says whether it did.
     let vendor =
-        config("# Betaflight / STM32F405 4.5.3.KAACK_V19\ndefaults nosave\nrateprofile 0\n");
+        config("# Betaflight / STM32F405 4.5.3.KAACK_V18\ndefaults nosave\nrateprofile 0\n");
     assert_eq!(
         vendor.firmware.pack_id.as_deref(),
         Some("betaflight-4.5.0-schema-1")
@@ -662,13 +692,13 @@ fn a_document_that_qualifies_for_no_defaults_says_why() {
     // Silence is the one thing this must not do: the guard that withholds a
     // default has to be as visible as the value it would have supplied.
     let vendor =
-        config("# Betaflight / STM32F405 4.5.3.KAACK_V19\ndefaults nosave\nrateprofile 0\n");
+        config("# Betaflight / STM32F405 4.5.3.KAACK_V18\ndefaults nosave\nrateprofile 0\n");
     assert!(vendor.derived.is_empty());
     assert!(vendor
         .derived_note
         .as_deref()
         .unwrap()
-        .contains("4.5.3.KAACK_V19"));
+        .contains("4.5.3.KAACK_V18"));
 
     // A backup that never resets states no baseline, so an omission carries no
     // information at all -- a different reason, and worth saying so.
@@ -786,6 +816,7 @@ fn closing_duplicate_backups_removes_every_saved_path() {
     let mut registry = SourceRegistry::default();
     let mut session = Vec::new();
     let mut duplicate_id = String::new();
+    let mut sources = Vec::new();
     for (name, craft) in [
         ("a.dump", "same"),
         ("b.dump", "same"),
@@ -803,6 +834,7 @@ fn closing_duplicate_backups_removes_every_saved_path() {
             .remember_document(&source.id, &document.id)
             .unwrap();
         session.push(registry.path(&source.id).unwrap());
+        sources.push(source.id.clone());
         if craft == "same" {
             if !duplicate_id.is_empty() {
                 assert_eq!(duplicate_id, document.id);
@@ -813,6 +845,9 @@ fn closing_duplicate_backups_removes_every_saved_path() {
     // Closing uses the imported identity even if a source disappears afterwards.
     std::fs::remove_file(&session[0]).unwrap();
     registry.forget_document(&duplicate_id, &mut session);
+    assert!(registry.path(&sources[0]).is_err());
+    assert!(registry.path(&sources[1]).is_err());
+    assert!(registry.path(&sources[2]).is_ok());
     assert_eq!(
         session,
         vec![temp.path().join("other.dump").canonicalize().unwrap()]
@@ -838,6 +873,7 @@ fn session_identity_follows_successful_reimports_and_recognized_artifacts() {
     // the old immutable snapshot must not discard the newly opened file.
     std::fs::write(&path, "# INAV / STM32F405 7.0.0\n").unwrap();
     let reopened = registry.register(path.clone()).unwrap();
+    assert_eq!(source.id, reopened.id);
     let Artifact::Recognized(second) = open_path(&path, &reopened.id).unwrap() else {
         panic!("expected recognized artifact");
     };
@@ -846,9 +882,23 @@ fn session_identity_follows_successful_reimports_and_recognized_artifacts() {
         .remember_document(&reopened.id, &second.id)
         .unwrap();
     registry.forget_document(&first.id, &mut session);
+    assert_eq!(
+        registry.path(&source.id).unwrap(),
+        path.canonicalize().unwrap()
+    );
     assert_eq!(session.len(), 1);
     registry.forget_document(&second.id, &mut session);
     assert!(session.is_empty());
+    assert!(registry.path(&source.id).is_err());
+    let fresh = registry.register(path.clone()).unwrap();
+    assert_ne!(fresh.id, source.id);
+    assert_eq!(
+        registry
+            .register(temp.path().join(".").join("backup.dump"))
+            .unwrap()
+            .id,
+        fresh.id
+    );
     assert_eq!(
         std::fs::read_to_string(path).unwrap(),
         "# INAV / STM32F405 7.0.0\n"
@@ -902,7 +952,7 @@ fn year_based_schema_defaults_and_bounds_are_verified() {
         assert!(rates(&d, 0).iter().all(|c| c.reason.is_none()));
     }
     for version in [
-        "2025.12.3-alpha.KAACK_V19",
+        "2025.12.3-alpha.KAACK_V18",
         "2025.12.99",
         "2025.12.1+custom",
     ] {
@@ -1191,6 +1241,283 @@ fn feedback_report_counts_the_complete_issue_at_the_paste_boundary() {
                 report.issue_body.chars().count() + text.chars().count(),
                 feedback::ISSUE_BODY_LIMIT
             );
+        }
+    }
+}
+
+#[test]
+fn feedback_url_limit_guidance_actually_fits() {
+    use flightlens_core::feedback;
+    for text in ["界".repeat(1900), "Ж".repeat(1900), "🚁".repeat(1000)] {
+        let mut request = report_request(feedback::ReportKind::Bug, false);
+        request.body = text;
+        let error = feedback::build_report(&request, None).unwrap_err();
+        let remove: usize = error
+            .split("Remove at least ")
+            .nth(1)
+            .unwrap()
+            .split_whitespace()
+            .next()
+            .unwrap()
+            .parse()
+            .unwrap();
+        assert!(remove > 0 && remove < request.body.chars().count());
+        request.body = request
+            .body
+            .chars()
+            .take(request.body.chars().count() - remove)
+            .collect();
+        let report = feedback::build_report(&request, None).unwrap();
+        assert!(report.url.len() <= 8000);
+    }
+}
+
+#[test]
+fn closing_latest_import_preserves_older_snapshot_source() {
+    let temp = tempfile::tempdir().unwrap();
+    let path = temp.path().join("backup.dump");
+    std::fs::write(&path, "synthetic").unwrap();
+    let mut registry = SourceRegistry::default();
+    let source = registry.register(path).unwrap();
+    registry.remember_document(&source.id, "older").unwrap();
+    registry.remember_document(&source.id, "newer").unwrap();
+    let mut session = vec![registry.path(&source.id).unwrap()];
+    registry.forget_document("newer", &mut session);
+    assert!(session.is_empty());
+    assert!(registry.path(&source.id).is_ok());
+    registry.forget_document("older", &mut session);
+    assert!(registry.path(&source.id).is_err());
+}
+
+#[test]
+fn pid_defaults_recover_only_ten_verified_invariant_gains() {
+    for patch in 0..=5 {
+        let d = config(&format!(
+            "# Betaflight / STM32F405 4.5.{patch}\ndefaults nosave\nprofile 1\nprofile 3\n"
+        ));
+        for profile in [0, 1, 3] {
+            let scope = Scope::Pid(profile);
+            assert_eq!(d.derived.values().filter(|v| v.scope == scope).count(), 10);
+            for (axis, expected) in [
+                ("roll", [45., 80., 120.]),
+                ("pitch", [47., 84., 125.]),
+                ("yaw", [45., 80., 120.]),
+            ] {
+                for (gain, value) in ["p", "i", "f"].into_iter().zip(expected) {
+                    let key = format!("{gain}_{axis}");
+                    assert_eq!(d.number(&scope, &key), None);
+                    assert_eq!(d.number_or_default(&scope, &key), Some(value));
+                }
+            }
+            assert_eq!(d.number_or_default(&scope, "d_yaw"), Some(0.));
+            for key in ["d_roll", "d_pitch", "d_min_roll", "d_max_roll"] {
+                assert_eq!(d.number_or_default(&scope, key), None);
+            }
+        }
+        assert!(!d.derived.values().any(|v| v.scope == Scope::Pid(2)));
+    }
+    for version in [
+        "4.2.11",
+        "4.3.2",
+        "4.4.3",
+        "4.5.6",
+        "4.5.3.KAACK_V19",
+        "4.5.3-RC1",
+        "2025.12.1",
+    ] {
+        let d = config(&format!(
+            "# Betaflight / STM32F405 {version}\ndefaults nosave\n"
+        ));
+        assert!(!d.derived.values().any(|v| matches!(v.scope, Scope::Pid(_))));
+    }
+    assert!(with("profile 0\n").derived.is_empty());
+    let d = with("defaults nosave\nprofile 4\n");
+    assert!(!d.derived.values().any(|v| v.scope == Scope::Pid(4)));
+}
+
+#[test]
+fn pid_defaults_respect_declarations_and_final_reset() {
+    let d = with("defaults nosave\nset p_roll = 0\nset i_roll = invalid\nprofile 1\nset p_roll = 21\nprofile 0\n");
+    assert_eq!(d.number_or_default(&Scope::Pid(0), "p_roll"), Some(0.));
+    assert_eq!(d.number_or_default(&Scope::Pid(0), "i_roll"), None);
+    assert_eq!(d.number_or_default(&Scope::Pid(1), "p_roll"), Some(21.));
+    assert_eq!(d.number_or_default(&Scope::Pid(1), "i_roll"), Some(80.));
+    assert!(!d.derived.contains_key("pid:0:p_roll"));
+    assert!(!d.derived.contains_key("pid:0:i_roll"));
+    let d = with(
+        "defaults nosave\nprofile 1\nset p_roll = 21\nsimplified_tuning apply\ndefaults nosave\n",
+    );
+    assert_eq!(d.pid_profiles, [0]);
+    assert_eq!(d.number_or_default(&Scope::Pid(0), "p_roll"), Some(45.));
+    assert!(d.parameters.is_empty());
+}
+
+#[test]
+fn ambiguous_commands_block_pid_recovery_until_reset() {
+    for command in [
+        "simplified_tuning apply",
+        "simplified_tuning APPLY",
+        "\u{feff}simplified_tuning apply",
+        "\u{feff}defaults group_id 8",
+        "simplified_tuning unknown",
+        "defaults group_id 8",
+        "defaults broken",
+        "profile invalid",
+        "profile 255",
+        "DEFAULTS nosave",
+        "set p_roll",
+    ] {
+        let d = with(&format!(
+            "defaults nosave\nprofile 1\n{command}\nprofile 0\nset p_roll = 12\n"
+        ));
+        assert!(
+            !d.derived.values().any(|v| matches!(v.scope, Scope::Pid(_))),
+            "{command}"
+        );
+        assert_eq!(d.number(&Scope::Pid(0), "p_roll"), Some(12.));
+        assert!(d
+            .diagnostics
+            .iter()
+            .any(|v| v.message.contains("Omitted PID gains remain unknown")));
+    }
+    let d = with(
+        "defaults nosave\nset simplified_master_multiplier = 120\nsimplified_tuning disable\n",
+    );
+    assert_eq!(d.number_or_default(&Scope::Pid(0), "p_roll"), Some(45.));
+    let d = with("defaults nosave\nsimplified_tuning apply\nsimplified_tuning disable\n");
+    assert_eq!(d.number_or_default(&Scope::Pid(0), "p_roll"), None);
+}
+
+#[test]
+fn recovered_pid_gains_are_never_exported() {
+    let d = with("defaults nosave\nset p_roll = 12\n");
+    assert!(d.derived.contains_key("pid:0:i_roll"));
+    // PID snippets contain only the selected explicit settings.
+    let snippet = export(&d, &request(&d, &["pids_filters"])).unwrap();
+    assert!(snippet.text.contains("set p_roll = 12"));
+    for value in d.derived.values() {
+        assert!(!snippet.text.contains(&format!("set {} =", value.key)));
+    }
+    let d = fixture("4.5.0");
+    let snippet = export(&d, &request(&d, &["pids_filters"])).unwrap();
+    for value in d.derived.values() {
+        if value.scope == Scope::Pid(0) {
+            assert!(!snippet.text.contains(&format!("set {} =", value.key)));
+        }
+    }
+}
+
+#[test]
+fn exact_vendor_rate_defaults_recover_curves_with_vendor_provenance() {
+    for (version, count) in [("4.5.3.KAACK_V19", 18), ("2025.12.3-alpha.KAACK_V19", 19)] {
+        let prefix = format!("# Betaflight / STM32F405 {version}\n");
+        let d = config(&format!("{prefix}defaults nosave\nrateprofile 3\nrateprofile 1\nset roll_expo = 0\nset pitch_expo = invalid\n"));
+        assert!(compatibility::defaults_certified(version));
+        assert_eq!(d.derived_note, None);
+        for profile in [0, 3] {
+            let scope = Scope::Rate(profile);
+            assert_eq!(
+                d.derived.values().filter(|v| v.scope == scope).count(),
+                count
+            );
+            assert!(rates(&d, profile).iter().all(|c| c.points.len() == 201));
+            assert_eq!(d.number_or_default(&scope, "roll_rc_rate"), Some(7.0));
+            assert_eq!(d.number_or_default(&scope, "roll_srate"), Some(67.0));
+            assert_eq!(d.number_or_default(&scope, "roll_rate_limit"), Some(1998.0));
+        }
+        assert!(d.derived.values().all(|v| v.source_version == version));
+        assert!(!d
+            .derived
+            .values()
+            .any(|v| v.scope == Scope::Rate(2) || matches!(v.scope, Scope::Pid(_))));
+        assert!(!d.derived.contains_key("rate:1:roll_expo"));
+        assert!(!d.derived.contains_key("rate:1:pitch_expo"));
+        let curves = rates(&d, 1);
+        assert_eq!(
+            curves
+                .iter()
+                .find(|c| c.name == "roll")
+                .unwrap()
+                .points
+                .len(),
+            201
+        );
+        assert!(curves
+            .iter()
+            .find(|c| c.name == "pitch")
+            .unwrap()
+            .points
+            .is_empty());
+        assert!(export(&d, &request(&d, &["rates"])).is_err());
+        let bare = config(&format!("{prefix}rateprofile 0\n"));
+        assert!(bare.derived.is_empty());
+        let reset = config(&format!(
+            "{prefix}defaults nosave\nrateprofile 3\nset roll_expo = 44\ndefaults nosave\n"
+        ));
+        assert_eq!(reset.rate_profiles, vec![0]);
+        assert_eq!(
+            reset.number_or_default(&Scope::Rate(0), "roll_expo"),
+            Some(0.0)
+        );
+        let complete = config(
+            &include_str!("../../../fixtures/configs/betaflight-4.5.0.dump")
+                .replace("4.5.0", version),
+        );
+        let snippet = export(&complete, &request(&complete, &["rates"])).unwrap();
+        for value in complete
+            .derived
+            .values()
+            .filter(|v| v.scope == Scope::Rate(0))
+        {
+            assert!(!snippet.text.contains(&format!("set {} =", value.key)));
+        }
+    }
+    for version in [
+        "4.5.3.KAACK_V18",
+        "4.5.3.KAACK_V20",
+        "4.5.3.KAACK_V19+custom",
+        "4.5.4.KAACK_V19",
+        "2025.12.3.KAACK_V19",
+        "2025.12.3-alpha.KAACK_V19+custom",
+    ] {
+        assert!(!compatibility::defaults_certified(version));
+        let d = config(&format!(
+            "# Betaflight / STM32F405 {version}\ndefaults nosave\n"
+        ));
+        assert!(d.derived.is_empty());
+        assert!(d
+            .derived_note
+            .unwrap()
+            .contains("not in the verified release list"));
+    }
+}
+
+#[test]
+fn ambiguous_rate_commands_withhold_recovery_until_a_new_reset() {
+    for version in ["4.5.0", "4.5.3.KAACK_V19", "2025.12.3-alpha.KAACK_V19"] {
+        for command in [
+            "rateprofile 255",
+            "rateprofile invalid",
+            "rateprofile 0 1",
+            "DEFAULTS nosave",
+            "\u{feff}DEFAULTS nosave",
+            "defaults group_id 6",
+            "set roll_expo",
+            "SET roll_expo = 20",
+        ] {
+            let input = format!(
+                "# Betaflight / STM32F405 {version}\ndefaults nosave\n{command}\nrateprofile 0\n"
+            );
+            let d = config(&input);
+            assert!(
+                !d.derived
+                    .values()
+                    .any(|v| matches!(v.scope, Scope::Rate(_))),
+                "{version}: {command}"
+            );
+            assert!(d.derived_note.unwrap().contains("ambiguous"));
+            let reset = config(&format!("{input}defaults nosave\n"));
+            assert!(rates(&reset, 0).iter().all(|c| c.points.len() == 201));
         }
     }
 }

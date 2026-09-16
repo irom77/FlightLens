@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { ConfigDocument } from "../bindings/core";
+import type { ComparisonDocument } from "../documentView";
 
 export type Profiles = { rate: number; pid: number };
 export type ComparisonSelection = {
@@ -7,7 +7,7 @@ export type ComparisonSelection = {
   baseline: string | null;
 };
 
-export function defaultProfiles(d: ConfigDocument): Profiles {
+export function defaultProfiles(d: ComparisonDocument): Profiles {
   const first = (kind: "pid" | "rate", indices: number[]) => {
     const populated = indices.filter((index) =>
       [...Object.values(d.parameters), ...Object.values(d.derived)].some(
@@ -22,7 +22,7 @@ export function defaultProfiles(d: ConfigDocument): Profiles {
   };
 }
 
-export function restoredProfiles(d: ConfigDocument, saved: Profiles) {
+export function restoredProfiles(d: ComparisonDocument, saved: Profiles) {
   const profiles = { ...saved };
   const warnings: string[] = [];
   for (const kind of ["rate", "pid"] as const) {
@@ -40,7 +40,11 @@ export function restoredProfiles(d: ConfigDocument, saved: Profiles) {
 interface Selections {
   profiles: Record<string, Profiles>;
   comparison: ComparisonSelection | null;
-  setProfile: (d: ConfigDocument, kind: keyof Profiles, value: number) => void;
+  setProfile: (
+    d: ComparisonDocument,
+    kind: keyof Profiles,
+    value: number,
+  ) => void;
   setComparison: (comparison: ComparisonSelection | null) => void;
 }
 export const useSelections = create<Selections>((set) => ({
@@ -56,7 +60,7 @@ export const useSelections = create<Selections>((set) => ({
   setComparison: (comparison) => set({ comparison }),
 }));
 
-export function useProfiles(d?: ConfigDocument) {
+export function useProfiles(d?: ComparisonDocument) {
   const state = useSelections();
   const profiles = d
     ? (state.profiles[d.id] ?? defaultProfiles(d))

@@ -1,6 +1,6 @@
-import type { ConfigDocument } from "./bindings/core";
+import type { ComparisonDocument } from "./documentView";
 
-export function comparePorts(a: ConfigDocument, b: ConfigDocument) {
+export function comparePorts(a: ComparisonDocument, b: ComparisonDocument) {
   const compatible = Boolean(
     a.firmware.packId &&
       a.firmware.packId === b.firmware.packId &&

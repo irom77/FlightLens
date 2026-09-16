@@ -1,6 +1,7 @@
 //! Offline analysis of immutable flight controller backup snapshots.
 pub mod analysis;
 pub mod compatibility;
+pub mod evidence;
 pub mod export;
 pub mod feedback;
 pub mod model;
@@ -13,3 +14,5 @@ pub use model::*;
 pub use parser::analyze;
 
 pub mod vtx;
+
+mod pid_defaults;

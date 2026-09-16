@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { defaultProfile } from "./App";
+import { defaultProfile } from "./inspectionProfiles";
 
 describe("defaultProfile", () => {
   it("opens profile 1 when it is present", () => {

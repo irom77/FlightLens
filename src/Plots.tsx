@@ -140,6 +140,56 @@ export function Plot({
           );
         })}
       </div>
+      {valid.length > 0 && (
+        <details className="plot-values">
+          <summary>Sample values</summary>
+          <div
+            className="plot-values-scroll"
+            tabIndex={0}
+            role="region"
+            aria-label="Plot sample values"
+          >
+            {valid.map((c) => (
+              <table key={c.name}>
+                <caption>{c.name}</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      {throttle
+                        ? "Throttle input (%)"
+                        : frequency
+                          ? "Frequency (Hz)"
+                          : "Stick input (%)"}
+                    </th>
+                    <th scope="col">
+                      {throttle
+                        ? "Throttle command (%)"
+                        : frequency
+                          ? "Response (dB)"
+                          : "Angular velocity (°/s)"}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {c.points.map((point, index) => (
+                    <tr key={index}>
+                      <td>
+                        {Number(
+                          (!throttle && !frequency
+                            ? point.x * 100
+                            : point.x
+                          ).toFixed(4),
+                        )}
+                      </td>
+                      <td>{Number(point.y.toFixed(4))}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ))}
+          </div>
+        </details>
+      )}
       {curves
         .filter((c) => c.reason)
         .map((c) => (

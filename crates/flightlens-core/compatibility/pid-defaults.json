@@ -1,0 +1,176 @@
+{
+  "contract": "Unmodified upstream release source and build machinery; ten gains invariant across D-min and simplified-tuning selection. No arbitrary custom source or target callbacks.",
+  "releases": [
+    {
+      "archiveUrl": "https://codeload.github.com/betaflight/betaflight/tar.gz/c155f5830d0ffdee1c34071dd21f174ffc374c81",
+      "buildSourceFiles": 995,
+      "buildSourceManifestSha256": "3186ac864543793aaa82a12be3d0991391678cba265779ab0e404263dc788a60",
+      "commit": "c155f5830d0ffdee1c34071dd21f174ffc374c81",
+      "defaultMacroLocations": {
+        "PID_PITCH_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "PID_ROLL_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "PID_YAW_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "SIMPLIFIED_TUNING_DEFAULT": [
+          "src/main/config/simplified_tuning.h"
+        ],
+        "SIMPLIFIED_TUNING_D_DEFAULT": [
+          "src/main/config/simplified_tuning.h"
+        ]
+      },
+      "targetConfigurationDefinitions": [],
+      "version": "4.5.0"
+    },
+    {
+      "archiveUrl": "https://codeload.github.com/betaflight/betaflight/tar.gz/77d01ba3b76a22909d5f09cb0628820141f95eaa",
+      "buildSourceFiles": 995,
+      "buildSourceManifestSha256": "9575a6b434b4eded3a5ce6730d60db62186280320282a51bcef8055ffe8af684",
+      "commit": "77d01ba3b76a22909d5f09cb0628820141f95eaa",
+      "defaultMacroLocations": {
+        "PID_PITCH_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "PID_ROLL_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "PID_YAW_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "SIMPLIFIED_TUNING_DEFAULT": [
+          "src/main/config/simplified_tuning.h"
+        ],
+        "SIMPLIFIED_TUNING_D_DEFAULT": [
+          "src/main/config/simplified_tuning.h"
+        ]
+      },
+      "targetConfigurationDefinitions": [],
+      "version": "4.5.1"
+    },
+    {
+      "archiveUrl": "https://codeload.github.com/betaflight/betaflight/tar.gz/024f8e13d4e642eb6a380308685b9ea3aa3ef1a2",
+      "buildSourceFiles": 995,
+      "buildSourceManifestSha256": "14d7d749f08c793847c5e86a2ff30118278a1b6a6d70f50e2b5713303ff9d81a",
+      "commit": "024f8e13d4e642eb6a380308685b9ea3aa3ef1a2",
+      "defaultMacroLocations": {
+        "PID_PITCH_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "PID_ROLL_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "PID_YAW_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "SIMPLIFIED_TUNING_DEFAULT": [
+          "src/main/config/simplified_tuning.h"
+        ],
+        "SIMPLIFIED_TUNING_D_DEFAULT": [
+          "src/main/config/simplified_tuning.h"
+        ]
+      },
+      "targetConfigurationDefinitions": [],
+      "version": "4.5.2"
+    },
+    {
+      "archiveUrl": "https://codeload.github.com/betaflight/betaflight/tar.gz/0e533ba76cb9129458578f7fa2134df1449596ba",
+      "buildSourceFiles": 995,
+      "buildSourceManifestSha256": "ece80b385d11ee6808ab3a1a43c2f88d64273ee373051d884052195e2b0fe04b",
+      "commit": "0e533ba76cb9129458578f7fa2134df1449596ba",
+      "defaultMacroLocations": {
+        "PID_PITCH_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "PID_ROLL_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "PID_YAW_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "SIMPLIFIED_TUNING_DEFAULT": [
+          "src/main/config/simplified_tuning.h"
+        ],
+        "SIMPLIFIED_TUNING_D_DEFAULT": [
+          "src/main/config/simplified_tuning.h"
+        ]
+      },
+      "targetConfigurationDefinitions": [],
+      "version": "4.5.3"
+    },
+    {
+      "archiveUrl": "https://codeload.github.com/betaflight/betaflight/tar.gz/25356b59a96dc975d777844f896b7c7855ea90e6",
+      "buildSourceFiles": 995,
+      "buildSourceManifestSha256": "5225a0da9a88554e7c7f9a3c133752ace44380f3d2823806d3f7e2d367f293ba",
+      "commit": "25356b59a96dc975d777844f896b7c7855ea90e6",
+      "defaultMacroLocations": {
+        "PID_PITCH_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "PID_ROLL_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "PID_YAW_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "SIMPLIFIED_TUNING_DEFAULT": [
+          "src/main/config/simplified_tuning.h"
+        ],
+        "SIMPLIFIED_TUNING_D_DEFAULT": [
+          "src/main/config/simplified_tuning.h"
+        ]
+      },
+      "targetConfigurationDefinitions": [],
+      "version": "4.5.4"
+    },
+    {
+      "archiveUrl": "https://codeload.github.com/betaflight/betaflight/tar.gz/4adbd3ef7cb546947600e5f747bd5453c9573063",
+      "buildSourceFiles": 995,
+      "buildSourceManifestSha256": "823d93e4f7ad9798662575698062b646aa12dab5438857339df3091693eabc89",
+      "commit": "4adbd3ef7cb546947600e5f747bd5453c9573063",
+      "defaultMacroLocations": {
+        "PID_PITCH_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "PID_ROLL_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "PID_YAW_DEFAULT": [
+          "src/main/flight/pid.h"
+        ],
+        "SIMPLIFIED_TUNING_DEFAULT": [
+          "src/main/config/simplified_tuning.h"
+        ],
+        "SIMPLIFIED_TUNING_D_DEFAULT": [
+          "src/main/config/simplified_tuning.h"
+        ]
+      },
+      "targetConfigurationDefinitions": [],
+      "version": "4.5.5"
+    }
+  ],
+  "sourceVersion": "4.5.0",
+  "values": {
+    "d_yaw": "0",
+    "f_pitch": "125",
+    "f_roll": "120",
+    "f_yaw": "120",
+    "i_pitch": "84",
+    "i_roll": "80",
+    "i_yaw": "80",
+    "p_pitch": "47",
+    "p_roll": "45",
+    "p_yaw": "45"
+  },
+  "verified": [
+    "4.5.0",
+    "4.5.1",
+    "4.5.2",
+    "4.5.3",
+    "4.5.4",
+    "4.5.5"
+  ]
+}

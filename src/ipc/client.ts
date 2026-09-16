@@ -1,6 +1,7 @@
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import type {
-  Artifact,
+  ArtifactView,
+  SyntaxLine,
   WorkspacePage,
   ExportRequest,
   FeedbackReport,
@@ -32,7 +33,7 @@ export const api = {
   openPortableSession: (retry = false, relink = false) =>
     invoke<{
       workspace: WorkspacePage | null;
-      artifacts: Artifact[];
+      artifacts: ArtifactView[];
       profiles: SessionProfiles[];
       comparison: SessionComparison | null;
       activeId: string | null;
@@ -46,14 +47,16 @@ export const api = {
     invoke<WorkspacePage | null>("workspace_page", { query, offset }),
   cancelWorkspace: () => invoke<void>("cancel_workspace"),
   openWorkspaceEntry: (entryId: string) =>
-    invoke<Artifact>("open_workspace_entry", { entryId }),
+    invoke<ArtifactView>("open_workspace_entry", { entryId }),
   ingest: (text: string, label: string) =>
-    invoke<Artifact>("ingest_text", { text, label }),
+    invoke<ArtifactView>("ingest_text", { text, label }),
   chooseFiles: () => invoke<SourceDescriptor[]>("choose_files"),
-  open: (sourceId: string) => invoke<Artifact>("open_source", { sourceId }),
+  open: (sourceId: string) => invoke<ArtifactView>("open_source", { sourceId }),
   pending: () => invoke<SourceDescriptor[]>("pending_sources"),
   restore: () => invoke<RestoredSession>("restore_session"),
   close: (configId: string) => invoke<void>("close_document", { configId }),
+  rawPage: (id: string, offset: number) =>
+    invoke<SyntaxLine[]>("raw_page", { id, offset, count: 500 }),
   inspect: (configId: string, rateProfile: number) =>
     invoke<Inspection>("inspect_config", { configId, rateProfile }),
   filter: (configId: string, key: string, scope: Scope, sampleRate: number) =>

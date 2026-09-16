@@ -159,7 +159,7 @@ impl WorkspaceIndex {
             .iter()
             .filter(|e| e.summary.relative_path.to_lowercase().contains(&query))
             .collect();
-        let offset = offset.min(matching.len().saturating_sub(1) / 50 * 50);
+        let offset = (offset / 50).min(matching.len().saturating_sub(1) / 50) * 50;
         WorkspacePage {
             root: self.root.to_string_lossy().into_owned(),
             status: self.status.clone(),
@@ -247,6 +247,28 @@ mod tests {
         assert_eq!(page.entries.len(), 50);
         assert_eq!(index.page("", 50).entries.len(), 25);
         assert_eq!(index.page("absent", 999).offset, 0);
+        for (requested, expected) in [
+            (0, 0),
+            (37, 0),
+            (49, 0),
+            (50, 50),
+            (51, 50),
+            (usize::MAX, 50),
+        ] {
+            let normalized = index.page("", requested);
+            assert_eq!(normalized.offset, expected);
+            assert_eq!(
+                normalized.entries[0].id,
+                index.page("", expected).entries[0].id
+            );
+            assert_eq!(
+                normalized.entries.len(),
+                if expected == 0 { 50 } else { 25 }
+            );
+        }
+        let filtered = index.page("backup-00", usize::MAX);
+        assert_eq!(filtered.offset, 0);
+        assert_eq!(filtered.entries.len(), 1);
         let id = &page.entries[0].id;
         let path = index.path(id).unwrap();
         fs::remove_file(path).unwrap();

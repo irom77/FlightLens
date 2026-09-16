@@ -1,6 +1,8 @@
+import { sourceLine } from "./documentView";
+import type { ComparisonDocument } from "./documentView";
 import { ThreeCollectionTable } from "./ThreeCollectionTable";
 import { useState } from "react";
-import type { ConfigDocument, Mode } from "./bindings/core";
+import type { Mode } from "./bindings/core";
 import { compareModes } from "./compareModes";
 
 function ModeValue({
@@ -8,13 +10,13 @@ function ModeValue({
   value,
   side,
 }: {
-  document: ConfigDocument;
+  document: ComparisonDocument;
   value?: Mode;
   side: string;
 }) {
   if (!value)
     return <span className="unknown-badge">Unknown · not declared</span>;
-  const source = document.syntax.find((line) => line.line === value.line);
+  const source = sourceLine(document, value.line);
   return (
     <>
       <strong>{value.name}</strong>
@@ -48,9 +50,9 @@ export function ModeComparison({
   c,
   sides,
 }: {
-  a: ConfigDocument;
-  b: ConfigDocument;
-  c?: ConfigDocument;
+  a: ComparisonDocument;
+  b: ComparisonDocument;
+  c?: ComparisonDocument;
   sides?: [string, string, string];
 }) {
   const [query, setQuery] = useState("");

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { ArtifactView } from "../bindings/core";
 export const tabs = [
   "Rates",
   "PID",
@@ -37,32 +38,49 @@ export const savedActive = (): string | null => {
 };
 interface WorkspaceState {
   documents: DocumentSummary[];
+  artifacts: ReadonlyMap<string, ArtifactView>;
   activeId: string | null;
   tab: Tab;
-  add: (document: DocumentSummary) => void;
+  add: (artifact: ArtifactView) => void;
   close: (id: string) => void;
   activate: (id: string) => void;
   setTab: (tab: Tab) => void;
 }
 export const useWorkspace = create<WorkspaceState>((set, get) => ({
   documents: [],
+  // In-memory only: preference storage never receives backup contents.
+  artifacts: new Map(),
   activeId: null,
   tab: "Rates",
-  add: (document) => {
+  add: (artifact) => {
+    const document = {
+      id: artifact.document.id,
+      title: artifact.document.title,
+      family:
+        artifact.kind === "config"
+          ? artifact.document.firmware.family
+          : artifact.document.family,
+    };
     rememberActive(document.id);
     set((s) => ({
+      artifacts: new Map(s.artifacts).set(document.id, artifact),
       documents: [...s.documents.filter((d) => d.id !== document.id), document],
       activeId: document.id,
     }));
   },
   close: (id) => {
-    set((s) => ({
-      documents: s.documents.filter((d) => d.id !== id),
-      activeId:
-        s.activeId === id
-          ? (s.documents.find((d) => d.id !== id)?.id ?? null)
-          : s.activeId,
-    }));
+    set((s) => {
+      const artifacts = new Map(s.artifacts);
+      artifacts.delete(id);
+      return {
+        artifacts,
+        documents: s.documents.filter((d) => d.id !== id),
+        activeId:
+          s.activeId === id
+            ? (s.documents.find((d) => d.id !== id)?.id ?? null)
+            : s.activeId,
+      };
+    });
     rememberActive(get().activeId);
   },
   activate: (activeId) => {

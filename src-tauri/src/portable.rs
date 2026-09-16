@@ -149,7 +149,7 @@ fn restore_comparison(
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct OpenResult {
-    artifacts: Vec<Artifact>,
+    artifacts: Vec<ArtifactView>,
     profiles: Vec<ProfileSelection>,
     comparison: Option<ComparisonSelection>,
     active_id: Option<String>,
@@ -212,82 +212,68 @@ pub async fn save_portable_session(
         for id in &request.document_ids {
             sources.push(session_source(&state, id)?);
         }
-        let Some(file) = app
-            .dialog()
-            .file()
-            .add_filter("FlightLens session", &["flightlens"])
-            .set_file_name("workspace.flightlens")
-            .blocking_save_file()
-        else {
-            return Ok(false);
-        };
-        let path = file
-            .into_path()
-            .map_err(|_| "Only local files are supported")?;
-        let directory = path.parent().ok_or("Session directory unavailable")?;
-        let root = state
-            .index
-            .lock()
-            .map_err(|_| "Workspace unavailable")?
-            .as_ref()
-            .map(|i| i.root());
-        let mut manifest = PortableSession {
-            format: "flightlens".into(),
-            version: 1,
-            workspace: root
-                .map(|root| reference_path(directory, &root))
-                .transpose()?,
-            documents: sources
-                .iter()
-                .zip(&request.document_ids)
-                .map(|(path, id)| {
-                    let profiles = request
-                        .profiles
+        save::save_new(
+            &app,
+            "workspace.flightlens",
+            ("FlightLens session", &["flightlens"]),
+            |path| {
+                let directory = path.parent().ok_or("Session directory unavailable")?;
+                let root = state
+                    .index
+                    .lock()
+                    .map_err(|_| "Workspace unavailable")?
+                    .as_ref()
+                    .map(|i| i.root());
+                let mut manifest = PortableSession {
+                    format: "flightlens".into(),
+                    version: 1,
+                    workspace: root
+                        .map(|root| reference_path(directory, &root))
+                        .transpose()?,
+                    documents: sources
                         .iter()
-                        .find(|p| &p.document_id == id)
-                        .ok_or("Session profile unavailable")?;
-                    Ok(SessionDocument {
-                        path: reference_path(directory, path)?,
-                        sha256: id.clone(),
-                        rate_profile: profiles.rate_profile,
-                        pid_profile: profiles.pid_profile,
-                    })
-                })
-                .collect::<Result<_, String>>()?,
-            active: request
-                .active_id
-                .and_then(|id| request.document_ids.iter().position(|d| d == &id)),
-            comparison,
-            tab: request.tab,
-            theme: request.theme,
-        };
-        if let Some(unresolved) = state
-            .unresolved_session
-            .lock()
-            .map_err(|_| "Session recovery unavailable")?
-            .as_ref()
-        {
-            let mut recovery = unresolved.clone();
-            if !request.preserve_unavailable_selections {
-                recovery.active = None;
-                recovery.comparison = None;
-            } else if request.comparison.is_some() {
-                // An explicitly configured available comparison replaces recovery.
-                recovery.comparison = None;
-            }
-            retain_unresolved(&mut manifest, directory, &recovery)?;
-        }
-        let bytes = manifest.encode()?;
-        let mut output = std::fs::OpenOptions::new()
-            .write(true)
-            .create_new(true)
-            .open(&path)
-            .map_err(|_| "Choose a new filename. Existing files are never overwritten.")?;
-        output
-            .write_all(&bytes)
-            .and_then(|_| output.sync_all())
-            .map_err(|_| "Cannot save session; the new file may be incomplete")?;
-        Ok(true)
+                        .zip(&request.document_ids)
+                        .map(|(path, id)| {
+                            let profiles = request
+                                .profiles
+                                .iter()
+                                .find(|p| &p.document_id == id)
+                                .ok_or("Session profile unavailable")?;
+                            Ok(SessionDocument {
+                                path: reference_path(directory, path)?,
+                                sha256: id.clone(),
+                                rate_profile: profiles.rate_profile,
+                                pid_profile: profiles.pid_profile,
+                            })
+                        })
+                        .collect::<Result<_, String>>()?,
+                    active: request
+                        .active_id
+                        .as_ref()
+                        .and_then(|id| request.document_ids.iter().position(|d| d == id)),
+                    comparison: comparison.clone(),
+                    tab: request.tab.clone(),
+                    theme: request.theme.clone(),
+                };
+                if let Some(unresolved) = state
+                    .unresolved_session
+                    .lock()
+                    .map_err(|_| "Session recovery unavailable")?
+                    .as_ref()
+                {
+                    let mut recovery = unresolved.clone();
+                    if !request.preserve_unavailable_selections {
+                        recovery.active = None;
+                        recovery.comparison = None;
+                    } else if request.comparison.is_some() {
+                        // An explicitly configured available comparison replaces recovery.
+                        recovery.comparison = None;
+                    }
+                    retain_unresolved(&mut manifest, directory, &recovery)?;
+                }
+                manifest.encode()
+            },
+        )
     })
     .await
     .map_err(|_| "Session save worker failed")?
@@ -331,7 +317,7 @@ pub async fn open_portable_session(
         let mut unresolved = UnresolvedSession { session_path: path.clone(), directory: directory.to_path_buf(), documents: Vec::new(), workspace: None, active: None, comparison: None };
         let mut loaded_ids = vec![None; manifest.documents.len()];
         for (index, entry) in manifest.documents.iter_mut().enumerate() {
-            let loaded = (|| -> Result<Artifact, String> {
+            let loaded = (|| -> Result<ArtifactView, String> {
                 let original = resolve_path(directory, &entry.path).and_then(|path| {
                     checked_backup(&path, &entry.sha256).map(|text| (path, text))
                 });
@@ -352,9 +338,9 @@ pub async fn open_portable_session(
                 let source = state.sources.lock().map_err(|_| "Sources unavailable")?.register(path)?;
                 let artifact = flightlens_core::analyze(&text, &source.label, &source.id)?;
                 let artifact = keep(&state, artifact)?;
-                let id = match &artifact { Artifact::Config(d) => &d.id, Artifact::Recognized(d) => &d.id };
+                let id = match &artifact { ArtifactView::Config(d) => &d.id, ArtifactView::Recognized(d) => &d.id };
                 remember(&app, &source.id, id);
-                if matches!(&artifact, Artifact::Config(_)) {
+                if matches!(&artifact, ArtifactView::Config(_)) {
                     loaded_ids[index] = Some(id.clone());
                     result.profiles.push(ProfileSelection { document_id: id.clone(), rate_profile: entry.rate_profile, pid_profile: entry.pid_profile });
                 }
@@ -460,8 +446,8 @@ mod tests {
             )
             .unwrap();
             let id = match &artifact {
-                Artifact::Config(d) => &d.id,
-                Artifact::Recognized(d) => &d.id,
+                ArtifactView::Config(d) => &d.id,
+                ArtifactView::Recognized(d) => &d.id,
             };
             let error = session_source(&state, id).unwrap_err();
             assert!(error.contains("Save the original backup separately and open that file first"));

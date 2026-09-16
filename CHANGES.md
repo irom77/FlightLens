@@ -6,6 +6,100 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## 0.10.2 — 2026-09-16
+
+- Recover omitted rate-profile settings for source-verified Betaflight
+  `4.5.3.KAACK_V19` and `2025.12.3-alpha.KAACK_V19` backups with a reset
+  baseline. Rate curves can use these values, labeled with the
+  exact vendor version; recovered settings are never exported. Other vendor
+  identities remain unverified. Ambiguous reset, rate-profile selector or
+  assignment commands withhold rate recovery until a new valid reset.
+
+- Recover ten omitted PID gains (P/I/F on all axes and yaw D) from verified
+  official Betaflight 4.5.0–4.5.5 defaults after a valid reset. PID inspection
+  labels recovered values and comparisons include them; export still requires
+  explicit declarations. Roll/pitch D, D-min/D-max, unverified releases and
+  ambiguous reset/profile/tuning sequences keep missing values unknown.
+
+- Import compact inspection documents and fetch Raw source in pages of at most
+  500 lines, keeping full source in the backend. Source jumps wait for their page;
+  stale requests after navigation/reload/close cannot replace the current source.
+  Failed source requests show an error with a retry action.
+
+- Reuse immutable backend document snapshots during analysis, export, feedback
+  and session validation instead of copying full backups on every request.
+  Imports move the original document into backend storage without a full clone.
+  In-flight requests retain their snapshot when a document closes or reloads.
+
+- Add an offline synthetic document-cost probe and IPC assessment for maintainers,
+  identifying payload expansion and measuring a tested compact source-evidence
+  projection for future raw paging. Comparisons now support the compact document
+  view, with a generated Rust/TypeScript contract and cross-language regression
+  coverage consuming serialized Rust views from synthetic inputs.
+  The probe compares full and compact import payloads and parsed JS heap.
+  Frontend tests now require Cargo
+  (provided by test.sh and CI).
+
+- Keep in-memory artifacts and document metadata together in the reactive
+  workspace store, removing App's manual render counter and making document
+  replacement and removal a single state update.
+
+- Split the inspector and its tab views out of App.tsx into separate modules for
+  maintenance, preserving the existing interface and navigation behavior.
+
+- Show source-verified mode names for 30 official Betaflight releases and both
+  supported KAACK builds, including camera controls, VTX pit mode, user switches
+  and launch control. Labels follow the release; unknown IDs remain numeric.
+
+- Snippet and portable-session saves now suggest unused filenames and reopen the
+  save dialog with an explanation after a filename collision. Existing files
+  remain protected; session references follow the final destination folder.
+
+- Add a developer verification tool and pinned upstream evidence for PID-default
+  research across Betaflight 4.5.0–4.5.5, including the CLI diff omission path
+  and platform include order, plus a source-checked C harness for default and
+  slider/mode tuning arithmetic and the complete SITL PID-profile reset through
+  the upstream dispatcher with a PID-only host registry under
+  O0/O2/Ofast. A hardware preprocessing tool verifies a pinned SPEEDYBEEF405V4
+  configuration against 44 public upstream inputs; the verified PID recovery
+  scope is described above.
+
+- Add JavaScript/TypeScript and React hook lint checks to local validation,
+  branch/PR CI, and both installer release workflows.
+
+- Add expandable sample-value tables to rate, throttle, and filter plots,
+  accessible by keyboard and touch with explicit input/output units.
+
+- Normalize workspace page requests to 50-entry boundaries, including callers
+  that supply an offset between pages.
+
+- Bound retained file-source registrations to 4,096 and queued native drops to
+  256, with an error when full. Duplicate queued drops reuse their existing entry;
+  queued imports and open documents keep their source IDs.
+
+- Reuse file-source registrations on repeated imports and release them when all
+  associated documents close, while preserving references for older snapshots.
+
+- Show throttle previews for verified official Betaflight 4.2.1–4.2.11, 4.3.1,
+  and 4.4.1–4.4.3 releases when the selected profile declares valid inputs.
+
+- Point audit references at the matched Betaflight schema tag, label them as
+  schema references, and omit them when no schema matches. Vendor build suffixes
+  no longer produce nonexistent upstream tags.
+
+- Run Windows/macOS checks on branch pushes and pull requests, and require Rust
+  formatting and warning-free Clippy checks before building release installers.
+  Local `./test.sh` now includes workspace Clippy checks.
+
+- Keep keyboard focus inside paste and feedback dialogs, support Escape dismissal,
+  and return focus to the opener when closed. Prevent the paste shortcut from
+  opening another dialog over an existing modal.
+
+- Wait for a pause in typing before preparing feedback previews, avoiding repeated
+  backup redaction during a typing burst while keeping stale previews unfilable.
+- Give feedback reports that exceed the encoded URL limit a calculated shortening
+  instruction, including for non-Latin descriptions.
+
 ## 0.10.1 — 2026-09-14
 
 - Move session controls from the sidebar into the main area in inspection and comparison. Keep Open and Save visible, with recovery controls under Session options.

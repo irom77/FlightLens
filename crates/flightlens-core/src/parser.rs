@@ -12,8 +12,8 @@ pub const AUX_CHANNEL_COUNT: u32 = 14;
 /// document whose `defaults` line states that baseline, a key no `set` touches
 /// still holds the reset value. Reading that is decoding the format, not
 /// inventing a value -- but only while the baseline itself is certain, so the
-/// pack must carry a proven reset table and the firmware must be a plain
-/// release on the certified line rather than a vendor build.
+/// pack must carry a proven reset table and the exact firmware version must
+/// have independent certification, including any vendor suffix.
 fn derive_defaults(
     d: &mut ConfigDocument,
     pack: Option<&'static compatibility::Pack>,
@@ -33,13 +33,44 @@ fn derive_defaults(
         );
         return;
     };
-    if !compatibility::defaults_certified(&version) {
+    let Some(source_version) = compatibility::rate_default_source(&version) else {
         let note = format!(
             "This build reports {version}, which is not in the verified release list. Values the source omits are left unknown rather than read back from the Betaflight {} defaults, because an unverified or custom build may change any of them and nothing in the backup says whether it did.",
             pack.version
         );
         d.diagnostics.push(Diagnostic {
             line: Some(line),
+            severity: "info".into(),
+            message: note.clone(),
+        });
+        d.derived_note = Some(note);
+        return;
+    };
+    // A malformed selector/reset/assignment cannot establish which omitted
+    // values still belong to the reset. A later valid reset clears this doubt.
+    let uncertain = d
+        .syntax
+        .iter()
+        .filter(|s| s.line > line)
+        .find(|s| match &s.command {
+            Command::Rateprofile { index } => *index >= pack.profiles.rate,
+            Command::Unsupported | Command::Malformed => {
+                let first = s
+                    .raw
+                    .trim_start_matches('\u{feff}')
+                    .split_whitespace()
+                    .next()
+                    .unwrap_or("");
+                ["defaults", "rateprofile", "set"]
+                    .iter()
+                    .any(|name| first.eq_ignore_ascii_case(name))
+            }
+            _ => false,
+        });
+    if let Some(s) = uncertain {
+        let note = "Omitted rate-profile settings remain unknown after an ambiguous reset, rate-profile selector or assignment. A later valid defaults command can establish a new baseline.".to_owned();
+        d.diagnostics.push(Diagnostic {
+            line: Some(s.line),
             severity: "info".into(),
             message: note.clone(),
         });
@@ -60,7 +91,11 @@ fn derive_defaults(
             // A declared key is never derived, even when its value is invalid:
             // masking a value the schema rejects with the default would report
             // a configuration the source does not contain.
-            if d.parameters.contains_key(&id) {
+            if d.parameters.contains_key(&id)
+                || d.parameters
+                    .values()
+                    .any(|p| p.key == *key && p.scope == Scope::Unknown)
+            {
                 continue;
             }
             let (value, valid) = schema.parse(raw);
@@ -74,7 +109,7 @@ fn derive_defaults(
                     scope: scope.clone(),
                     value,
                     raw_value: raw.clone(),
-                    source_version: pack.version.clone(),
+                    source_version: source_version.into(),
                 },
             );
             count += 1;
@@ -82,7 +117,7 @@ fn derive_defaults(
     }
     if count > 0 {
         d.diagnostics.push(Diagnostic{line:Some(line),severity:"info".into(),message:format!(
-            "This line resets the configuration, so the {count} rate-profile settings the source never assigns still hold their Betaflight {} defaults. They are shown as read back from the firmware, never as declared, and are not exported.", pack.version)});
+            "This line resets the configuration, so the {count} rate-profile settings the source never assigns still hold their Betaflight {} defaults. They are shown as read back from the firmware, never as declared, and are not exported.", source_version)});
     }
 }
 /// A declared name, or `None` when the backup leaves it unset.
@@ -384,7 +419,7 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
     let mut pids = BTreeSet::new();
     let mut rates = BTreeSet::new();
     let mut offset = 0;
-    d.diagnostics.push(Diagnostic{line:None,severity:"info".into(),message:"No uniquely verified target baseline is bundled. Omitted values remain unknown; this is a declared configuration, not a simulation of boot-time corrections.".into()});
+    d.diagnostics.push(Diagnostic{line:None,severity:"info".into(),message:"Only independently certified profile defaults can be recovered. Other omitted values remain unknown; this is a declared configuration, not a simulation of boot-time corrections.".into()});
     if pack.is_none() {
         d.diagnostics.push(Diagnostic{line:None,severity:"warning".into(),message:"No compatible schema matches this firmware line. Raw inspection is available; semantic plots and export are disabled.".into()});
     }
@@ -537,7 +572,7 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
                 d.modes.push(Mode {
                     index: *index,
                     mode_id: *mode,
-                    name: mode_name(*mode),
+                    name: mode_name(*mode, d.firmware.version.as_deref()),
                     channel: *channel,
                     channel_assigned,
                     start: *start,
@@ -590,6 +625,7 @@ pub fn analyze(text: &str, label: &str, source_id: &str) -> Result<Artifact, Str
     (d.craft_name, d.pilot_name) = declared_names(&d.syntax);
     d.firmware.board_name = declared_board(&d.syntax);
     derive_defaults(&mut d, pack, baseline);
+    crate::pid_defaults::derive(&mut d, pack, baseline);
     Ok(Artifact::Config(Box::new(d)))
 }
 pub(crate) fn named_serial_version(version: Option<&str>) -> bool {
@@ -670,7 +706,26 @@ fn port_functions(mask: u32, modern: bool) -> Vec<String> {
     }
     out
 }
-fn mode_name(id: u32) -> String {
+fn mode_name(id: u32, version: Option<&str>) -> String {
+    #[derive(serde::Deserialize)]
+    struct ModeTable {
+        names: std::collections::BTreeMap<u32, String>,
+    }
+    static TABLES: std::sync::OnceLock<std::collections::BTreeMap<String, ModeTable>> =
+        std::sync::OnceLock::new();
+    let tables = TABLES.get_or_init(|| {
+        serde_json::from_str(include_str!("../compatibility/mode-names.json"))
+            .expect("bundled mode tables must validate")
+    });
+    if let Some(table) = version.and_then(|v| tables.get(v)) {
+        return table
+            .names
+            .get(&id)
+            .cloned()
+            .unwrap_or_else(|| format!("Mode ID {id}"));
+    }
+    // Preserve the historical labels for unverified versions; newly recognized
+    // modes require an exact source-verified release, including vendor suffixes.
     match id {
         0 => "ARM",
         1 => "ANGLE",
@@ -715,5 +770,31 @@ mod serial_tests {
         assert_eq!(serial_port_token(50, true).as_deref(), Some("UART0"));
         assert!(serial_port_token(50, false).is_none());
         assert!(serial_port_token(0, true).is_none());
+    }
+}
+
+#[cfg(test)]
+mod mode_tests {
+    use super::*;
+
+    #[test]
+    fn mode_labels_follow_release_identity_and_preserve_unknown_ids() {
+        for (version, id, expected) in [
+            ("4.2.0", 37, "BEEP GPS SATELLITE COUNT"),
+            ("4.5.5", 32, "CAMERA CONTROL 1"),
+            ("4.5.3.KAACK_V19", 39, "VTX PIT MODE"),
+            ("4.5.0", 54, "LAP TIMER RESET"),
+            ("4.2.0", 54, "Mode ID 54"),
+            ("4.5.0-custom", 54, "Mode ID 54"),
+            ("4.5.0", 38, "Mode ID 38"),
+            ("2025.12.5", 200, "Mode ID 200"),
+        ] {
+            let text = format!("# Betaflight / STM32F405 {version}\naux 0 {id} 0 1300 1700 0 0\n");
+            let Artifact::Config(doc) = analyze(&text, "test", "test").unwrap() else {
+                panic!("expected config");
+            };
+            assert_eq!(doc.modes[0].name, expected, "{version}, {id}");
+            assert_eq!(doc.modes[0].mode_id, id);
+        }
     }
 }

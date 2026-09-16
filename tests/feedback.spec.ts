@@ -1,13 +1,24 @@
 import { test, expect } from "@playwright/test";
 import { execFileSync } from "node:child_process";
 
-const fixture = JSON.parse(
-  execFileSync(
-    process.env.FLIGHTLENS_CARGO ?? "cargo",
-    ["run", "--quiet", "-p", "flightlens-core", "--bin", "preview_fixture"],
-    { encoding: "utf8" },
-  ),
-);
+import type { ArtifactView, Inspection } from "../src/bindings/core";
+
+type FeedbackWindow = Window & {
+  __reportCalls: number;
+  __delayReports: boolean;
+  __pendingReports: (() => void)[];
+  __copied?: string;
+  __filed: unknown[];
+};
+
+const fixture: { artifact: ArtifactView; inspections: Inspection[] } =
+  JSON.parse(
+    execFileSync(
+      process.env.FLIGHTLENS_CARGO ?? "cargo",
+      ["run", "--quiet", "-p", "flightlens-core", "--bin", "preview_fixture"],
+      { encoding: "utf8" },
+    ),
+  );
 
 const redacted = "# Betaflight 4.5.0\nset craft_name = <redacted>\n";
 
@@ -28,6 +39,7 @@ test("feedback is reviewed in the app and filed by the reporter", async ({
       win.isTauri = true;
       win.__TAURI_EVENT_PLUGIN_INTERNALS__ = { unregisterListener: () => {} };
       win.__filed = [];
+      win.__reportCalls = 0;
       win.__pendingReports = [];
       // The page has no clipboard permission in a test browser, and the copy
       // is what the report depends on, so record it instead.
@@ -57,10 +69,11 @@ test("feedback is reviewed in the app and filed by the reporter", async ({
             return [];
           if (command === "restore_session")
             return { sources: [], unavailable: [] };
-          if (command === "ingest_text") return (f as any).artifact;
+          if (command === "ingest_text") return f.artifact;
           if (command === "inspect_config")
-            return (f as any).inspections[args.rateProfile!];
+            return f.inspections[args.rateProfile!];
           if (command === "feedback_report") {
+            (win.__reportCalls as number)++;
             // Mirrors the validation the core performs, so the dialog is
             // exercised in both the incomplete and the complete state.
             const r = args.request!;
@@ -123,40 +136,76 @@ test("feedback is reviewed in the app and filed by the reporter", async ({
   await expect(dialog.locator(".feedback-removed")).toContainText(
     "Line 2: craft_name (name)",
   );
+  // A typing burst must not rebuild the attached backup for every character.
+  await page.clock.install();
+  await page.clock.pauseAt(new Date());
+  const calls = await page.evaluate(
+    () => (window as FeedbackWindow).__reportCalls,
+  );
+  await dialog.getByLabel("Description").pressSequentially(" More details.");
+  await expect(submit).toBeDisabled();
+  expect(
+    await page.evaluate(() => (window as FeedbackWindow).__reportCalls),
+  ).toBe(calls);
+  await page.clock.runFor(300);
+  await expect(submit).toBeEnabled();
+  expect(
+    await page.evaluate(() => (window as FeedbackWindow).__reportCalls),
+  ).toBe(calls + 1);
+  await page.clock.resume();
   // Hold IPC responses so edits cannot accidentally submit a previous preview.
   await page.evaluate(() => {
-    (window as any).__delayReports = true;
+    (window as FeedbackWindow).__delayReports = true;
   });
   await dialog.getByLabel("Attach the open configuration").uncheck();
   await expect(submit).toBeDisabled();
   await expect(dialog.locator(".feedback-preview")).toHaveCount(0);
+  await expect
+    .poll(() =>
+      page.evaluate(() => (window as FeedbackWindow).__pendingReports.length),
+    )
+    .toBe(1);
   await dialog.getByLabel("Attach the open configuration").check();
+  await expect
+    .poll(() =>
+      page.evaluate(() => (window as FeedbackWindow).__pendingReports.length),
+    )
+    .toBe(2);
   await dialog
     .getByLabel("Description")
     .fill("Updated description that must appear in the reviewed report.");
   await expect(submit).toBeDisabled();
   await expect
-    .poll(() => page.evaluate(() => (window as any).__pendingReports.length))
+    .poll(() =>
+      page.evaluate(() => (window as FeedbackWindow).__pendingReports.length),
+    )
     .toBe(3);
   // Resolve the latest request first, then stale requests in reverse order.
   await page.evaluate(() => {
-    (window as any).__pendingReports.pop()();
+    (window as FeedbackWindow).__pendingReports.pop()!();
   });
   await expect(submit).toBeEnabled();
   await expect(dialog.locator(".feedback-preview")).toContainText(
     "Updated description",
   );
   await page.evaluate(() => {
-    for (const resolve of (window as any).__pendingReports.reverse()) resolve();
+    for (const resolve of (window as FeedbackWindow).__pendingReports.reverse())
+      resolve();
   });
   await expect(dialog.locator(".feedback-preview")).toContainText(
     "Updated description",
   );
-  expect(await page.evaluate(() => (window as any).__copied)).toBeUndefined();
+  expect(
+    await page.evaluate(() => (window as FeedbackWindow).__copied),
+  ).toBeUndefined();
   await submit.click();
   await expect(dialog).toContainText("open in your browser");
-  expect(await page.evaluate(() => (window as any).__copied)).toBe(redacted);
-  expect(await page.evaluate(() => (window as any).__filed)).toMatchObject([
+  expect(await page.evaluate(() => (window as FeedbackWindow).__copied)).toBe(
+    redacted,
+  );
+  expect(
+    await page.evaluate(() => (window as FeedbackWindow).__filed),
+  ).toMatchObject([
     {
       configId: fixture.artifact.document.id,
       request: {

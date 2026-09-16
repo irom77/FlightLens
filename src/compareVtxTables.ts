@@ -1,4 +1,6 @@
-import type { ConfigDocument, SyntaxLine } from "./bindings/core";
+import { comparisonSyntax } from "./documentView";
+import type { ComparisonDocument } from "./documentView";
+import type { SyntaxLine } from "./bindings/core";
 import compatibility from "./vtxTableCompatibility.json";
 
 export type VtxTableValue = { value: string; source: SyntaxLine };
@@ -92,15 +94,16 @@ export function applyVtxTableLine(
   values.clear();
 }
 
-function table(document: ConfigDocument) {
+function table(document: ComparisonDocument) {
   const values = new Map<string, VtxTableValue>();
-  for (const source of document.syntax) applyVtxTableLine(values, source);
+  for (const source of comparisonSyntax(document))
+    applyVtxTableLine(values, source);
   return values;
 }
 
-export function compareVtxTables(a: ConfigDocument, b: ConfigDocument) {
+export function compareVtxTables(a: ComparisonDocument, b: ComparisonDocument) {
   const releases: Record<string, string | undefined> = compatibility.releases;
-  const certified = (document: ConfigDocument) =>
+  const certified = (document: ComparisonDocument) =>
     Boolean(
       document.firmware.family === compatibility.family &&
         document.firmware.version &&

@@ -1,0 +1,826 @@
+[
+  {
+    "version": "4.2.0",
+    "commit": "8f2d21460a9913d58bd1c33f8348c3791451fb45",
+    "matchesBaseline": "4.2.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "860ef9913cdc3f89e4af20ac6baf2e00e86241edb4b9ca205c4a8aa0c837787b",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "5cf519938697a60287ab981fd09272bad72d7551b81644e322809aa14e1f2611",
+        "verifiedDeclarations": [
+          "{ \"thr_mid\",                    VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ \"thr_expo\",                   VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ \"throttle_limit_type\",        VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ \"throttle_limit_percent\",     VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "9a5962d5d298d723d513a88f355e0d2d5a3afd41f1076d9c39a764e9a56d0142",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "5d772a58b5a8781068b18ebec7b5901d865b164ba9990463b6a9b1ac1a70809a",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.2.11",
+    "commit": "948ba6339766851806d7637370829ea0ff74c690",
+    "matchesBaseline": "4.2.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "860ef9913cdc3f89e4af20ac6baf2e00e86241edb4b9ca205c4a8aa0c837787b",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "9a1efa0d6040da5a25fcd09128383cf210e13603a6a48a79dcf89cfcca8bc9a2",
+        "verifiedDeclarations": [
+          "{ \"thr_mid\",                    VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ \"thr_expo\",                   VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ \"throttle_limit_type\",        VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ \"throttle_limit_percent\",     VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "9a5962d5d298d723d513a88f355e0d2d5a3afd41f1076d9c39a764e9a56d0142",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "5d772a58b5a8781068b18ebec7b5901d865b164ba9990463b6a9b1ac1a70809a",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.2.10",
+    "commit": "e4b21269952ec6e23c91be0703661ea7e61e6cfd",
+    "matchesBaseline": "4.2.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "860ef9913cdc3f89e4af20ac6baf2e00e86241edb4b9ca205c4a8aa0c837787b",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "9a1efa0d6040da5a25fcd09128383cf210e13603a6a48a79dcf89cfcca8bc9a2",
+        "verifiedDeclarations": [
+          "{ \"thr_mid\",                    VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ \"thr_expo\",                   VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ \"throttle_limit_type\",        VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ \"throttle_limit_percent\",     VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "9a5962d5d298d723d513a88f355e0d2d5a3afd41f1076d9c39a764e9a56d0142",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "5d772a58b5a8781068b18ebec7b5901d865b164ba9990463b6a9b1ac1a70809a",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.2.9",
+    "commit": "e097f4ab7f16d6bb9a08abc6842ff2b8cffffd59",
+    "matchesBaseline": "4.2.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "860ef9913cdc3f89e4af20ac6baf2e00e86241edb4b9ca205c4a8aa0c837787b",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "9a1efa0d6040da5a25fcd09128383cf210e13603a6a48a79dcf89cfcca8bc9a2",
+        "verifiedDeclarations": [
+          "{ \"thr_mid\",                    VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ \"thr_expo\",                   VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ \"throttle_limit_type\",        VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ \"throttle_limit_percent\",     VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "9a5962d5d298d723d513a88f355e0d2d5a3afd41f1076d9c39a764e9a56d0142",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "5d772a58b5a8781068b18ebec7b5901d865b164ba9990463b6a9b1ac1a70809a",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.2.8",
+    "commit": "101738d8e86eb86fb98fefa9a25faa3c124584ca",
+    "matchesBaseline": "4.2.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "860ef9913cdc3f89e4af20ac6baf2e00e86241edb4b9ca205c4a8aa0c837787b",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "a352e30df61002fd8923c44d70097dccf534d2c4e3bfdb671f4bcf1307a59aaa",
+        "verifiedDeclarations": [
+          "{ \"thr_mid\",                    VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ \"thr_expo\",                   VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ \"throttle_limit_type\",        VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ \"throttle_limit_percent\",     VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "9a5962d5d298d723d513a88f355e0d2d5a3afd41f1076d9c39a764e9a56d0142",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "5d772a58b5a8781068b18ebec7b5901d865b164ba9990463b6a9b1ac1a70809a",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.2.7",
+    "commit": "657efec8cfa83f7e0dbb73a18ad3093b938e7b23",
+    "matchesBaseline": "4.2.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "860ef9913cdc3f89e4af20ac6baf2e00e86241edb4b9ca205c4a8aa0c837787b",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "a352e30df61002fd8923c44d70097dccf534d2c4e3bfdb671f4bcf1307a59aaa",
+        "verifiedDeclarations": [
+          "{ \"thr_mid\",                    VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ \"thr_expo\",                   VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ \"throttle_limit_type\",        VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ \"throttle_limit_percent\",     VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "9a5962d5d298d723d513a88f355e0d2d5a3afd41f1076d9c39a764e9a56d0142",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "5d772a58b5a8781068b18ebec7b5901d865b164ba9990463b6a9b1ac1a70809a",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.2.6",
+    "commit": "a4b6db1e76eacc2dafc261640ee68c7270f47c0d",
+    "matchesBaseline": "4.2.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "860ef9913cdc3f89e4af20ac6baf2e00e86241edb4b9ca205c4a8aa0c837787b",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "ca184006f935fcd8f307d3db892ea3c36b3805618bf9f1255ee35b7fced2be68",
+        "verifiedDeclarations": [
+          "{ \"thr_mid\",                    VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ \"thr_expo\",                   VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ \"throttle_limit_type\",        VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ \"throttle_limit_percent\",     VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "9a5962d5d298d723d513a88f355e0d2d5a3afd41f1076d9c39a764e9a56d0142",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "5d772a58b5a8781068b18ebec7b5901d865b164ba9990463b6a9b1ac1a70809a",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.2.5",
+    "commit": "afdac08b3780080e9a2e790a24f3988266d5596b",
+    "matchesBaseline": "4.2.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "860ef9913cdc3f89e4af20ac6baf2e00e86241edb4b9ca205c4a8aa0c837787b",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "5cf519938697a60287ab981fd09272bad72d7551b81644e322809aa14e1f2611",
+        "verifiedDeclarations": [
+          "{ \"thr_mid\",                    VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ \"thr_expo\",                   VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ \"throttle_limit_type\",        VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ \"throttle_limit_percent\",     VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "9a5962d5d298d723d513a88f355e0d2d5a3afd41f1076d9c39a764e9a56d0142",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "5d772a58b5a8781068b18ebec7b5901d865b164ba9990463b6a9b1ac1a70809a",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.2.4",
+    "commit": "fbcaf8c500924d79e7cf4300d9e4712c68abfbd9",
+    "matchesBaseline": "4.2.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "860ef9913cdc3f89e4af20ac6baf2e00e86241edb4b9ca205c4a8aa0c837787b",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "5cf519938697a60287ab981fd09272bad72d7551b81644e322809aa14e1f2611",
+        "verifiedDeclarations": [
+          "{ \"thr_mid\",                    VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ \"thr_expo\",                   VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ \"throttle_limit_type\",        VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ \"throttle_limit_percent\",     VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "9a5962d5d298d723d513a88f355e0d2d5a3afd41f1076d9c39a764e9a56d0142",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "5d772a58b5a8781068b18ebec7b5901d865b164ba9990463b6a9b1ac1a70809a",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.2.3",
+    "commit": "2696b7c88fa85fbf9bd57735d6101ec7aff0c4ce",
+    "matchesBaseline": "4.2.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "860ef9913cdc3f89e4af20ac6baf2e00e86241edb4b9ca205c4a8aa0c837787b",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "5cf519938697a60287ab981fd09272bad72d7551b81644e322809aa14e1f2611",
+        "verifiedDeclarations": [
+          "{ \"thr_mid\",                    VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ \"thr_expo\",                   VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ \"throttle_limit_type\",        VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ \"throttle_limit_percent\",     VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "9a5962d5d298d723d513a88f355e0d2d5a3afd41f1076d9c39a764e9a56d0142",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "5d772a58b5a8781068b18ebec7b5901d865b164ba9990463b6a9b1ac1a70809a",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.2.2",
+    "commit": "e833ac612a53eb75f5208e02c903970d20e8ad02",
+    "matchesBaseline": "4.2.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "860ef9913cdc3f89e4af20ac6baf2e00e86241edb4b9ca205c4a8aa0c837787b",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "5cf519938697a60287ab981fd09272bad72d7551b81644e322809aa14e1f2611",
+        "verifiedDeclarations": [
+          "{ \"thr_mid\",                    VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ \"thr_expo\",                   VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ \"throttle_limit_type\",        VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ \"throttle_limit_percent\",     VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "9a5962d5d298d723d513a88f355e0d2d5a3afd41f1076d9c39a764e9a56d0142",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "5d772a58b5a8781068b18ebec7b5901d865b164ba9990463b6a9b1ac1a70809a",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.2.1",
+    "commit": "caa0d683c3e3281d5d8dc2cee9626654d77e7490",
+    "matchesBaseline": "4.2.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "860ef9913cdc3f89e4af20ac6baf2e00e86241edb4b9ca205c4a8aa0c837787b",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "5cf519938697a60287ab981fd09272bad72d7551b81644e322809aa14e1f2611",
+        "verifiedDeclarations": [
+          "{ \"thr_mid\",                    VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ \"thr_expo\",                   VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ \"throttle_limit_type\",        VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ \"throttle_limit_percent\",     VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "9a5962d5d298d723d513a88f355e0d2d5a3afd41f1076d9c39a764e9a56d0142",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "5d772a58b5a8781068b18ebec7b5901d865b164ba9990463b6a9b1ac1a70809a",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.3.0",
+    "commit": "229ac667552827c6288550964a0ef877c04bf8ab",
+    "matchesBaseline": "4.3.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "9be9c9f362311e191e43466efa3d6ffaac2903090d6fe31e4bae28f9f9af30f9",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "acd523d61d06919d033010a39575bbc537d3b30607a4d22ee6839fd819fb879b",
+        "verifiedDeclarations": [
+          "{ PARAM_NAME_THR_MID,           VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ PARAM_NAME_THR_EXPO,          VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ PARAM_NAME_THROTTLE_LIMIT_TYPE,    VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ PARAM_NAME_THROTTLE_LIMIT_PERCENT, VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "9fc9d19371a35ea9017826506581049a9d20e2f9582239d11d5d005804883ea0",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "13283295904dc4b0f5eb9990774ebf648983623da1e865d8bd82b0287e466ee5",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000",
+          "#define PWM_RANGE (PWM_RANGE_MAX - PWM_RANGE_MIN)"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.3.1",
+    "commit": "8d4f00532dfdd36467ed4b5f3395f5445b521dd6",
+    "matchesBaseline": "4.3.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "9be9c9f362311e191e43466efa3d6ffaac2903090d6fe31e4bae28f9f9af30f9",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "acd523d61d06919d033010a39575bbc537d3b30607a4d22ee6839fd819fb879b",
+        "verifiedDeclarations": [
+          "{ PARAM_NAME_THR_MID,           VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ PARAM_NAME_THR_EXPO,          VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ PARAM_NAME_THROTTLE_LIMIT_TYPE,    VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ PARAM_NAME_THROTTLE_LIMIT_PERCENT, VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "9fc9d19371a35ea9017826506581049a9d20e2f9582239d11d5d005804883ea0",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "13283295904dc4b0f5eb9990774ebf648983623da1e865d8bd82b0287e466ee5",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000",
+          "#define PWM_RANGE (PWM_RANGE_MAX - PWM_RANGE_MIN)"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.3.2",
+    "commit": "60c9521da6072e6c891bd30fd772e91a790f0b53",
+    "matchesBaseline": "4.3.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "9be9c9f362311e191e43466efa3d6ffaac2903090d6fe31e4bae28f9f9af30f9",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "6fe813fdfc40c30452e5c20d2bfd28bd2072b886eb786e9fe0df9e633ef6d528",
+        "verifiedDeclarations": [
+          "{ PARAM_NAME_THR_MID,           VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ PARAM_NAME_THR_EXPO,          VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ PARAM_NAME_THROTTLE_LIMIT_TYPE,    VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ PARAM_NAME_THROTTLE_LIMIT_PERCENT, VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "9fc9d19371a35ea9017826506581049a9d20e2f9582239d11d5d005804883ea0",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "13283295904dc4b0f5eb9990774ebf648983623da1e865d8bd82b0287e466ee5",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000",
+          "#define PWM_RANGE (PWM_RANGE_MAX - PWM_RANGE_MIN)"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.4.0",
+    "commit": "4605309d8253db0113d4c54d31fe8bd998f46401",
+    "matchesBaseline": "4.4.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "25351f97687df9c681c0df2d454b73cbcc2473c547b6f5ee5c13891b51f6df7f",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "092ff58a2505eb09f94c0db359fb0f3700b0b69b6170c6ffdda8257f0021d211",
+        "verifiedDeclarations": [
+          "{ PARAM_NAME_THR_MID,           VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ PARAM_NAME_THR_EXPO,          VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ PARAM_NAME_THROTTLE_LIMIT_TYPE,    VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ PARAM_NAME_THROTTLE_LIMIT_PERCENT, VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "a08c07b9dc257d1f5cdcb28b3079a5746c8e38858e998ac47a1be17eb0003b13",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "d0ccc07f70d190320956754d9d4926bc0c237a7471e75914f4e6f6798d1e4a1d",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000",
+          "#define PWM_RANGE (PWM_RANGE_MAX - PWM_RANGE_MIN)"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.4.3",
+    "commit": "738127e7e11da587f63b9531ec732a37bdb436b0",
+    "matchesBaseline": "4.4.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "25351f97687df9c681c0df2d454b73cbcc2473c547b6f5ee5c13891b51f6df7f",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "844f5ce8b9afc915a3d3164fe6073c319637e5f2db75d64779dc5f53d61127ea",
+        "verifiedDeclarations": [
+          "{ PARAM_NAME_THR_MID,           VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ PARAM_NAME_THR_EXPO,          VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ PARAM_NAME_THROTTLE_LIMIT_TYPE,    VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ PARAM_NAME_THROTTLE_LIMIT_PERCENT, VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "a08c07b9dc257d1f5cdcb28b3079a5746c8e38858e998ac47a1be17eb0003b13",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "d0ccc07f70d190320956754d9d4926bc0c237a7471e75914f4e6f6798d1e4a1d",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000",
+          "#define PWM_RANGE (PWM_RANGE_MAX - PWM_RANGE_MIN)"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.4.2",
+    "commit": "23d066d0824ecdb2cd0986a31eb6603a89d15a3e",
+    "matchesBaseline": "4.4.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "25351f97687df9c681c0df2d454b73cbcc2473c547b6f5ee5c13891b51f6df7f",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "844f5ce8b9afc915a3d3164fe6073c319637e5f2db75d64779dc5f53d61127ea",
+        "verifiedDeclarations": [
+          "{ PARAM_NAME_THR_MID,           VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ PARAM_NAME_THR_EXPO,          VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ PARAM_NAME_THROTTLE_LIMIT_TYPE,    VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ PARAM_NAME_THROTTLE_LIMIT_PERCENT, VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "a08c07b9dc257d1f5cdcb28b3079a5746c8e38858e998ac47a1be17eb0003b13",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "d0ccc07f70d190320956754d9d4926bc0c237a7471e75914f4e6f6798d1e4a1d",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000",
+          "#define PWM_RANGE (PWM_RANGE_MAX - PWM_RANGE_MIN)"
+        ]
+      }
+    }
+  },
+  {
+    "version": "4.4.1",
+    "commit": "e43d591b2d75554dc36cfe7f8cdbe94422ba8936",
+    "matchesBaseline": "4.4.0",
+    "sources": {
+      "fc/controlrate_profile.h": {
+        "sha256": "25351f97687df9c681c0df2d454b73cbcc2473c547b6f5ee5c13891b51f6df7f",
+        "verifiedDeclarations": [
+          "THROTTLE_LIMIT_TYPE_OFF = 0,",
+          "THROTTLE_LIMIT_TYPE_SCALE,",
+          "THROTTLE_LIMIT_TYPE_CLIP,",
+          "THROTTLE_LIMIT_TYPE_COUNT   // must be the last entry",
+          "uint8_t thrMid8;",
+          "uint8_t thrExpo8;",
+          "uint8_t throttle_limit_type;            // Sets the throttle limiting type - off, scale or clip",
+          "uint8_t throttle_limit_percent;         // Sets the maximum pilot commanded throttle limit"
+        ]
+      },
+      "cli/settings.c": {
+        "sha256": "81d1933b6c54fa231667b4652d19cade4b8a9e57334030bcc131f12b3b552600",
+        "verifiedDeclarations": [
+          "{ PARAM_NAME_THR_MID,           VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrMid8) },",
+          "{ PARAM_NAME_THR_EXPO,          VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 0, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, thrExpo8) },",
+          "{ PARAM_NAME_THROTTLE_LIMIT_TYPE,    VAR_UINT8  | PROFILE_RATE_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_THROTTLE_LIMIT_TYPE }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_type) },",
+          "{ PARAM_NAME_THROTTLE_LIMIT_PERCENT, VAR_UINT8  | PROFILE_RATE_VALUE, .config.minmaxUnsigned = { 25, 100 }, PG_CONTROL_RATE_PROFILES, offsetof(controlRateConfig_t, throttle_limit_percent) },",
+          "const char * const lookupTableThrottleLimitType[] = {\n    \"OFF\", \"SCALE\", \"CLIP\"\n};"
+        ]
+      },
+      "fc/rc.c": {
+        "sha256": "a08c07b9dc257d1f5cdcb28b3079a5746c8e38858e998ac47a1be17eb0003b13",
+        "verifiedDeclarations": [
+          "#define THROTTLE_LOOKUP_LENGTH 12"
+        ]
+      },
+      "rx/rx.h": {
+        "sha256": "d0ccc07f70d190320956754d9d4926bc0c237a7471e75914f4e6f6798d1e4a1d",
+        "verifiedDeclarations": [
+          "#define PWM_RANGE_MIN 1000",
+          "#define PWM_RANGE_MAX 2000",
+          "#define PWM_RANGE (PWM_RANGE_MAX - PWM_RANGE_MIN)"
+        ]
+      }
+    }
+  }
+]

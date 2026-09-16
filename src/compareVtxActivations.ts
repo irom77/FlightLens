@@ -1,4 +1,6 @@
-import type { ConfigDocument, SyntaxLine } from "./bindings/core";
+import { comparisonSyntax } from "./documentView";
+import type { ComparisonDocument } from "./documentView";
+import type { SyntaxLine } from "./bindings/core";
 import { applyVtxTableLine, type VtxTableValue } from "./compareVtxTables";
 import compatibility from "./vtxTableCompatibility.json";
 
@@ -12,7 +14,7 @@ export type VtxActivation = {
   source: SyntaxLine;
 };
 
-function activations(document: ConfigDocument) {
+function activations(document: ComparisonDocument) {
   const values = new Map<number, VtxActivation>();
   const table = new Map<string, VtxTableValue>();
   const selector = (value: number, key: string, fallback: number) =>
@@ -21,7 +23,7 @@ function activations(document: ConfigDocument) {
       value <= Math.min(Number(table.get(key)!.value), fallback));
   const range = (value: number) =>
     900 + Math.floor((Math.max(900, Math.min(2100, value)) - 900) / 25) * 25;
-  for (const source of document.syntax) {
+  for (const source of comparisonSyntax(document)) {
     applyVtxTableLine(table, source);
     const command = source.command;
     if (
@@ -62,9 +64,12 @@ function activations(document: ConfigDocument) {
   return values;
 }
 
-export function compareVtxActivations(a: ConfigDocument, b: ConfigDocument) {
+export function compareVtxActivations(
+  a: ComparisonDocument,
+  b: ComparisonDocument,
+) {
   const releases: Record<string, string | undefined> = compatibility.releases;
-  const certified = ({ firmware }: ConfigDocument) =>
+  const certified = ({ firmware }: ComparisonDocument) =>
     Boolean(
       firmware.family === compatibility.family &&
         /^4\.5\.[0-5]$/.test(firmware.version ?? "") &&

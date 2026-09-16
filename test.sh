@@ -27,11 +27,17 @@ fi
 echo "== Rust formatting =="
 "$CARGO_BIN" fmt --all -- --check
 
+echo "== Rust Clippy =="
+"$CARGO_BIN" clippy --workspace --all-targets -- -D warnings
+
 echo "== Rust core tests =="
 "$CARGO_BIN" test -p flightlens-core
 
 echo "== Generated bindings =="
 pnpm bindings:check
+
+echo "== JavaScript/TypeScript lint =="
+pnpm lint
 
 echo "== TypeScript =="
 pnpm typecheck

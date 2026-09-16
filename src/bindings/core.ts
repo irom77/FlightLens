@@ -22,6 +22,8 @@ export type Command = { "kind": "set", key: string, value: string, } | { "kind":
 
 export type SyntaxLine = { line: number, start: number, end: number, raw: string, command: Command, };
 
+export type SourceEvidence = { lineCount: number, hasDumpAll: boolean, comparisonSyntax: Array<SyntaxLine>, };
+
 export type Firmware = { family: string, version: string | null, 
 /**
  * The flashed target the backup names on its `board_name` line. `None`
@@ -64,7 +66,11 @@ derived: { [key in string]?: Derived },
  */
 derivedNote: string | null, syntax: Array<SyntaxLine>, diagnostics: Array<Diagnostic>, ports: Array<Port>, modes: Array<Mode>, features: { [key in string]?: boolean }, pidProfiles: Array<number>, rateProfiles: Array<number>, selectedPid: number | null, selectedRate: number | null, };
 
+export type DocumentView = { id: string, sourceId: string, title: string, hash: string, firmware: Firmware, craftName: string | null, pilotName: string | null, completeness: string, parameters: { [key in string]?: Parameter }, derived: { [key in string]?: Derived }, derivedNote: string | null, sourceEvidence: SourceEvidence, diagnostics: Array<Diagnostic>, ports: Array<Port>, modes: Array<Mode>, features: { [key in string]?: boolean }, pidProfiles: Array<number>, rateProfiles: Array<number>, selectedPid: number | null, selectedRate: number | null, };
+
 export type Artifact = { "kind": "config", "document": ConfigDocument } | { "kind": "recognized", "document": RecognizedArtifact };
+
+export type ArtifactView = { "kind": "config", "document": DocumentView } | { "kind": "recognized", "document": RecognizedArtifact };
 
 export type RecognizedArtifact = { id: string, title: string, family: string, message: string, };
 

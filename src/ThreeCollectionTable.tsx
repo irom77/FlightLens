@@ -1,5 +1,5 @@
+import type { ComparisonDocument } from "./documentView";
 import { useState, type ReactNode } from "react";
-import type { ConfigDocument } from "./bindings/core";
 import { compareThreeRows, type PairRow } from "./compareThreeRows";
 
 export function ThreeCollectionTable<R extends PairRow<unknown>>({
@@ -14,13 +14,13 @@ export function ThreeCollectionTable<R extends PairRow<unknown>>({
 }: {
   title: string;
   description: ReactNode;
-  documents: [ConfigDocument, ConfigDocument, ConfigDocument];
+  documents: [ComparisonDocument, ComparisonDocument, ComparisonDocument];
   sides: [string, string, string];
-  compare: (a: ConfigDocument, b: ConfigDocument) => R[];
+  compare: (a: ComparisonDocument, b: ComparisonDocument) => R[];
   rowKey: (row: R) => string;
   renderValue: (
     value: R["a"],
-    document: ConfigDocument,
+    document: ComparisonDocument,
     side: string,
     row: R,
   ) => ReactNode;

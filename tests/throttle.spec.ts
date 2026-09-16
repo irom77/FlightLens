@@ -29,11 +29,19 @@ for (const variant of ["official", "vendor", "hover"]) {
       win.__TAURI_EVENT_PLUGIN_INTERNALS__ = { unregisterListener: () => {} };
       win.__TAURI_INTERNALS__ = {
         transformCallback: () => 1,
-        invoke: async (command: string, args: { rateProfile?: number }) => {
+        invoke: async (
+          command: string,
+          args: { rateProfile?: number; offset?: number; count?: number },
+        ) => {
           if (command === "pending_sources") return [];
           if (command === "restore_session")
             return { sources: [], unavailable: [] };
           if (command === "ingest_text") return f.artifact;
+          if (command === "raw_page")
+            return f.rawSyntax.slice(
+              args.offset,
+              (args.offset ?? 0) + (args.count ?? 500),
+            );
           if (command === "inspect_config")
             return f.inspections[args.rateProfile!];
           return 1;

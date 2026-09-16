@@ -1,4 +1,6 @@
-import type { ConfigDocument, SyntaxLine } from "./bindings/core";
+import { comparisonSyntax } from "./documentView";
+import type { ComparisonDocument } from "./documentView";
+import type { SyntaxLine } from "./bindings/core";
 import compatibility from "./vtxTableCompatibility.json";
 
 export type AdjustmentRange = {
@@ -12,7 +14,7 @@ export type AdjustmentRange = {
   source: SyntaxLine;
 };
 
-function ranges(document: ConfigDocument) {
+function ranges(document: ComparisonDocument) {
   const values = new Map<number, AdjustmentRange>();
   // Unknown/vendor versions retain syntactically understood records, but cannot
   // pass the comparison gate. Official 4.5 has the narrower function enum.
@@ -21,7 +23,7 @@ function ranges(document: ConfigDocument) {
     : 35;
   const range = (value: number) =>
     900 + Math.floor((Math.max(900, Math.min(2100, value)) - 900) / 25) * 25;
-  for (const source of document.syntax) {
+  for (const source of comparisonSyntax(document)) {
     const command = source.command;
     if (
       command.kind === "defaults" ||
@@ -71,9 +73,12 @@ function ranges(document: ConfigDocument) {
   return values;
 }
 
-export function compareAdjustmentRanges(a: ConfigDocument, b: ConfigDocument) {
+export function compareAdjustmentRanges(
+  a: ComparisonDocument,
+  b: ComparisonDocument,
+) {
   const releases: Record<string, string | undefined> = compatibility.releases;
-  const certified = ({ firmware }: ConfigDocument) =>
+  const certified = ({ firmware }: ComparisonDocument) =>
     Boolean(
       firmware.family === compatibility.family &&
         /^(4\.5\.[0-5]|2025\.12\.[1-5])$/.test(firmware.version ?? "") &&

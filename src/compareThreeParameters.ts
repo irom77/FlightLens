@@ -1,4 +1,4 @@
-import type { ConfigDocument } from "./bindings/core";
+import type { ComparisonDocument } from "./documentView";
 import {
   compareParameters,
   type ParameterDifference,
@@ -17,7 +17,7 @@ export function classifyThree(left: Status, right: Status, peers: Status) {
 }
 
 export function compareThreeParameters(
-  documents: [ConfigDocument, ConfigDocument, ConfigDocument],
+  documents: [ComparisonDocument, ComparisonDocument, ComparisonDocument],
   profiles: [ProfileSelection, ProfileSelection, ProfileSelection],
 ) {
   const pairs = [

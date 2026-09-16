@@ -277,7 +277,8 @@ pub fn filter_response(kind: &str, cutoff: f64, sample_rate: f64) -> Result<Vec<
 }
 fn audit(d: &ConfigDocument) -> Vec<RuleEvaluation> {
     let source = "https://github.com/betaflight/betaflight/blob/";
-    let version = d.firmware.version.as_deref().unwrap_or("4.5.0");
+    let pack = compatibility::pack(d.firmware.version.as_deref())
+        .filter(|pack| d.firmware.pack_id.as_deref() == Some(pack.id.as_str()));
     let mut rules = Vec::new();
     let mut add = |id: &str,
                    status: &str,
@@ -287,7 +288,7 @@ fn audit(d: &ConfigDocument) -> Vec<RuleEvaluation> {
                    file: &str| {
         rules.push(RuleEvaluation {
             id: id.into(),
-            status: if d.firmware.pack_id.is_none() {
+            status: if pack.is_none() {
                 "not_applicable".into()
             } else {
                 status.into()
@@ -295,7 +296,9 @@ fn audit(d: &ConfigDocument) -> Vec<RuleEvaluation> {
             severity: severity.into(),
             explanation,
             lines,
-            reference: format!("{source}{version}/src/main/{file}"),
+            reference: pack
+                .map(|pack| format!("{source}{}/src/main/{file}", pack.version))
+                .unwrap_or_default(),
         })
     };
     let poles = d.number(&Scope::Global, "motor_poles");

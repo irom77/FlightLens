@@ -1,11 +1,13 @@
 use crate::{analyze, Artifact, SourceDescriptor};
 use sha2::{Digest, Sha256};
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, BTreeSet},
     fs::File,
     io::Read,
     path::{Path, PathBuf},
 };
+/// Bounds grants, including selected files that never successfully import.
+pub const SOURCE_LIMIT: usize = 4096;
 pub const TEXT_LIMIT: usize = 16 * 1024 * 1024;
 pub fn hash(bytes: &[u8]) -> String {
     format!("{:x}", Sha256::digest(bytes))
@@ -15,6 +17,7 @@ pub struct SourceRegistry {
     next: u64,
     files: BTreeMap<String, PathBuf>,
     documents: BTreeMap<PathBuf, String>,
+    source_documents: BTreeMap<String, BTreeSet<String>>,
 }
 impl SourceRegistry {
     /// Paths come from native dialogs/drop events or an entry in a native-granted
@@ -26,13 +29,26 @@ impl SourceRegistry {
         if !path.is_file() {
             return Err("Select a regular file".into());
         }
-        self.next += 1;
-        let id = format!("source-{}", self.next);
         let label = path
             .file_name()
             .unwrap_or_default()
             .to_string_lossy()
             .into_owned();
+        if let Some((id, _)) = self
+            .files
+            .iter()
+            .find(|(_, registered)| **registered == path)
+        {
+            return Ok(SourceDescriptor {
+                id: id.clone(),
+                label,
+            });
+        }
+        if self.files.len() >= SOURCE_LIMIT {
+            return Err("File-source limit reached. Close file-backed documents or restart FlightLens before selecting more files.".into());
+        }
+        self.next += 1;
+        let id = format!("source-{}", self.next);
         self.files.insert(id.clone(), path);
         Ok(SourceDescriptor { id, label })
     }
@@ -40,11 +56,24 @@ impl SourceRegistry {
     pub fn remember_document(&mut self, source_id: &str, document_id: &str) -> Result<(), String> {
         let path = self.path(source_id)?;
         self.documents.insert(path, document_id.into());
+        self.source_documents
+            .entry(source_id.into())
+            .or_default()
+            .insert(document_id.into());
         Ok(())
     }
-    /// Remove a closed document's file references from the saved session.
+    /// Remove a closed document's registered sources and saved-session references.
     pub fn forget_document(&mut self, document_id: &str, session: &mut Vec<PathBuf>) {
         session.retain(|path| self.documents.get(path).is_none_or(|id| id != document_id));
+        self.source_documents.retain(|source_id, documents| {
+            documents.remove(document_id);
+            if documents.is_empty() {
+                self.files.remove(source_id);
+                false
+            } else {
+                true
+            }
+        });
         self.documents.retain(|_, id| id != document_id);
     }
 
@@ -114,4 +143,39 @@ pub fn read_stable(path: &Path) -> Result<String, String> {
         }
     }
     Err("Source changed while reading. Try again when writing has stopped.".into())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn source_limit_preserves_existing_grants_and_reuses_released_capacity() {
+        let temp = tempfile::tempdir().unwrap();
+        let first = temp.path().join("first.dump");
+        let extra = temp.path().join("extra.dump");
+        std::fs::write(&first, "synthetic").unwrap();
+        std::fs::write(&extra, "synthetic").unwrap();
+        let mut registry = SourceRegistry::default();
+        let source = registry.register(first.clone()).unwrap();
+        // Fill the registry without creating thousands of files. These grants
+        // intentionally have no owning document, like unattempted/failed imports.
+        for index in 1..SOURCE_LIMIT {
+            registry.files.insert(
+                format!("reserved-{index}"),
+                temp.path().join(format!("{index}.dump")),
+            );
+        }
+        assert!(registry
+            .register(extra.clone())
+            .unwrap_err()
+            .contains("File-source limit reached"));
+        assert_eq!(registry.register(first).unwrap().id, source.id);
+        assert!(registry.path(&source.id).is_ok());
+        registry.remember_document(&source.id, "document").unwrap();
+        registry.forget_document("document", &mut vec![]);
+        let replacement = registry.register(extra).unwrap();
+        assert_ne!(replacement.id, source.id);
+        assert_eq!(registry.files.len(), SOURCE_LIMIT);
+    }
 }

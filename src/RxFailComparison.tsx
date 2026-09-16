@@ -1,6 +1,6 @@
+import type { ComparisonDocument } from "./documentView";
 import { ThreeCollectionTable } from "./ThreeCollectionTable";
 import { useState } from "react";
-import type { ConfigDocument } from "./bindings/core";
 import { compareRxFails, type RxFail } from "./compareRxFails";
 
 function RxFailValue({ value, side }: { value?: RxFail; side: string }) {
@@ -30,9 +30,9 @@ export function RxFailComparison({
   c,
   sides,
 }: {
-  a: ConfigDocument;
-  b: ConfigDocument;
-  c?: ConfigDocument;
+  a: ComparisonDocument;
+  b: ComparisonDocument;
+  c?: ComparisonDocument;
   sides?: [string, string, string];
 }) {
   const [query, setQuery] = useState("");

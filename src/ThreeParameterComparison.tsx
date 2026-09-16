@@ -1,6 +1,6 @@
+import type { ComparisonDocument } from "./documentView";
 import { useProfiles } from "./stores/selections";
 import { useState } from "react";
-import type { ConfigDocument } from "./bindings/core";
 import { compareThreeParameters } from "./compareThreeParameters";
 import { ParameterValueCell } from "./ParameterComparison";
 
@@ -12,7 +12,7 @@ export function ThreeParameterComparison({
   baseline,
   setBaseline,
 }: {
-  documents: [ConfigDocument, ConfigDocument, ConfigDocument];
+  documents: [ComparisonDocument, ComparisonDocument, ComparisonDocument];
   rates: [number, number, number];
   baseline: string;
   setBaseline: (value: string) => void;

@@ -1,8 +1,10 @@
-import type { ConfigDocument, SyntaxLine } from "./bindings/core";
+import { comparisonSyntax } from "./documentView";
+import type { ComparisonDocument } from "./documentView";
+import type { SyntaxLine } from "./bindings/core";
 
-function collections(document: ConfigDocument) {
+function collections(document: ComparisonDocument) {
   const groups = new Map<string, SyntaxLine[]>();
-  for (const line of document.syntax) {
+  for (const line of comparisonSyntax(document)) {
     if (line.command.kind !== "collection") continue;
     const name = line.command.name;
     const group = groups.get(name) ?? [];
@@ -12,7 +14,10 @@ function collections(document: ConfigDocument) {
   return groups;
 }
 
-export function compareCollections(a: ConfigDocument, b: ConfigDocument) {
+export function compareCollections(
+  a: ComparisonDocument,
+  b: ComparisonDocument,
+) {
   const left = collections(a),
     right = collections(b);
   return [...new Set([...left.keys(), ...right.keys()])].sort().map((name) => {

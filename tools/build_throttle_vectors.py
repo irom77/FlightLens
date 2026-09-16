@@ -28,7 +28,7 @@ def block(source, marker):
 # Keep the immutable release identities in the reviewed evidence document.
 releases = re.findall(r'\| (4\.[2345]\.\d+) \| `([a-f0-9]{40})`',
                       (ROOT / 'docs/throttle-curve-preview.md').read_text())
-assert len(releases) == 10
+assert len(releases) == 25
 releases = [(v, c, "betaflight/betaflight") for v, c in releases]
 releases += [
     ("4.5.3.KAACK_V19", "8cd44381217948c0b2b5087f12e17dde15d6a25c", "limonspb/betaflight"),

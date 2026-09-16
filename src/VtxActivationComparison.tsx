@@ -1,6 +1,6 @@
+import type { ComparisonDocument } from "./documentView";
 import { ThreeCollectionTable } from "./ThreeCollectionTable";
 import { useState } from "react";
-import type { ConfigDocument } from "./bindings/core";
 import {
   compareVtxActivations,
   type VtxActivation,
@@ -44,9 +44,9 @@ export function VtxActivationComparison({
   c,
   sides,
 }: {
-  a: ConfigDocument;
-  b: ConfigDocument;
-  c?: ConfigDocument;
+  a: ComparisonDocument;
+  b: ComparisonDocument;
+  c?: ComparisonDocument;
   sides?: [string, string, string];
 }) {
   const [query, setQuery] = useState("");

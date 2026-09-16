@@ -16,6 +16,7 @@ it("keeps unknown curves absent and displays their reason", () => {
   );
   expect(html).toContain("roll_expo is unknown");
   expect(html).not.toContain("<path");
+  expect(html).not.toContain("<table");
 });
 it("renders backend samples and escapes untrusted labels", () => {
   const html = renderToStaticMarkup(
@@ -77,4 +78,6 @@ it("plots throttle on percentage axes without signed-stick scaling", () => {
   expect(html).toContain("throttle command (%)");
   expect(html).not.toContain("-100%");
   expect(html).not.toContain("°/s");
+  expect(html).toContain("Throttle command (%)");
+  expect(html).toContain("<td>100</td><td>50</td>");
 });

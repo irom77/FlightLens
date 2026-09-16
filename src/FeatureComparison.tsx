@@ -1,6 +1,7 @@
+import { comparisonSyntax } from "./documentView";
+import type { ComparisonDocument } from "./documentView";
 import { ThreeCollectionTable } from "./ThreeCollectionTable";
 import { useState } from "react";
-import type { ConfigDocument } from "./bindings/core";
 import { compareFeatures } from "./compareFeatures";
 
 function FeatureValue({
@@ -9,14 +10,14 @@ function FeatureValue({
   value,
   side,
 }: {
-  document: ConfigDocument;
+  document: ComparisonDocument;
   name: string;
   value?: boolean;
   side: string;
 }) {
   if (value === undefined)
     return <span className="unknown-badge">Unknown · not declared</span>;
-  const source = [...document.syntax]
+  const source = [...comparisonSyntax(document)]
     .reverse()
     .find(
       (line) => line.command.kind === "feature" && line.command.name === name,
@@ -43,9 +44,9 @@ export function FeatureComparison({
   c,
   sides,
 }: {
-  a: ConfigDocument;
-  b: ConfigDocument;
-  c?: ConfigDocument;
+  a: ComparisonDocument;
+  b: ComparisonDocument;
+  c?: ComparisonDocument;
   sides?: [string, string, string];
 }) {
   const [query, setQuery] = useState("");

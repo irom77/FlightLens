@@ -31,6 +31,8 @@ jobs:
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
 
       - name: Install JavaScript dependencies
         run: pnpm install --frozen-lockfile
@@ -38,12 +40,15 @@ jobs:
       - name: Check Rust core and generated bindings
         shell: bash
         run: |
+          cargo fmt --all -- --check
+          cargo clippy --workspace --all-targets -- -D warnings
           cargo test -p flightlens-core
           pnpm bindings:check
 
       - name: Check frontend behavior
         shell: bash
         run: |
+          pnpm lint
           pnpm typecheck
           pnpm test
           pnpm exec playwright install chromium

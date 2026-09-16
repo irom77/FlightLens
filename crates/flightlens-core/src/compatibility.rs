@@ -20,7 +20,7 @@ pub struct Profiles {
 /// The reset values a firmware line applies on `defaults`, extracted from the
 /// pinned tag by `tools/build_compatibility.py` and proven identical at every
 /// patch release on the line. Only `PG_CONTROL_RATE_PROFILES` is certified;
-/// other parameter groups move between minor releases and need their own pass.
+/// PID gains have a separate table and verification in `pid_defaults`.
 #[derive(Debug, Clone, Default, Deserialize)]
 pub struct Defaults {
     pub verified: Vec<VerifiedRelease>,
@@ -103,21 +103,42 @@ pub fn pack(version: Option<&str>) -> Option<&'static Pack> {
             && pack_parts.next().and_then(|v| v.parse::<u16>().ok()) == Some(minor)
     })
 }
-/// Whether a pack's default table may be read back for `version`.
-///
-/// `pack` deliberately falls back to the major/minor line, which is right for
-/// baseline syntax and bounds, with verified patch overrides. It cannot certify vendor changes or
-/// defaults, which a custom build is free to change with nothing in the dump to
-/// say whether it did. So a default is only ever applied to a plain
-/// `major.minor.patch` release, where the reset function is proven identical
-/// across the explicitly verified releases listed in the bundled pack.
+/// Exact vendor identities whose rate reset path, constants and CLI mappings
+/// match a bundled pack. This does not certify PID or other parameter groups.
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct VendorRateDefaults {
+    version: String,
+    pack_version: String,
+    reset_sha256: String,
+    values: BTreeMap<String, String>,
+}
+
+/// Provenance for a certified rate baseline; major/minor schema fallback alone
+/// never authorizes recovery. Exact vendor builds use their own identity.
+pub fn rate_default_source(version: &str) -> Option<&'static str> {
+    let pack = pack(Some(version))?;
+    if pack.defaults.verified.iter().any(|r| r.version == version) {
+        return Some(&pack.version);
+    }
+    static VENDORS: OnceLock<Vec<VendorRateDefaults>> = OnceLock::new();
+    VENDORS
+        .get_or_init(|| {
+            serde_json::from_str(include_str!("../compatibility/vendor-rate-defaults.json"))
+                .expect("bundled vendor rate defaults must validate")
+        })
+        .iter()
+        .find(|v| {
+            v.version == version
+                && v.pack_version == pack.version
+                && v.reset_sha256 == pack.defaults.reset_sha256
+                && v.values == pack.defaults.values
+        })
+        .map(|v| v.version.as_str())
+}
+
 pub fn defaults_certified(version: &str) -> bool {
-    pack(Some(version)).is_some_and(|pack| {
-        pack.defaults
-            .verified
-            .iter()
-            .any(|release| release.version == version)
-    })
+    rate_default_source(version).is_some()
 }
 impl Schema {
     pub fn scope(&self, pid: Option<u8>, rate: Option<u8>) -> Scope {

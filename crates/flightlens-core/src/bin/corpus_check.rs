@@ -66,7 +66,11 @@ fn known_pid_values(document: &ConfigDocument, profile: u8) -> usize {
     ["roll", "pitch", "yaw"]
         .into_iter()
         .flat_map(|axis| ["p", "i", "d", "f"].map(move |gain| format!("{gain}_{axis}")))
-        .filter(|key| document.number(&Scope::Pid(profile), key).is_some())
+        .filter(|key| {
+            document
+                .number_or_default(&Scope::Pid(profile), key)
+                .is_some()
+        })
         .count()
 }
 
@@ -355,6 +359,18 @@ mod tests {
                 ["p", "i", "d", "f"].map(move |gain| format!("set {gain}_{axis} = 0\n"))
             })
             .collect()
+    }
+
+    #[test]
+    fn recovered_gains_count_but_do_not_hide_missing_d() {
+        let d = document("defaults nosave");
+        assert_eq!(known_pid_values(&d, 0), 10);
+        let mut summary = Summary::default();
+        assert!(check_config(&d, true, &mut summary));
+        assert_eq!(summary.complete_pid_profiles, 0);
+        let d = document("defaults nosave\nset d_roll = 30\nset d_pitch = 32");
+        assert_eq!(known_pid_values(&d, 0), 12);
+        assert!(!check_config(&d, true, &mut Summary::default()));
     }
 
     #[test]

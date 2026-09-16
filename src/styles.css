@@ -1047,8 +1047,21 @@ summary {
   border-radius: 6px;
   font-size: 12px;
 }
+.modal-backdrop:not([open]) {
+  display: none;
+}
+.modal-backdrop::backdrop {
+  background: transparent;
+}
 .modal-backdrop {
   position: fixed;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border: 0;
+  color: inherit;
   inset: 0;
   background: var(--backdrop);
   z-index: 5;
@@ -1261,4 +1274,21 @@ summary {
 }
 .workspace-explorer small {
   display: block;
+}
+
+.plot-values {
+  margin-top: 12px;
+}
+.plot-values summary {
+  cursor: pointer;
+}
+.plot-values-scroll {
+  max-height: 320px;
+  overflow: auto;
+  margin-top: 8px;
+}
+.plot-values caption {
+  text-align: left;
+  font-weight: 600;
+  padding: 8px;
 }

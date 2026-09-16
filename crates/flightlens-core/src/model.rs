@@ -132,6 +132,15 @@ pub struct SyntaxLine {
     pub raw: String,
     pub command: Command,
 }
+/// Source metadata and ordered declarations needed outside the Raw viewer.
+/// This is not a complete source file and must never be used for export.
+#[derive(Debug, Clone, Serialize, Deserialize, TS)]
+#[serde(rename_all = "camelCase")]
+pub struct SourceEvidence {
+    pub line_count: u32,
+    pub has_dump_all: bool,
+    pub comparison_syntax: Vec<SyntaxLine>,
+}
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct Firmware {
@@ -205,6 +214,31 @@ pub struct ConfigDocument {
     pub selected_pid: Option<u8>,
     pub selected_rate: Option<u8>,
 }
+/// Renderer inspection data. Full source stays in the backend for raw paging.
+#[derive(Debug, Clone, Serialize, Deserialize, TS)]
+#[serde(rename_all = "camelCase")]
+pub struct DocumentView {
+    pub id: String,
+    pub source_id: String,
+    pub title: String,
+    pub hash: String,
+    pub firmware: Firmware,
+    pub craft_name: Option<String>,
+    pub pilot_name: Option<String>,
+    pub completeness: String,
+    pub parameters: BTreeMap<String, Parameter>,
+    pub derived: BTreeMap<String, Derived>,
+    pub derived_note: Option<String>,
+    pub source_evidence: SourceEvidence,
+    pub diagnostics: Vec<Diagnostic>,
+    pub ports: Vec<Port>,
+    pub modes: Vec<Mode>,
+    pub features: BTreeMap<String, bool>,
+    pub pid_profiles: Vec<u8>,
+    pub rate_profiles: Vec<u8>,
+    pub selected_pid: Option<u8>,
+    pub selected_rate: Option<u8>,
+}
 impl ConfigDocument {
     pub fn parameter(&self, scope: &Scope, key: &str) -> Option<&Parameter> {
         self.parameters
@@ -235,6 +269,13 @@ impl ConfigDocument {
 #[serde(tag = "kind", content = "document", rename_all = "snake_case")]
 pub enum Artifact {
     Config(Box<ConfigDocument>),
+    Recognized(RecognizedArtifact),
+}
+/// Import response: inspection data only; raw source is paged separately.
+#[derive(Debug, Clone, Serialize, Deserialize, TS)]
+#[serde(tag = "kind", content = "document", rename_all = "snake_case")]
+pub enum ArtifactView {
+    Config(Box<DocumentView>),
     Recognized(RecognizedArtifact),
 }
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]

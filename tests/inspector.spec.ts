@@ -29,13 +29,23 @@ test("offline renderer covers all views with the actual Rust DTO fixture", async
       transformCallback: () => 1,
       invoke: async (
         command: string,
-        args: { configId?: string; rateProfile?: number },
+        args: {
+          configId?: string;
+          rateProfile?: number;
+          offset?: number;
+          count?: number;
+        },
       ) => {
         if (command === "pending_sources" || command === "choose_files")
           return [];
         if (command === "restore_session")
           return { sources: [], unavailable: [] };
         if (command === "ingest_text") return f.artifact;
+        if (command === "raw_page")
+          return f.rawSyntax.slice(
+            args.offset,
+            (args.offset ?? 0) + (args.count ?? 500),
+          );
         if (command === "inspect_config") {
           if (
             args.configId !== f.artifact.document.id ||
@@ -88,6 +98,20 @@ test("offline renderer covers all views with the actual Rust DTO fixture", async
   await page.getByLabel("Include device “save” command").check();
   await expect(page.locator(".snippet")).toHaveCount(0);
   await page.getByRole("tab", { name: "Rates", exact: true }).click();
+  const samples = page.locator(".plot-values summary").first();
+  await samples.focus();
+  await page.keyboard.press("Enter");
+  const values = page
+    .getByRole("region", { name: "Plot sample values" })
+    .first();
+  await expect(values).toBeVisible();
+  await expect(
+    values.getByRole("columnheader", { name: "Stick input (%)" }),
+  ).toHaveCount(3);
+  await page.keyboard.press("Tab");
+  await expect(values).toBeFocused();
+  await samples.click();
+  await expect(values).toBeHidden();
   await page.getByRole("button", { name: "Line 39", exact: true }).click();
   await expect(page.locator("#line-39")).toHaveClass("highlight-line");
   expect(errors).toEqual([]);
@@ -146,7 +170,12 @@ for (const [skipEmpty, firmware42] of [
         transformCallback: () => 1,
         invoke: async (
           command: string,
-          args: { configId?: string; rateProfile?: number },
+          args: {
+            configId?: string;
+            rateProfile?: number;
+            offset?: number;
+            count?: number;
+          },
         ) => {
           if (command === "pending_sources" || command === "choose_files")
             return [];
@@ -190,22 +219,18 @@ for (const [skipEmpty, firmware42] of [
     await expect(page.locator(".profile-card")).toHaveCount(2);
     const plot = page.getByRole("img", { name: /Rate curves/ });
     await expect(plot.locator("path")).toHaveCount(3);
-    await expect(page.locator(".stats").first().locator(".stat strong")).toHaveText([
-      "800 °/s",
-      "800 °/s",
-      "650 °/s",
-    ]);
+    await expect(
+      page.locator(".stats").first().locator(".stat strong"),
+    ).toHaveText(["800 °/s", "800 °/s", "650 °/s"]);
     await page
       .getByRole("button", {
         name: new RegExp(`Profile ${partial}.*explicit settings`),
       })
       .click();
     await expect(plot.locator("path")).toHaveCount(1);
-    await expect(page.locator(".stats").first().locator(".stat strong")).toHaveText([
-      "667 °/s",
-      "Unavailable",
-      "Unavailable",
-    ]);
+    await expect(
+      page.locator(".stats").first().locator(".stat strong"),
+    ).toHaveText(["667 °/s", "Unavailable", "Unavailable"]);
     await page
       .getByRole("button", {
         name: new RegExp(`Profile ${populated}.*explicit settings`),
@@ -254,7 +279,12 @@ for (const [skipEmpty, firmware42] of [
   });
 }
 
-for (const scenario of ["--vendor-missing-expo", "--zero-expo"]) {
+for (const scenario of [
+  "--vendor-missing-expo",
+  "--unverified-vendor",
+  "--vendor-year-defaults",
+  "--zero-expo",
+]) {
   test(`Expo evidence: ${scenario}`, async ({ page }) => {
     const f = JSON.parse(
       execFileSync(
@@ -267,7 +297,11 @@ for (const scenario of ["--vendor-missing-expo", "--zero-expo"]) {
           "--bin",
           "preview_fixture",
           "--",
-          scenario,
+          ...(scenario === "--unverified-vendor"
+            ? ["--vendor-missing-expo", "--unverified-throttle"]
+            : scenario === "--vendor-year-defaults"
+              ? ["--vendor-missing-expo", scenario]
+              : [scenario]),
         ],
         { encoding: "utf8" },
       ),
@@ -280,7 +314,12 @@ for (const scenario of ["--vendor-missing-expo", "--zero-expo"]) {
         transformCallback: () => 1,
         invoke: async (
           command: string,
-          args: { configId?: string; rateProfile?: number },
+          args: {
+            configId?: string;
+            rateProfile?: number;
+            offset?: number;
+            count?: number;
+          },
         ) => {
           if (command === "pending_sources" || command === "choose_files")
             return [];
@@ -302,12 +341,26 @@ for (const scenario of ["--vendor-missing-expo", "--zero-expo"]) {
     await page
       .getByRole("button", { name: "Explore a synthetic example" })
       .click();
-    const missing = scenario === "--vendor-missing-expo";
+    const missing = scenario === "--unverified-vendor";
+    const recovered =
+      scenario === "--vendor-missing-expo" ||
+      scenario === "--vendor-year-defaults";
+    if (recovered) {
+      await expect(
+        page
+          .locator(".parameter-table")
+          .filter({ hasText: "Read back from firmware defaults" }),
+      ).toContainText(
+        scenario === "--vendor-year-defaults"
+          ? "2025.12.3-alpha.KAACK_V19"
+          : "4.5.3.KAACK_V19",
+      );
+    }
     const stats = page.locator(".stats").first().locator(".stat");
     await expect(stats).toHaveCount(3);
     for (let axis = 0; axis < 3; axis++) {
       await expect(stats.nth(axis)).toContainText(
-        missing ? "Expo unknown" : "Expo 0",
+        missing ? "Expo unknown" : recovered ? "Expo 0*" : "Expo 0",
       );
     }
     await expect(
@@ -315,21 +368,25 @@ for (const scenario of ["--vendor-missing-expo", "--zero-expo"]) {
     ).toHaveCount(missing ? 0 : 3);
     if (missing) {
       await expect(
-        page.getByText("4.5.3.KAACK_V19", { exact: false }).first(),
+        page.getByText("4.5.3.KAACK_V18", { exact: false }).first(),
       ).toBeVisible();
       await expect(
         page.getByText(/For complete inspection, capture/),
       ).toContainText("dump all");
     } else {
-      await expect(page.locator(".stats").first()).not.toContainText("Unavailable");
+      await expect(page.locator(".stats").first()).not.toContainText(
+        "Unavailable",
+      );
     }
   });
 }
 
 for (const fullDump of [false, true]) {
-  test(`backup warning remains visible after file import; dump all: ${fullDump}`, async ({ page }) => {
+  test(`backup warning remains visible after file import; dump all: ${fullDump}`, async ({
+    page,
+  }) => {
     const f = structuredClone(fixture);
-    if (fullDump) f.artifact.document.syntax.push({ raw: "# dump all" });
+    f.artifact.document.sourceEvidence.hasDumpAll = fullDump;
     await page.addInitScript((data) => {
       const win = window as unknown as Record<string, unknown>;
       win.isTauri = true;
@@ -338,7 +395,8 @@ for (const fullDump of [false, true]) {
         transformCallback: () => 1,
         invoke: async (command: string) => {
           if (command === "pending_sources") return [];
-          if (command === "choose_files") return [{ id: "synthetic", label: "Synthetic backup" }];
+          if (command === "choose_files")
+            return [{ id: "synthetic", label: "Synthetic backup" }];
           if (command === "open_source") return data.artifact;
           if (command === "inspect_config") return data.inspection;
           return 1;
@@ -346,13 +404,19 @@ for (const fullDump of [false, true]) {
       };
     }, f);
     await page.goto("/");
-    const guidance = page.getByRole("region", { name: "Backup import warning" });
+    const guidance = page.getByRole("region", {
+      name: "Backup import warning",
+    });
     await expect(guidance).toBeVisible();
     await expect(guidance).toContainText("dump all");
     await page.getByRole("button", { name: "Open backups" }).click();
-    await expect(page.getByRole("heading", { name: "Rate curves" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Rate curves" }),
+    ).toBeVisible();
     await expect(guidance).toBeVisible();
-    const warning = page.getByRole("alert", { name: "Incomplete backup warning" });
+    const warning = page.getByRole("alert", {
+      name: "Incomplete backup warning",
+    });
     await expect(warning).toHaveCount(fullDump ? 0 : 1);
     await page.getByRole("tab", { name: "PID", exact: true }).click();
     await expect(warning).toHaveCount(fullDump ? 0 : 1);

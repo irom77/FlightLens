@@ -1,19 +1,19 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod portable;
+mod save;
 use flightlens_core::{
     analysis::{self, Inspection, Point},
     export::{self, ExportRequest, ValidatedSnippet},
     feedback::{self, FeedbackReport, FeedbackRequest},
     source::{self, SourceRegistry},
-    Artifact, ConfigDocument, RestoredSession, SourceDescriptor,
+    Artifact, ArtifactView, ConfigDocument, RestoredSession, SourceDescriptor,
 };
 use std::{
     collections::BTreeMap,
-    io::Write,
     path::{Path, PathBuf},
     sync::{
         atomic::{AtomicBool, AtomicU64, Ordering},
-        Mutex,
+        Arc, Mutex,
     },
 };
 use tauri::{Emitter, Manager, State};
@@ -113,7 +113,10 @@ fn cancel_workspace(state: State<AppState>) {
     state.index_cancelled.store(true, Ordering::SeqCst);
 }
 #[tauri::command]
-async fn open_workspace_entry(app: tauri::AppHandle, entry_id: String) -> Result<Artifact, String> {
+async fn open_workspace_entry(
+    app: tauri::AppHandle,
+    entry_id: String,
+) -> Result<ArtifactView, String> {
     tauri::async_runtime::spawn_blocking(move || {
         let state = app.state::<AppState>();
         let path = state
@@ -130,8 +133,8 @@ async fn open_workspace_entry(app: tauri::AppHandle, entry_id: String) -> Result
             .register(path.clone())?;
         let artifact = keep(&state, source::open_path(&path, &source.id)?)?;
         let id = match &artifact {
-            Artifact::Config(d) => &d.id,
-            Artifact::Recognized(d) => &d.id,
+            ArtifactView::Config(d) => &d.id,
+            ArtifactView::Recognized(d) => &d.id,
         };
         remember(&app, &source.id, id);
         Ok(artifact)
@@ -151,7 +154,7 @@ struct AppState {
     index_cancelled: AtomicBool,
     index_generation: AtomicU64,
     sources: Mutex<SourceRegistry>,
-    documents: Mutex<BTreeMap<String, ConfigDocument>>,
+    documents: Mutex<BTreeMap<String, Arc<ConfigDocument>>>,
     pending: Mutex<Vec<SourceDescriptor>>,
     /// Paths of the file-backed documents currently open, in the order they
     /// were opened. Written to disk on every change so the next run reopens
@@ -221,8 +224,15 @@ fn forget(app: &tauri::AppHandle, document_id: &str) {
     save_session(app);
 }
 
-fn keep(state: &AppState, artifact: Artifact) -> Result<Artifact, String> {
-    if let Artifact::Config(d) = &artifact {
+fn keep(state: &AppState, artifact: Artifact) -> Result<ArtifactView, String> {
+    let Artifact::Config(d) = artifact else {
+        let Artifact::Recognized(d) = artifact else {
+            unreachable!()
+        };
+        return Ok(ArtifactView::Recognized(d));
+    };
+    let snapshot = Arc::new(*d);
+    {
         let mut docs = state
             .documents
             .lock()
@@ -231,19 +241,22 @@ fn keep(state: &AppState, artifact: Artifact) -> Result<Artifact, String> {
             .values()
             .map(|d| d.syntax.iter().map(|l| l.raw.len()).sum::<usize>())
             .sum();
-        if !docs.contains_key(&d.id)
+        if !docs.contains_key(&snapshot.id)
             && (docs.len() >= 32
-                || total + d.syntax.iter().map(|l| l.raw.len()).sum::<usize>() > 128 * 1024 * 1024)
+                || total + snapshot.syntax.iter().map(|l| l.raw.len()).sum::<usize>()
+                    > 128 * 1024 * 1024)
         {
             return Err(
                 "Open-document limit reached. Close a document before importing more.".into(),
             );
         }
-        docs.insert(d.id.clone(), d.as_ref().clone());
+        docs.insert(snapshot.id.clone(), Arc::clone(&snapshot));
     }
-    Ok(artifact)
+    Ok(ArtifactView::Config(Box::new(snapshot.document_view())))
 }
-fn document(state: &AppState, id: &str) -> Result<ConfigDocument, String> {
+// Clone only the handle under the lock. In-flight work keeps its immutable
+// snapshot alive even when the document is closed or replaced in the repository.
+fn document(state: &AppState, id: &str) -> Result<Arc<ConfigDocument>, String> {
     state
         .documents
         .lock()
@@ -252,12 +265,41 @@ fn document(state: &AppState, id: &str) -> Result<ConfigDocument, String> {
         .cloned()
         .ok_or("Document is not open".into())
 }
+const RAW_PAGE_LIMIT: usize = 500;
+
+// Only copy the requested source window; the snapshot lookup releases the
+// repository lock before any source lines are copied or serialized.
+fn document_raw_page(
+    state: &AppState,
+    id: &str,
+    offset: usize,
+    count: usize,
+) -> Result<Vec<flightlens_core::SyntaxLine>, String> {
+    if count == 0 || count > RAW_PAGE_LIMIT {
+        return Err("Raw page size must be between 1 and 500 lines".into());
+    }
+    let snapshot = document(state, id)?;
+    let start = offset.min(snapshot.syntax.len());
+    let end = start + count.min(snapshot.syntax.len() - start);
+    Ok(snapshot.syntax[start..end].to_vec())
+}
+
+#[tauri::command]
+fn raw_page(
+    state: State<'_, AppState>,
+    id: String,
+    offset: usize,
+    count: usize,
+) -> Result<Vec<flightlens_core::SyntaxLine>, String> {
+    document_raw_page(&state, &id, offset, count)
+}
+
 #[tauri::command]
 async fn ingest_text(
     text: String,
     label: String,
     app: tauri::AppHandle,
-) -> Result<Artifact, String> {
+) -> Result<ArtifactView, String> {
     tauri::async_runtime::spawn_blocking(move || {
         let artifact = flightlens_core::analyze(&text, &label, "virtual")?;
         keep(&app.state::<AppState>(), artifact)
@@ -301,7 +343,7 @@ async fn choose_files(app: tauri::AppHandle) -> Result<Vec<SourceDescriptor>, St
     .map_err(|_| "File picker worker failed")?
 }
 #[tauri::command]
-async fn open_source(source_id: String, app: tauri::AppHandle) -> Result<Artifact, String> {
+async fn open_source(source_id: String, app: tauri::AppHandle) -> Result<ArtifactView, String> {
     let path = app
         .state::<AppState>()
         .sources
@@ -312,8 +354,8 @@ async fn open_source(source_id: String, app: tauri::AppHandle) -> Result<Artifac
         let artifact = source::open_path(&path, &source_id)?;
         let artifact = keep(&app.state::<AppState>(), artifact)?;
         let document_id = match &artifact {
-            Artifact::Config(document) => &document.id,
-            Artifact::Recognized(document) => &document.id,
+            ArtifactView::Config(document) => &document.id,
+            ArtifactView::Recognized(document) => &document.id,
         };
         remember(&app, &source_id, document_id);
         Ok(artifact)
@@ -395,7 +437,7 @@ fn inspect_config(
     state: State<AppState>,
 ) -> Result<Inspection, String> {
     Ok(analysis::inspect(
-        &document(&state, &config_id)?,
+        document(&state, &config_id)?.as_ref(),
         rate_profile,
     ))
 }
@@ -425,7 +467,7 @@ fn export_snippet(
     request: ExportRequest,
     state: State<AppState>,
 ) -> Result<ValidatedSnippet, String> {
-    export::export(&document(&state, &config_id)?, &request)
+    export::export(document(&state, &config_id)?.as_ref(), &request)
 }
 #[tauri::command]
 async fn save_snippet(
@@ -433,29 +475,17 @@ async fn save_snippet(
     request: ExportRequest,
     app: tauri::AppHandle,
 ) -> Result<bool, String> {
-    let snippet = export::export(&document(&app.state::<AppState>(), &config_id)?, &request)?;
+    let snippet = export::export(
+        document(&app.state::<AppState>(), &config_id)?.as_ref(),
+        &request,
+    )?;
     tauri::async_runtime::spawn_blocking(move || {
-        let Some(file) = app
-            .dialog()
-            .file()
-            .set_file_name("flightlens-snippet.txt")
-            .blocking_save_file()
-        else {
-            return Ok(false);
-        };
-        let path = file
-            .into_path()
-            .map_err(|_| "Only local files are supported")?;
-        // Never truncate an existing backup (or any other file).
-        let mut output = std::fs::OpenOptions::new()
-            .write(true)
-            .create_new(true)
-            .open(path)
-            .map_err(|_| "Choose a new filename. Existing files are never overwritten.")?;
-        output
-            .write_all(snippet.text.as_bytes())
-            .map_err(|_| "Cannot save snippet")?;
-        Ok(true)
+        save::save_new(
+            &app,
+            "flightlens-snippet.txt",
+            ("Text snippet", &["txt"]),
+            |_| Ok(snippet.text.as_bytes().to_vec()),
+        )
     })
     .await
     .map_err(|_| "Save worker failed")?
@@ -465,7 +495,7 @@ async fn save_snippet(
 fn reported_document(
     state: &AppState,
     config_id: Option<String>,
-) -> Result<Option<ConfigDocument>, String> {
+) -> Result<Option<Arc<ConfigDocument>>, String> {
     config_id.map(|id| document(state, &id)).transpose()
 }
 /// Stamp the environment the report records, overwriting whatever the webview
@@ -485,7 +515,7 @@ fn feedback_report(
     state: State<AppState>,
 ) -> Result<FeedbackReport, String> {
     let document = reported_document(&state, config_id)?;
-    feedback::build_report(&stamped(request), document.as_ref())
+    feedback::build_report(&stamped(request), document.as_deref())
 }
 /// Open the prefilled issue in the reporter's browser.
 ///
@@ -500,7 +530,7 @@ fn file_feedback_report(
     app: tauri::AppHandle,
 ) -> Result<(), String> {
     let document = reported_document(&app.state::<AppState>(), config_id)?;
-    let report = feedback::build_report(&stamped(request), document.as_ref())?;
+    let report = feedback::build_report(&stamped(request), document.as_deref())?;
     app.opener()
         .open_url(report.url, None::<&str>)
         .map_err(|_| "Cannot open a browser for the report".into())
@@ -517,8 +547,16 @@ fn main() {
                     (state.sources.lock(), state.pending.lock())
                 {
                     for path in paths {
+                        if pending.len() >= 256 {
+                            let _ = window.emit("source-error", "Drop queue limit reached. Wait for pending imports to finish before dropping more files.");
+                            break;
+                        }
                         match registry.register(path.clone()) {
-                            Ok(source) => pending.push(source),
+                            Ok(source) => {
+                                if !pending.iter().any(|queued| queued.id == source.id) {
+                                    pending.push(source);
+                                }
+                            },
                             Err(error) => {
                                 let _ = window.emit("source-error", error);
                             }
@@ -541,6 +579,7 @@ fn main() {
             restore_session,
             pending_sources,
             close_document,
+            raw_page,
             inspect_config,
             filter_plot,
             export_snippet,
@@ -550,4 +589,141 @@ fn main() {
         ])
         .run(tauri::generate_context!())
         .expect("FlightLens could not start");
+}
+
+#[cfg(test)]
+mod document_tests {
+    use super::*;
+
+    fn open(state: &AppState, title: &str) -> String {
+        let artifact = flightlens_core::analyze(
+            include_str!("../../fixtures/configs/betaflight-4.5.0.dump"),
+            title,
+            "virtual",
+        )
+        .unwrap();
+        let ArtifactView::Config(document) = keep(state, artifact).unwrap() else {
+            panic!("fixture must be a configuration");
+        };
+        document.id
+    }
+
+    #[test]
+    fn imports_move_source_storage_and_return_only_the_view() {
+        let state = AppState::default();
+        let Artifact::Config(parsed) = flightlens_core::analyze(
+            include_str!("../../fixtures/configs/betaflight-4.5.0.dump"),
+            "view",
+            "virtual",
+        )
+        .unwrap() else {
+            panic!("expected config")
+        };
+        let source_storage = parsed.syntax.as_ptr();
+        let id = parsed.id.clone();
+        let view = keep(&state, Artifact::Config(parsed)).unwrap();
+        let retained = document(&state, &id).unwrap();
+        assert_eq!(retained.syntax.as_ptr(), source_storage);
+        let json = serde_json::to_value(&view).unwrap();
+        assert!(json["document"].get("syntax").is_none());
+        assert_eq!(
+            json["document"]["sourceEvidence"]["lineCount"],
+            retained.syntax.len()
+        );
+        assert_eq!(
+            json["document"],
+            serde_json::to_value(retained.document_view()).unwrap()
+        );
+    }
+
+    #[test]
+    fn raw_pages_preserve_source_and_boundaries() {
+        let state = AppState::default();
+        let text = format!(
+            "# Betaflight / STM32F405 (S405) 4.5.0\r\n{}last line",
+            "# café source\r\n".repeat(1000)
+        );
+        let Artifact::Config(parsed) =
+            flightlens_core::analyze(&text, "paging", "virtual").unwrap()
+        else {
+            panic!("expected configuration");
+        };
+        let id = parsed.id.clone();
+        let expected = serde_json::to_value(&parsed.syntax).unwrap();
+        keep(&state, Artifact::Config(parsed)).unwrap();
+        let mut lines = Vec::new();
+        for offset in [0, 500, 1000] {
+            let page = document_raw_page(&state, &id, offset, 500).unwrap();
+            assert!(page.len() <= RAW_PAGE_LIMIT);
+            lines.extend(page);
+        }
+        assert_eq!(serde_json::to_value(&lines).unwrap(), expected);
+        assert_eq!(
+            lines
+                .iter()
+                .map(|line| line.raw.as_str())
+                .collect::<String>(),
+            text
+        );
+        assert!(document_raw_page(&state, &id, lines.len(), 500)
+            .unwrap()
+            .is_empty());
+        assert!(document_raw_page(&state, &id, usize::MAX, 500)
+            .unwrap()
+            .is_empty());
+        assert_eq!(document_raw_page(&state, &id, 499, 1).unwrap()[0].line, 500);
+    }
+
+    #[test]
+    fn raw_pages_reject_invalid_sizes_and_closed_documents() {
+        let state = AppState::default();
+        let id = open(&state, "paging");
+        for count in [0, 501, usize::MAX] {
+            assert_eq!(
+                document_raw_page(&state, &id, 0, count).unwrap_err(),
+                "Raw page size must be between 1 and 500 lines"
+            );
+        }
+        let page = document_raw_page(&state, &id, 0, 1).unwrap();
+        state.documents.lock().unwrap().remove(&id);
+        assert_eq!(
+            document_raw_page(&state, &id, 0, 1).unwrap_err(),
+            "Document is not open"
+        );
+        assert_eq!(page.len(), 1);
+    }
+
+    #[test]
+    fn lookups_share_a_snapshot_that_survives_close_and_is_then_released() {
+        let state = AppState::default();
+        let id = open(&state, "original");
+        let first = document(&state, &id).unwrap();
+        let second = document(&state, &id).unwrap();
+        assert!(Arc::ptr_eq(&first, &second));
+        let weak = Arc::downgrade(&first);
+        // A returned handle must not retain the repository mutex.
+        state.documents.try_lock().unwrap().remove(&id);
+        assert_eq!(document(&state, &id).unwrap_err(), "Document is not open");
+        assert_eq!(first.title, "original");
+        assert!(!analysis::inspect(&first, 0).rates.is_empty());
+        drop(first);
+        assert!(weak.upgrade().is_some());
+        drop(second);
+        assert!(weak.upgrade().is_none());
+    }
+
+    #[test]
+    fn replacing_a_snapshot_does_not_mutate_in_flight_work() {
+        let state = AppState::default();
+        let id = open(&state, "original");
+        let original = document(&state, &id).unwrap();
+        assert_eq!(open(&state, "reopened"), id);
+        let current = document(&state, &id).unwrap();
+        assert!(!Arc::ptr_eq(&original, &current));
+        assert_eq!(original.title, "original");
+        assert_eq!(current.title, "reopened");
+        let reported = reported_document(&state, Some(id)).unwrap().unwrap();
+        assert!(Arc::ptr_eq(&current, &reported));
+        assert!(reported_document(&state, None).unwrap().is_none());
+    }
 }

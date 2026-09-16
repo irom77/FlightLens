@@ -230,7 +230,7 @@ The corresponding source repository is [irom77/fpv_cli_dumps](https://github.com
 
 - `crates/flightlens-core`: immutable source reads, lossless syntax, normalization, bundled schemas, Rust calculations, audits, export and reference tests.
 - `src-tauri`: backend-authorized source registry, native dialog/drop entry points, bounded document repository, saved session and command boundary. The webview cannot grant itself arbitrary paths or write arbitrary text to disk; restoring a session replays only paths the backend itself registered from a native dialog or drop event.
-- `src`: React views, small Zustand navigation store, typed IPC wrappers and generated DTOs. Large parsed documents remain outside Zustand. Colors live only in the `:root` and `:root[data-theme="light"]` token blocks of `src/styles.css`; components reference tokens through `var(--…)` so both themes stay in step. The OSD canvas keeps its dark video colors in both themes.
+- `src`: React views, small Zustand navigation store, typed IPC wrappers and generated DTOs. Full source documents remain in the backend; compact inspection views live in Zustand. Colors live only in the `:root` and `:root[data-theme="light"]` token blocks of `src/styles.css`; components reference tokens through `var(--…)` so both themes stay in step. The OSD canvas keeps its dark video colors in both themes.
 - `docs/screenshots`: README images regenerated with `pnpm screenshots`.
 - `TODO.md`, `CHANGES.md`, `docs/releases`: outstanding work, the user-visible change log, and the release policy and milestone release notes.
 - `fixtures`: synthetic configurations, malformed inputs and pinned C rate reference vectors.
@@ -243,8 +243,10 @@ For complete Rates and PID inspection, save the entire `dump all` output from
 the currently configured controller, including the firmware header. This includes
 unchanged settings across profiles. `diff all` omits unchanged values, so an
 offline reader needs verified defaults to reconstruct them. FlightLens currently
-derives only rate defaults under its baseline and firmware checks; vendor builds
-may have different defaults. Unknown Expo does not mean zero. Running `dump all`
+derives verified rate defaults and a bounded set of PID gains under its baseline
+and firmware checks. Two exact vendor builds have separately verified rate defaults;
+see [vendor recovery evidence](docs/vendor-rate-defaults.md) and
+[PID recovery evidence](docs/pid-default-recovery.md). Unknown Expo does not mean zero. Running `dump all`
 does not require a reset or a separate `defaults` command. Unsupported firmware
 still needs a compatibility implementation even with a complete dump.
 

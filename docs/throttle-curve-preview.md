@@ -9,7 +9,7 @@ profile switching, source links, unsupported firmware, missing input and MID=100
 ## Supported previews
 
 Plot normalized throttle input against configured throttle command for exact
-reviewed official releases **4.2.0, 4.3.0, 4.3.2, 4.4.0, and 4.5.0–4.5.5**. Require a
+reviewed official releases **4.2.0–4.2.11, 4.3.0–4.3.2, 4.4.0–4.4.3, and 4.5.0–4.5.5**. Require a
 compatible Betaflight schema pack and explicit, valid values from the selected
 rate profile. Exact KAACK releases `4.5.3.KAACK_V19` (legacy) and
 `2025.12.3-alpha.KAACK_V19` (hover-dependent) are also supported, as reviewed
@@ -154,13 +154,13 @@ Research downloaded only public source files, five per exact tag:
 Reproduce the numerical fixtures with `python3 tools/build_throttle_vectors.py`
 (requires Python, a C compiler, and network access to public upstream source).
 The developer tool extracts the unmodified lookup initialization loop,
-`rcLookupThrottle`, and `applyThrottleLimit` at the ten immutable legacy commits
+`rcLookupThrottle`, and `applyThrottleLimit` at the 25 immutable legacy commits
 below, compiles them with undefined-behavior sanitization, and records source
 SHA-256 hashes in `fixtures/throttle-vectors.json`. A minimal shim supplies the
 reviewed constants/profile fields and selects the ordinary non-RPM-limited path.
 It does not compile the entire firmware or independently verify CLI declarations.
 
-The checked-in fixture contains 90,816 vectors (34,848 legacy and 55,968 hover-dependent) covering eight midpoint/expo
+The checked-in fixture contains 138,336 vectors (82,368 legacy and 55,968 hover-dependent) covering eight midpoint/expo
 pairs, all three limit modes, four percentages, endpoints, lookup knots and their
 neighbors, and intermediate inputs. The Rust differential test consumes these
 fixtures offline, checks exact pre-limit integer results, and allows 0.00002
@@ -205,9 +205,24 @@ on 2026-09-12. Use the commit in source URLs for immutable reproduction.
 | Tag | Commit |
 | --- | --- |
 | 4.2.0 | `8f2d21460a9913d58bd1c33f8348c3791451fb45` |
+| 4.2.1 | `caa0d683c3e3281d5d8dc2cee9626654d77e7490` |
+| 4.2.2 | `e833ac612a53eb75f5208e02c903970d20e8ad02` |
+| 4.2.3 | `2696b7c88fa85fbf9bd57735d6101ec7aff0c4ce` |
+| 4.2.4 | `fbcaf8c500924d79e7cf4300d9e4712c68abfbd9` |
+| 4.2.5 | `afdac08b3780080e9a2e790a24f3988266d5596b` |
+| 4.2.6 | `a4b6db1e76eacc2dafc261640ee68c7270f47c0d` |
+| 4.2.7 | `657efec8cfa83f7e0dbb73a18ad3093b938e7b23` |
+| 4.2.8 | `101738d8e86eb86fb98fefa9a25faa3c124584ca` |
+| 4.2.9 | `e097f4ab7f16d6bb9a08abc6842ff2b8cffffd59` |
+| 4.2.10 | `e4b21269952ec6e23c91be0703661ea7e61e6cfd` |
+| 4.2.11 | `948ba6339766851806d7637370829ea0ff74c690` |
 | 4.3.0 | `229ac667552827c6288550964a0ef877c04bf8ab` |
+| 4.3.1 | `8d4f00532dfdd36467ed4b5f3395f5445b521dd6` |
 | 4.3.2 | `60c9521da6072e6c891bd30fd772e91a790f0b53` |
 | 4.4.0 | `4605309d8253db0113d4c54d31fe8bd998f46401` |
+| 4.4.1 | `e43d591b2d75554dc36cfe7f8cdbe94422ba8936` |
+| 4.4.2 | `23d066d0824ecdb2cd0986a31eb6603a89d15a3e` |
+| 4.4.3 | `738127e7e11da587f63b9531ec732a37bdb436b0` |
 | 4.5.0 | `c155f5830d0ffdee1c34071dd21f174ffc374c81` |
 | 4.5.1 | `77d01ba3b76a22909d5f09cb0628820141f95eaa` |
 | 4.5.2 | `024f8e13d4e642eb6a380308685b9ea3aa3ef1a2` |
@@ -317,3 +332,23 @@ Validation: `./test.sh` and `pnpm screenshots:check` pass. The full check includ
 Rust formatting/core tests, generated bindings, TypeScript, frontend tests, browser
 behavior, and the read-only backup corpus check. Existing numerical vectors were
 confirmed unchanged. No commit or release was made in this checkpoint.
+
+
+## Older patch coverage completed — 2026-09-14
+
+Added 15 exact official releases: 4.2.1–4.2.11, 4.3.1 and 4.4.1–4.4.3.
+Their tag commits above were resolved on 2026-09-14. The C generator compiled
+each pinned release with undefined-behavior sanitization, adding 47,520 synthetic
+vectors. The Rust differential suite checks every added release.
+
+Run `python3 tools/verify_throttle_releases.py` to reproduce the accompanying
+declaration checks. `fixtures/throttle-release-evidence.json` records pinned
+commits, source hashes and selected declarations for all 19 releases on these
+three lines. CLI field mappings and bounds, profile field types and limit enums,
+lookup length, and PWM constants match each line's previously reviewed base.
+The compiled fixtures independently exercise lookup construction/interpolation
+and limit calculations; neither check compiles a complete flight controller.
+
+Missing-input behavior, the legacy MID=100 exclusion, and exact vendor identity
+gates remain covered by tests. Omitted throttle-default recovery remains a
+separate TODO.
