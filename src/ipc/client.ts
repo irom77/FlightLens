@@ -1,5 +1,11 @@
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import type {
+  LlmSettings,
+  LlmStatus,
+  LlmPreview,
+  LlmSummary,
+  SummaryRequest,
+  Provider,
   ArtifactView,
   SyntaxLine,
   WorkspacePage,
@@ -21,6 +27,22 @@ type SessionProfiles = {
 type SessionComparison = { documents: string[]; baseline: string | null };
 export const desktopAvailable = isTauri;
 export const api = {
+  llmSettings: () => invoke<LlmStatus>("llm_settings"),
+  llmSaveSettings: (settings: LlmSettings) =>
+    invoke<LlmStatus>("llm_save_settings", { settings }),
+  llmSaveKey: (provider: Provider, key: string, sessionOnly = false) =>
+    invoke<LlmStatus>("llm_save_key", { provider, key, sessionOnly }),
+  llmClearKey: (provider: Provider) =>
+    invoke<LlmStatus>("llm_clear_key", { provider }),
+  llmPreview: (request: SummaryRequest) =>
+    invoke<LlmPreview>("llm_preview", { request }),
+  llmSummarize: (request: SummaryRequest, regenerate = false) =>
+    invoke<LlmSummary>("llm_summarize", { request, regenerate }),
+  llmSaveSummary: (request: SummaryRequest, summary: LlmSummary) =>
+    invoke<boolean>("llm_save_summary", { request, summary }),
+  llmCancel: () => invoke<void>("llm_cancel"),
+  llmTestPreview: () => invoke<LlmPreview>("llm_test_preview"),
+  llmTestConnection: () => invoke<string>("llm_test_connection"),
   savePortableSession: (request: {
     preserveUnavailableSelections: boolean;
     documentIds: string[];

@@ -33,6 +33,9 @@ echo "== Rust Clippy =="
 echo "== Rust core tests =="
 "$CARGO_BIN" test -p flightlens-core
 
+echo "== Rust shell tests =="
+"$CARGO_BIN" test -p flightlens
+
 echo "== Generated bindings =="
 pnpm bindings:check
 

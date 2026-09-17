@@ -34,3 +34,16 @@ The repository distributes this resource under its GPL license, with no separate
 ## Dependencies
 
 Cargo.lock and pnpm-lock.yaml pin dependency versions. Rust and JavaScript dependencies retain their individual licenses. CI emits inventories for review; no distribution license clearance or SBOM certification is claimed by this development build. Preserve applicable dependency notices and corresponding source when preparing Phase 2 release artifacts.
+
+### Optional AI summary transport and credentials
+
+The desktop shell adds `reqwest` 0.12.28 (MIT OR Apache-2.0) with rustls TLS,
+and `keyring` 3.6.3 (MIT OR Apache-2.0) with native Windows/macOS stores and
+Linux Secret Service. Linux vendors D-Bus and uses Rust cryptography; the
+selected dependency graph introduces no OpenSSL/native-tls transport.
+
+The [locked dependency inventory](docs/llm-dependencies.md) lists new direct
+and transitive packages and their upstream license expressions, including
+ring's combined Apache/ISC notices, the root data's CDLA-Permissive-2.0 license,
+and vendored D-Bus notices. Preserve those upstream notices with distributions.
+Native installer/license bundle verification remains a release check.

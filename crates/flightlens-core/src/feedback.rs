@@ -103,7 +103,8 @@ pub struct RedactedConfig {
     pub oversized: bool,
 }
 
-fn category(key: &str) -> Option<Category> {
+/// Shared sensitivity classification for feedback and structured summaries.
+pub fn sensitivity(key: &str) -> Option<Category> {
     if IDENTITY_KEYS.contains(&key) {
         Some(Category::Identity)
     } else if LINK_SECRET_KEYS.contains(&key) {
@@ -163,7 +164,7 @@ pub fn redact(document: &ConfigDocument) -> RedactedConfig {
     let mut lines = Vec::with_capacity(document.syntax.len());
     for line in &document.syntax {
         match &line.command {
-            Command::Set { key, .. } => match category(key) {
+            Command::Set { key, .. } => match sensitivity(key) {
                 Some(category) => {
                     removed.push(Redaction {
                         key: key.clone(),
@@ -453,4 +454,52 @@ pub fn build_report(
         clipboard: redacted.as_ref().map(|r| r.text.clone()),
         removed: redacted.map(|r| r.removed).unwrap_or_default(),
     })
+}
+
+#[cfg(test)]
+mod sensitivity_tests {
+    use super::*;
+
+    #[test]
+    fn summary_excludes_every_sensitive_key() {
+        let mut text = "# Betaflight / STM32F405 4.5.0\n".to_string();
+        for key in IDENTITY_KEYS.iter().chain(LINK_SECRET_KEYS.iter()) {
+            text.push_str(&format!("set {key} = PRIVATE-SENTINEL\n"));
+        }
+        let crate::Artifact::Config(document) =
+            crate::analyze(&text, "PRIVATE-TITLE", "PRIVATE-PATH").unwrap()
+        else {
+            panic!("config");
+        };
+        let digest = crate::llm::InspectorDigest::build(&document, 0, 0);
+        let json = serde_json::to_string(&digest).unwrap();
+        assert!(!json.contains("PRIVATE"));
+        for key in IDENTITY_KEYS.iter().chain(LINK_SECRET_KEYS.iter()) {
+            assert!(!digest.parameters.iter().any(|p| p.semantic_key == *key));
+            let row = crate::llm::DiffRowInput {
+                section: "parameters".into(),
+                key: (*key).into(),
+                scope: "global".into(),
+                status: "changed".into(),
+                values: vec![None, None],
+                reason: None,
+            };
+            assert_eq!(
+                crate::llm::DiffDigest::build(2, None, &[row]).err(),
+                Some(crate::llm::DigestError::SensitiveKey)
+            );
+        }
+    }
+
+    #[test]
+    fn shared_classifier_covers_both_lists() {
+        for key in IDENTITY_KEYS {
+            assert_eq!(sensitivity(key), Some(Category::Identity));
+        }
+        for key in LINK_SECRET_KEYS {
+            assert_eq!(sensitivity(key), Some(Category::LinkSecret));
+        }
+        assert_eq!(sensitivity("roll_p"), None);
+        assert_eq!(sensitivity(""), None);
+    }
 }

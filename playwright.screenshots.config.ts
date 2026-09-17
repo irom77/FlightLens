@@ -17,6 +17,8 @@ export default defineConfig({
     baseURL: "http://127.0.0.1:1420",
     viewport: { width: 1280, height: 820 },
     deviceScaleFactor: 2,
+    timezoneId: "UTC",
+    locale: "en-US",
     launchOptions: process.env.FLIGHTLENS_CHROMIUM
       ? { executablePath: process.env.FLIGHTLENS_CHROMIUM }
       : {},

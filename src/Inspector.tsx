@@ -1,3 +1,5 @@
+import { AiSummary } from "./AiSummary";
+import type { LlmStatus } from "./bindings/core";
 import { useEffect, useState } from "react";
 import type { DocumentView, Inspection, Parameter } from "./bindings/core";
 import { api } from "./ipc/client";
@@ -30,8 +32,12 @@ export function Inspector({
   document: d,
   onError,
   reload,
+  aiStatus,
+  openAiSettings,
 }: {
   document: DocumentView;
+  aiStatus: LlmStatus | null;
+  openAiSettings: () => void;
   onError: (e: string) => void;
   reload: () => void;
 }) {
@@ -103,34 +109,49 @@ export function Inspector({
   );
   return (
     <>
-      <section className="document-heading">
-        <div>
-          <span className="eyebrow">CONFIGURATION SNAPSHOT</span>
-          <h1>{d.title}</h1>
-          <div className="metadata">
-            <span className="firmware">
-              {d.firmware.family} {d.firmware.version ?? "unknown version"}
-              {d.firmware.boardName && ` · ${d.firmware.boardName}`}
-            </span>
-            {d.craftName && (
-              <span className="declared-name">
-                Craft <b>{d.craftName}</b>
-              </span>
+      <AiSummary
+        key={JSON.stringify([d.id, d.hash, rate, pid, aiStatus])}
+        heading={
+          <section className="document-heading">
+            <div>
+              <span className="eyebrow">CONFIGURATION SNAPSHOT</span>
+              <h1>{d.title}</h1>
+              <div className="metadata">
+                <span className="firmware">
+                  {d.firmware.family} {d.firmware.version ?? "unknown version"}
+                  {d.firmware.boardName && ` · ${d.firmware.boardName}`}
+                </span>
+                {d.craftName && (
+                  <span className="declared-name">
+                    Craft <b>{d.craftName}</b>
+                  </span>
+                )}
+                {d.pilotName && (
+                  <span className="declared-name">
+                    Pilot <b>{d.pilotName}</b>
+                  </span>
+                )}
+                <span>SHA-256 {d.hash.slice(0, 12)}</span>
+                <span>{d.sourceEvidence.lineCount} lines</span>
+                <span className="unknown-badge">
+                  Partial · defaults unknown
+                </span>
+              </div>
+            </div>
+            {d.sourceId !== "virtual" && (
+              <button onClick={reload}>Reload file</button>
             )}
-            {d.pilotName && (
-              <span className="declared-name">
-                Pilot <b>{d.pilotName}</b>
-              </span>
-            )}
-            <span>SHA-256 {d.hash.slice(0, 12)}</span>
-            <span>{d.sourceEvidence.lineCount} lines</span>
-            <span className="unknown-badge">Partial · defaults unknown</span>
-          </div>
-        </div>
-        {d.sourceId !== "virtual" && (
-          <button onClick={reload}>Reload file</button>
-        )}
-      </section>
+          </section>
+        }
+        request={{
+          kind: "inspector",
+          configId: d.id,
+          rateProfile: rate,
+          pidProfile: pid,
+        }}
+        status={aiStatus}
+        openSettings={openAiSettings}
+      />
       {!d.sourceEvidence.hasDumpAll && (
         <section
           className="notice"

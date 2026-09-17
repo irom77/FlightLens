@@ -9,7 +9,9 @@ import { ModeComparison } from "./ModeComparison";
 import { PortComparison } from "./PortComparison";
 import { FeatureComparison } from "./FeatureComparison";
 import { useEffect, useState } from "react";
-import type { Inspection } from "./bindings/core";
+import { AiSummary } from "./AiSummary";
+import { summaryDiff } from "./summaryDiff";
+import type { LlmStatus, SummaryRequest, Inspection } from "./bindings/core";
 import { useProfiles, useSelections } from "./stores/selections";
 import { api } from "./ipc/client";
 import { Plot } from "./Plots";
@@ -38,7 +40,15 @@ function useRates(document: ComparisonDocument | undefined, profile: number) {
   return result?.key === key ? result : undefined;
 }
 
-export function Comparison({ documents }: { documents: ComparisonDocument[] }) {
+export function Comparison({
+  documents,
+  aiStatus,
+  openAiSettings,
+}: {
+  documents: ComparisonDocument[];
+  aiStatus: LlmStatus | null;
+  openAiSettings: () => void;
+}) {
   const { comparison, setComparison } = useSelections();
   const ids = comparison?.documents ?? [
     documents[0]?.id ?? "",
@@ -59,7 +69,13 @@ export function Comparison({ documents }: { documents: ComparisonDocument[] }) {
   const b = documents.find((d) => d.id === right);
   return (
     <section className="content">
-      <h1>Compare backups</h1>
+      <ComparisonSummary
+        a={a}
+        b={b}
+        c={c}
+        status={aiStatus}
+        openSettings={openAiSettings}
+      />
       <p>
         Calculated angular velocity (°/s) versus stick input, not measured
         flight motion. Choose two or three backups and a rate profile for each.
@@ -99,6 +115,73 @@ export function Comparison({ documents }: { documents: ComparisonDocument[] }) {
       </div>
       <RateComparison key={`${a?.id}:${b?.id}:${c?.id}`} a={a} b={b} c={c} />
     </section>
+  );
+}
+
+function ComparisonSummary({
+  a,
+  b,
+  c,
+  status,
+  openSettings,
+}: {
+  a?: ComparisonDocument;
+  b?: ComparisonDocument;
+  c?: ComparisonDocument;
+  status: LlmStatus | null;
+  openSettings: () => void;
+}) {
+  const pa = useProfiles(a);
+  const pb = useProfiles(b);
+  const pc = useProfiles(c);
+  const selection = useSelections((s) => s.comparison);
+  const index = [a?.id, b?.id, c?.id].indexOf(selection?.baseline ?? "");
+  const baseline = c && index >= 0 ? index : null;
+  const unavailable =
+    !a || !b || a.id === b.id || (c && (c.id === a.id || c.id === b.id))
+      ? "Select two or three different open backups to summarize."
+      : c && baseline === null
+        ? "Choose a baseline to summarize three backups."
+        : undefined;
+  const slots =
+    a && b
+      ? [
+          { document: a, profiles: { rate: pa.rate, pid: pa.pid } },
+          { document: b, profiles: { rate: pb.rate, pid: pb.pid } },
+          ...(c
+            ? [{ document: c, profiles: { rate: pc.rate, pid: pc.pid } }]
+            : []),
+        ]
+      : [];
+  const request: SummaryRequest | null = unavailable
+    ? null
+    : {
+        kind: "diff",
+        slots: slots.map(({ document, profiles }) => ({
+          configId: document.id,
+          rateProfile: profiles.rate,
+          pidProfile: profiles.pid,
+        })),
+        baseline,
+        rows: summaryDiff(slots, baseline),
+      };
+  return (
+    <AiSummary
+      key={JSON.stringify([request, slots.map((s) => s.document.hash), status])}
+      request={request}
+      status={status}
+      openSettings={openSettings}
+      unavailable={unavailable}
+      heading={
+        <div>
+          <h1>Compare backups</h1>
+          <p className="muted">
+            AI summaries cover all non-equal comparison rows for the selected
+            profiles, regardless of table search filters.
+          </p>
+        </div>
+      }
+    />
   );
 }
 

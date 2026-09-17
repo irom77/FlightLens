@@ -1,4 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+mod llm;
 mod portable;
 mod save;
 use flightlens_core::{
@@ -148,6 +149,7 @@ async fn open_workspace_entry(
 const SESSION_LIMIT: usize = 32;
 #[derive(Default)]
 struct AppState {
+    llm: llm::Service,
     unresolved_session: Mutex<Option<portable::UnresolvedSession>>,
     index: Mutex<Option<flightlens_core::workspace::WorkspaceIndex>>,
     index_busy: AtomicBool,
@@ -427,6 +429,7 @@ fn close_document(config_id: String, app: tauri::AppHandle) -> Result<(), String
         .lock()
         .map_err(|_| "Document repository unavailable")?
         .remove(&config_id);
+    state.llm.invalidate();
     forget(&app, &config_id);
     Ok(())
 }
@@ -567,6 +570,16 @@ fn main() {
             }
         })
         .invoke_handler(tauri::generate_handler![
+            llm::llm_settings,
+            llm::llm_save_settings,
+            llm::llm_save_key,
+            llm::llm_clear_key,
+            llm::llm_preview,
+            llm::llm_summarize,
+            llm::llm_cancel,
+            llm::llm_save_summary,
+            llm::llm_test_preview,
+            llm::llm_test_connection,
             portable::save_portable_session,
             portable::open_portable_session,
             choose_workspace,

@@ -6,6 +6,22 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## 0.11.0 — 2026-09-17
+
+- Add the core and desktop command foundation for optional AI summaries:
+  bounded redacted digests, deterministic prompts, provider settings, OS
+  credential storage or explicit session-only keys, reviewed-payload gating,
+  cancellable Rust HTTP transport and memory-only caching. The feature is off
+  by default. Inspector now includes settings, exact-payload preview, plain-text
+  results, copy with attribution and safe Markdown export with backup provenance.
+  Connection tests and regeneration also require a reviewed Send. Compare now
+  supports two- and three-backup summaries with baseline/profile invalidation and
+  Markdown provenance for every slot. Its row adapter preserves comparison
+  classifications and omits raw collection source text. Comparison previews
+  filter sensitive rows and resolve backup labels and hashes from open documents.
+  The status badge now says “Local inspection” to distinguish offline analysis
+  from explicitly requested model traffic.
+
 ## 0.10.2 — 2026-09-16
 
 - Recover omitted rate-profile settings for source-verified Betaflight

@@ -7,6 +7,14 @@ file holds actionable tasks and explicitly deferred follow-up work.
 
 ## Next
 
+- LLM release checks still pending: a real provider request, installed Ollama
+  smoke test, and packaged Windows/macOS keychain, installer and license-bundle
+  checks. Only Linux is available here; fake credentials and a synthetic HTTP
+  server do not establish native keychain or model availability.
+- Keep LLM streaming, token/cost display, summary session persistence, telemetry
+  summaries and user prompt customization deferred. LLM output must never drive
+  parsing, audit verdicts, derived values or configuration exports.
+
 - Extend vendor rate-default certification only with pinned source evidence.
   D2 covers exactly `4.5.3.KAACK_V19` and `2025.12.3-alpha.KAACK_V19`;
   other vendor versions and vendor PID defaults remain unverified. See

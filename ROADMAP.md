@@ -210,6 +210,11 @@ Phase 3 adds the telemetry pipeline before expanding configuration adapters:
 - Differential fixtures against trusted decoder output and bounded background workers.
 - Redacted, user-reviewed diagnostic payloads with optional local or cloud providers.
 
+Inspector configuration and Compare summaries now partially deliver the
+reviewed-payload commitment ahead of telemetry: optional local/cloud providers,
+explicit preview and Send, and unverified text kept separate from inspection
+findings. The Phase 3 telemetry pipeline remains unfinished.
+
 Cloud diagnostics remain opt-in. No network request, credential storage, configuration mutation, or tuning recommendation happens automatically.
 
 ## Phase 4 — iNAV and ArduPilot adapters

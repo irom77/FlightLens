@@ -41,11 +41,35 @@ The images below come from the built-in synthetic example (**Explore a synthetic
 
 Flight controller backups are useful, but they are hard to read as raw CLI text. FlightLens turns a backup into a clear, navigable snapshot while keeping the source close at hand.
 
-- **Private by default:** analysis runs locally. There is no account, upload, telemetry, or background network connection.
+- **Private by default:** inspection, comparison, audits and configuration exports run locally. There is no FlightLens account, telemetry or background network connection. Optional AI summary transport is off by default and sends only an explicitly reviewed structured digest to the configured provider; raw CLI text is never sent. Inspector and Compare summaries are available through AI summary settings.
 - **Read-only:** imported files are never edited. FlightLens works from an immutable snapshot and content hash.
 - **Honest about uncertainty:** missing values stay unknown; the app does not invent target defaults or pretend a backup proves how an aircraft flies.
 - **Traceable:** values, audit findings, and exports link back to the original source lines.
 - **Useful at the bench:** compare rates, PID settings, filters, ports, modes, OSD, raw CLI, and audit findings in one place.
+
+## AI summaries
+
+In the desktop sidebar, open **AI summary settings**, select a provider and
+model, then save settings. Cloud providers use your own API key, stored in the
+OS credential store. If it is unavailable, explicitly select a session-only key;
+it is discarded on exit. Custom OpenAI-compatible endpoints can use a local
+model without a key. Enter its installed model ID and base URL, such as
+`http://localhost:11434`. Remote endpoints require HTTPS.
+
+Enable summaries, then choose **AI summary** in Inspector or Compare. Compare
+requires two backups, or three with a selected baseline, and covers all non-equal
+rows for the selected rate/PID profiles regardless of table search filters. Review the destination,
+exact prompts, structured digest, exclusions and anonymous label mapping before
+**Send**. Connection tests also require a reviewed Send and contain no backup data.
+Inspection, profile changes and opening files never send requests. A loopback
+endpoint keeps requests on this machine; cloud endpoints receive the reviewed
+digest. Corporate environment proxies and redirects are not supported.
+
+Results are unverified model text, separate from FlightLens findings. Copy includes
+attribution and a disclaimer. Save as Markdown creates a new file with the backup
+name/hash, profiles and model provenance (every slot and baseline for Compare); model text remains a literal code block.
+Regenerate requires a fresh preview. Cached summaries stay in memory and are
+cleared when a backup closes or settings/keys change; sessions never store them.
 
 ## Get started
 

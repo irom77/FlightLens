@@ -43,6 +43,7 @@ jobs:
           cargo fmt --all -- --check
           cargo clippy --workspace --all-targets -- -D warnings
           cargo test -p flightlens-core
+          cargo test -p flightlens
           pnpm bindings:check
 
       - name: Check frontend behavior

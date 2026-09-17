@@ -1,7 +1,23 @@
-use flightlens_core::{analysis::*, export::*, feedback::*, *};
+use flightlens_core::{analysis::*, export::*, feedback::*, llm::*, *};
 use ts_rs::TS;
 fn main() {
     let declarations = [
+        SummaryRequest::decl(),
+        SummarySlot::decl(),
+        LlmStatus::decl(),
+        LlmPreview::decl(),
+        LlmSummary::decl(),
+        Provider::decl(),
+        LlmSettings::decl(),
+        DigestFirmware::decl(),
+        Provenance::decl(),
+        DigestParameter::decl(),
+        DigestCurve::decl(),
+        DigestAudit::decl(),
+        InspectorDigest::decl(),
+        DiffRowInput::decl(),
+        Truncation::decl(),
+        DiffDigest::decl(),
         workspace::WorkspaceEntry::decl(),
         workspace::WorkspacePage::decl(),
         Value::decl(),

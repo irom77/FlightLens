@@ -4,6 +4,7 @@ pub mod compatibility;
 pub mod evidence;
 pub mod export;
 pub mod feedback;
+pub mod llm;
 pub mod model;
 pub mod parser;
 pub mod session;

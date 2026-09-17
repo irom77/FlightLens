@@ -4,9 +4,325 @@ Handoff plan for adding optional, key-configured LLM summaries to FlightLens:
 an AI summary of the open backup in Inspector mode, and an AI summary of the
 differences in Compare mode.
 
-Nothing in this document has been implemented. It is a specification for the
-implementing agent, written against `v0.10.1` (`main`). It states the decisions
-that are settled, the seams to build, and the checks that must pass.
+Checkpoints 1–5 are implemented against `v0.10.2`; checkpoint 6 prepares
+`0.11.0`. Live-provider and native-platform verification remains pending.
+The specification was originally written against `v0.10.1`. The completion
+boundary below records the implementation; later sections remain the target
+for the remaining checkpoints.
+
+### Checkpoint 6 — final local verification and release preparation — 2026-09-17
+
+Implementation and documentation cover Inspector and Compare summaries. Version
+metadata is now `0.11.0` in package.json, Tauri configuration, workspace Cargo.toml
+and the refreshed Cargo.lock: this is a new capability under the release policy.
+[Milestone notes](releases/v0.11.0.md) describe compatibility, privacy and remaining
+limitations. CHANGES remains Unreleased until an authorized release is cut.
+No commit, tag, push or publication was performed.
+
+Verification: `cargo check --workspace` refreshed the lockfile successfully.
+The full `./test.sh` passed: Rust formatting and Clippy with warnings denied,
+core and 27 shell tests, generated bindings, ESLint, TypeScript, 94 frontend
+tests, 37 browser tests and the local real-backup corpus gate.
+`pnpm screenshots:check` passed six scenarios covering 20 images.
+`pnpm build`, `pnpm format:check` and `git diff --check` passed. The first
+formatting run identified App/Inspector integration formatting; those touched
+files were corrected and the full formatting check now passes.
+
+Full release validation is **not complete**. These checks need environments or
+credentials unavailable in this Linux session; simulated transport is not a
+substitute:
+
+1. With a real cloud account and a synthetic backup, review the exact payload,
+   Send, verify a nonempty attributed result, regenerate after another review,
+   and export. Record provider/model and outcome, never the key or private data.
+2. With installed Ollama and a downloaded model, repeat through the loopback
+   custom endpoint without a key. Verify cancellation and an unavailable-model
+   error. No Ollama executable is installed in this environment.
+3. Build both Windows and macOS installers with the locked dependencies. Both
+   builds are release-blocking. In packaged apps, verify credential save/restart/
+   clear and explicit session-only fallback, clipboard, Markdown save/cancel/
+   collision handling, and retained dependency licenses/corresponding source.
+4. Before an authorized push, rerun the release gates as needed, date the
+   Unreleased changelog section, commit and push with matching `v0.11.0` tag.
+   Publish milestone notes only after both installer workflows pass.
+
+Code implementation can be called complete; live integration and release
+verification must remain pending until evidence for the checks above exists.
+
+### Checkpoint 5 completion boundary — 2026-09-17
+
+- Compare now shares Inspector's review, Send, plain-text result, Copy,
+  Regenerate, Dismiss and Markdown export controls. The action explains missing
+  selections and requires a baseline for three backups. The digest covers all
+  non-equal comparison rows, independent of table search filters.
+- Selected documents/hashes, rate/PID profiles, baseline and settings identify
+  the mounted summary. Changes discard pending/late results and displayed text;
+  returning to an unchanged request can reuse the Rust cache after review.
+- Markdown exports validate the exact cached result against all open documents
+  before writing. Compare provenance includes A/B/C titles, full hashes, rate/PID
+  selections and baseline. Metadata is escaped and model output stays literal.
+- Added browser coverage for two/three slots, selected profiles, reviewed Send,
+  export request identity, baseline/profile invalidation and missing selections;
+  shell coverage verifies multi-backup provenance and rejects tampered results,
+  changed hashes/profiles and missing documents. Added comparison preview/result
+  screenshot baselines in both themes.
+- README, roadmap, changelog and TODO now reflect both modes. Live provider,
+  Ollama and native verification, full final gates and release preparation remain
+  checkpoint 6. No version bump, commit, push or live-provider call in this slice.
+
+Verification: all 27 shell tests, 94 frontend tests and 37 browser tests pass.
+Workspace Clippy with warnings denied, Rust formatting, TypeScript checking,
+ESLint, changed UI/test-file Prettier checks, production build and diff whitespace
+checks pass. Four new comparison screenshots were generated and visually reviewed
+in both themes; `pnpm screenshots:check` passes all six scenarios (20 images).
+The first new browser run found that the fixture lacked a second
+PID profile; it now uses the existing Rust multi-profile fixture variant.
+No real backup or API key was sent to a provider. Native save dialogs/keychains,
+live providers and Ollama remain unverified here.
+
+### Checkpoint 5b — comparison request boundary — 2026-09-17
+
+- Comparison requests now carry document IDs and rate/PID profiles for each slot,
+  replacing renderer-supplied labels. Rust resolves open documents, validates
+  slot count, document order and profile bounds, and requires a baseline for
+  three-backup comparisons. Local label mapping uses trusted document titles.
+- Cache/review identity includes every resolved backup hash and the selected
+  profiles, slots and baseline. Titles and hashes do not enter provider payloads.
+- Rust removes sensitive-key rows using the shared feedback sensitivity list,
+  reports them as local preview exclusions, and passes the remaining rows through
+  the existing strict digest validation and caps. Core sensitive-key rejection
+  remains intact. Exclusion line numbers are zero because diff rows have no
+  single source line.
+- Compare UI and multi-backup Markdown export remain unimplemented. The new
+  request shape provides their document provenance boundary; comparison semantics
+  still come from the tested frontend adapter.
+
+Verification: `cargo test -p flightlens` passes 26 shell tests, including two new
+comparison boundary tests. Core tests, all 94 frontend tests, workspace Clippy
+with warnings denied, Rust formatting, generated bindings, TypeScript checking,
+ESLint and `git diff --check` pass. An initial test-fixture type error and a
+needless-borrow lint were corrected. No UI changed, so browser/screenshot checks
+were not repeated. No live provider, Ollama or native-platform checks ran.
+
+### Checkpoint 5a — comparison extraction — 2026-09-17
+
+- Added `src/summaryDiff.ts`, reusing the existing parameter and collection
+  comparison functions, including certified cross-version and three-way gates.
+- Values retain original A/B/C slot order regardless of the selected baseline.
+  Reasons identify the changed slot for one-sided results. Unknown values remain
+  null; declared and derived parameter values retain their provenance.
+- Equal rows are omitted. Source-text collection rows carry classification and
+  line counts only, with an explicit warning that text differences do not prove
+  behavioral differences. Raw CLI lines, source metadata and document identities
+  are not serialized by the adapter.
+- The adapter is not connected to the UI yet. Rust remains responsible for
+  sensitive-key rejection and payload limits; exclusion handling must be wired
+  before enabling Compare summaries. Local export must also bind slot IDs and
+  profiles to open Rust documents to obtain trusted titles and hashes.
+- Six new regression tests cover profile selection, unknowns, provenance,
+  certified versus uncertified equivalence, all baselines, explicit false values,
+  collection semantics, text-only differences and source-metadata exclusion.
+  All 94 frontend tests pass. No provider requests or backup writes occurred.
+
+The remaining work recorded at checkpoint 5a was completed by checkpoints 5b
+and 5 above.
+
+### Checkpoint 4 completion boundary — 2026-09-17
+
+- Added sidebar AI settings and a visible Inspector AI summary action, with
+  disabled reasons and a settings shortcut. Provider/model/base URL/timeout and
+  enablement are saved explicitly; browser preview explains desktop requirements.
+  The status badge says “Local inspection” rather than implying model traffic
+  is offline. Keys are write-only password inputs cleared on submission, with explicit
+  session-only storage and key clearing. Saving settings never sends a request.
+- Both summary and connection test dialogs show destination, provider/model,
+  exact prompts, expandable digest JSON, local label mapping, sensitivity
+  exclusions, payload bytes, truncation and blocking problems. Send is explicit
+  and single-use; retry and regeneration require fresh review. Cancellation and
+  Inspector identity/profile/settings changes discard late results.
+- Model results render as plain text with provider, model, prompt version, local
+  timestamp, cache indicator and disclaimer. Copy includes attribution and the
+  disclaimer. Dismiss removes the panel; summaries never enter sessions.
+- Added `llm_save_summary(request, summary)`: Rust compares the displayed result
+  with the exact cached request before exporting its own cached text. Markdown
+  includes UTC ISO timestamp, local backup title/full hash, 1-based and CLI
+  profiles, provider/model, prompt version and app version. Metadata is escaped;
+  model output uses an indented literal block, preserving plain-text rendering
+  even for HTML, Markdown image links or embedded fences. The existing
+  `save_new` dialog uses `create_new` and retries collisions. Evicted or changed
+  results require a fresh reviewed summary before saving.
+- Compare row extraction, entry points and multi-backup export remain checkpoint 5.
+  No dependency, CSP/capability, version, commit or release changes in this slice.
+
+Verification: `cargo test -p flightlens` passes all 24 shell tests, including
+cached-export provenance/tamper checks and UTC date boundaries. `pnpm test`
+passes 88 tests in 22 files. The full `pnpm test:ui` run passes 35 tests; the
+expanded AI suite covers five scenarios, including no automatic requests,
+profile invalidation, preview problems, credential entry/clearing, connection
+review, literal output, copying/export, cancellation and retry.
+`cargo clippy --workspace --all-targets -- -D warnings`, Rust formatting,
+`pnpm bindings:check`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, changed/new
+component Prettier checks and `git diff --check` pass. `pnpm screenshots` and
+`pnpm screenshots:check` pass all four scenarios with 16 baselines, including
+six new settings/preview/result images in both themes. Baselines were visually
+reviewed; screenshots use a fixed locale/timezone for timestamp stability.
+The first targeted browser run found an ambiguous test label, corrected without
+weakening assertions. No provider network calls occurred in these checks.
+
+Live provider/Ollama and native installer, keychain and save-dialog checks remain
+pending. The final release `./test.sh` gate remains checkpoint 6; this slice ran
+the relevant shell, frontend, browser, build and screenshot checks directly.
+
+### Checkpoint 3 completion boundary — 2026-09-16
+
+- Added desktop IPC and Rust transport, settings validation/read/write in
+  `llm.json`, native credential storage, explicit session-only keys, cancellation,
+  one-request guard, static error mapping and bounded in-memory summary caching.
+  No UI or Markdown summary export is implemented yet.
+- `keyring` 3.6.3 requires explicit backend features: apple-native,
+  windows-native, sync-secret-service, crypto-rust and vendored. Without platform
+  features it uses a mock store, per the [upstream documentation](https://docs.rs/keyring/3.6.3/keyring/).
+  Linux uses vendored D-Bus and Rust crypto. `reqwest` 0.12.28 uses rustls with
+  default features disabled. No new core dependencies were added.
+- The [HTTP client](https://docs.rs/reqwest/0.12.28/reqwest/struct.ClientBuilder.html)
+  disables redirects, automatic retries and environment proxies. Thus a loopback
+  model request cannot be routed through an environment proxy. Corporate proxies
+  are not supported in this first implementation. Response reads stop at 1 MiB;
+  error status bodies are discarded, and transport/keychain errors are mapped
+  without logging or exposing backend messages.
+- Settings and credential IO use blocking workers. Stored keys never return to
+  the renderer. Key entry is a write-only IPC argument, transiently present in
+  the settings renderer; the contradictory literal “never enters the renderer”
+  wording is interpreted as applying to stored keys, as required by the planned
+  key-entry API. Owned Rust key buffers are cleared promptly, without claiming
+  guaranteed erasure of OS, IPC or allocator copies. Hints are at most four
+  characters and are omitted for keys of four characters or fewer.
+- Credential failures are reported, never silently persisted in plaintext.
+  `llm_save_key` takes an explicit `sessionOnly` flag. A loopback custom endpoint
+  can work without a credential-store backend; remote custom endpoints fail
+  closed when the credential store is inaccessible. Session overrides last only
+  until clear/replacement or app exit. Clearing removes the session override and
+  attempts deletion of the stored key, reporting any failure.
+- Send rebuilds the prompt from its request and requires a matching, single-use
+  Rust-held preview receipt. The receipt includes provider/model/endpoint,
+  timeout, prompt version and complete local request identity. Settings/key edits,
+  cancellation and document closure invalidate pending review. Connection tests
+  now have `llm_test_preview` and likewise require review before their send command;
+  their fixed payload contains no backup data and can run with summaries disabled.
+- Cache identity uses exact local request/prompt equality rather than a digest
+  hash, avoiding collisions or a new hashing dependency. It includes Inspector
+  document hash/profiles and Compare input rows, slots and baseline, plus settings
+  including endpoint. Cache is bounded to 16 entries/8 MiB and cleared on any
+  document closure or settings/key edit. No summaries enter sessions. A
+  `regenerate` flag bypasses cached output after a fresh preview. `generatedAt`
+  carries Unix seconds as a decimal string for local formatting in the next UI
+  checkpoint. Comparison IPC input is limited to 2 MiB before digest construction.
+- Registered commands and typed client wrappers. Generated core bindings include
+  non-secret status, request, preview and summary contracts. Added shell tests to
+  `test.sh` and both native release workflow gates; no workflows were dispatched.
+- Updated privacy documentation and [dependency/license inventory](llm-dependencies.md).
+  Native installer contents and associated notice bundles remain release checks.
+
+Verification: `cargo test --workspace` passes 147 tests (124 core and 23 shell,
+including nine new shell tests). `cargo clippy --workspace --all-targets -- -D warnings`,
+`cargo fmt --all -- --check`, `pnpm bindings:check`, `pnpm typecheck`, `pnpm lint`,
+changed-client Prettier checking and `git diff --check` pass. `pnpm test` passes
+all 86 tests in 21 files when run alone; the first run alongside Rust builds
+passed its assertions but hit three Vitest worker RPC timeouts. No test or
+runner configuration was weakened. The shell transport tests use synthetic
+loopback HTTP responses; no cloud endpoint is contacted. Cross-target dependency
+graphs for Windows MSVC and macOS ARM64 contain rustls and no OpenSSL/native-tls;
+this is dependency verification, not native compilation or installer validation.
+UI/Playwright and screenshot gates remain for the UI checkpoints.
+
+Live provider/Ollama tests and native Windows/macOS installer/keychain tests are
+pending: this environment has only the Linux target and no Ollama executable.
+No real backup or key has been sent to any provider during this implementation.
+
+### Checkpoint 2 completion boundary — 2026-09-16
+
+- Added Inspector and Compare digest builders and prompt version 1, with generated
+  TypeScript declarations for the digest and settings types. No shell or UI yet.
+- Inspector enumerates the matching certified schema, excluding sensitive keys
+  and unrecognized settings. Missing and invalid values carry `value: null` and
+  `provenance: unknown`; only existing parser recovery supplies derived values.
+  Rate and PID selections are independent. Without a matching pack the parameter
+  list is empty; no unsupported setting values are forwarded.
+- Inspector includes five evenly spaced curve samples (including endpoints,
+  center and half-stick positions), unavailable reasons, recovery inputs, all
+  audit evaluations and fixed-severity diagnostic counts. Source text, paths,
+  titles, hashes, diagnostic messages and OSD identity previews are excluded.
+- Compare accepts two or three slots and an optional validated baseline index.
+  It rejects sensitive keys, unknown sections/statuses and incorrect value counts,
+  including rows beyond the cap. It preserves slot order and null unknown values.
+  Only slot counts enter the builder; local filenames cannot become labels.
+- Compare retains at most 400 rows and reports omitted counts and sorted sections.
+  Values, reasons, keys and scope labels are capped at 512 Unicode characters,
+  including an explicit truncation marker. Inspector setting values use the same
+  field cap; parameter cardinality is bounded by the bundled schema.
+- Prompts treat payload fields as untrusted data, preserve unknown/derived and
+  not-comparable distinctions, and state evidence and truncation limitations.
+  Rendering is byte-identical for rebuilt inputs. Actual preview/send IPC equality
+  remains a shell-checkpoint responsibility. Builders, rather than deserialized
+  digest objects supplied by the renderer, must be used by those commands.
+
+Verification: `cargo test -p flightlens-core` passes all 124 tests, including
+seven digest integration tests and the shared-list digest regression test.
+`cargo fmt --all -- --check`, `cargo clippy --workspace --all-targets -- -D warnings`,
+`pnpm bindings:check`, `pnpm typecheck` and `git diff --check` pass.
+Frontend behavior, screenshots, live providers and native keychain checks are
+not exercised in this core-only checkpoint.
+
+### Checkpoint 1 completion boundary — 2026-09-16
+
+- Added the pure `llm` core module: provider/wire types, non-secret settings,
+  disabled defaults, timeout clamping, request preparation and response parsing.
+  Promoted `feedback::sensitivity` without changing feedback redaction behavior.
+- No dependencies, sockets, key storage, IPC commands or UI have been added.
+  `Prompt` is only the transport input type for now; digest construction,
+  deterministic prompt rendering and generated bindings belong to checkpoint 2.
+- Requests hide all headers, URLs and bodies in `Debug`; prompts and summaries
+  also hide their text. Errors never include provider-supplied messages. Blocked,
+  truncated, incomplete and empty outputs are separate outcomes.
+- To preserve the no-new-core-dependencies rule, custom URLs use a strict ASCII
+  parser: DNS names, canonical IPv4, bracketed IPv6, optional ports and simple
+  endpoint paths. Encoded/Unicode hosts, numeric IPv4 shorthand, credentials,
+  queries, fragments and ambiguous paths are rejected. Use ASCII/punycode names
+  and unencoded endpoint prefixes. The shell must disable redirects and bound
+  response reads; the pure parser additionally limits bodies to 1 MiB.
+- Custom settings start with `http://localhost:11434` and an empty model field;
+  the user must name an installed model before validation succeeds. No local
+  model is assumed to be installed.
+
+Verification: `cargo test -p flightlens-core` passes all 116 tests (including
+14 provider/settings integration tests and the shared sensitivity-list test);
+`cargo fmt --all -- --check`, `cargo clippy --workspace --all-targets -- -D warnings`
+and `pnpm bindings:check` pass. Live requests, credentials and native installer
+checks are deferred to the transport/release checkpoints. No backup or key was
+sent to any provider during this work.
+
+Provider documentation checked on 2026-09-16:
+
+- Gemini defaults to `gemini-3.8-flash`, listed as stable in the
+  [model catalog](https://ai.google.dev/gemini-api/docs/models); the request uses
+  the documented [generateContent wire](https://ai.google.dev/api/generate-content).
+- OpenAI defaults to the non-reasoning
+  [`gpt-4.1-mini`](https://developers.openai.com/api/docs/models/gpt-4.1-mini).
+  The [Chat Completions reference](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create)
+  still documents `max_tokens`, deprecated in favor of `max_completion_tokens`
+  and incompatible with o-series models. The adapter retains the plan's
+  `max_tokens`/temperature shape for this default; arbitrary model overrides
+  may reject these parameters and receive a fixed explanatory error. Actual
+  account/model availability still needs checkpoint 3's live smoke check.
+- OpenRouter defaults to
+  [`openai/gpt-4.1-mini`](https://openrouter.ai/openai/gpt-4.1-mini).
+  Its [attribution documentation](https://openrouter.ai/docs/app-attribution)
+  confirms the plan's `X-Title` is still accepted; no referer is sent.
+
+Remaining UI interpretation: section 10's visible, disabled action with a reason
+will take precedence over section 1's hidden-action wording. The key-entry
+interpretation and explicit preview receipt are recorded in checkpoint 3 above.
+
 
 The prompt to hand the implementing agent is in
 [Appendix A](#appendix-a--codex-handoff-prompt), along with a shorter form for
@@ -333,9 +649,10 @@ Commands added to `invoke_handler!` in `main.rs` and to `src/ipc/client.ts`.
 - `llm_settings() -> LlmStatus` — returns the settings plus `hasKey: bool` and
   `keyHint: Option<String>` (last four characters only). **Never returns the key.**
 - `llm_save_settings(settings: LlmSettings) -> LlmStatus`
-- `llm_save_key(provider: Provider, key: String) -> LlmStatus` — writes to the
+- `llm_save_key(provider: Provider, key: String, session_only: bool) -> LlmStatus` — writes to the
   keychain, clears the local variable promptly.
 - `llm_clear_key(provider: Provider) -> LlmStatus`
+- `llm_test_preview() -> LlmPreview` — previews the fixed no-backup test payload.
 - `llm_test_connection() -> Result<String, String>` — a minimal request that
   confirms the key and endpoint work, so a user is not debugging credentials
   through a failed summary.
@@ -343,13 +660,13 @@ Commands added to `invoke_handler!` in `main.rs` and to `src/ipc/client.ts`.
 ### 8.2 Summaries
 
 - `llm_preview(request: SummaryRequest) -> LlmPreview`
-- `llm_summarize(request: SummaryRequest) -> LlmSummary`
+- `llm_summarize(request: SummaryRequest, regenerate: bool) -> LlmSummary`
 - `llm_cancel()`
 
 ```rust
 pub enum SummaryRequest {
     Inspector { config_id: String, rate_profile: u8, pid_profile: u8 },
-    Diff { labels: Vec<String>, baseline: Option<usize>, rows: Vec<DiffRowInput> },
+    Diff { slots: Vec<SummarySlot>, baseline: Option<usize>, rows: Vec<DiffRowInput> },
 }
 
 pub struct LlmPreview {

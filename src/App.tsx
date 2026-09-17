@@ -1,3 +1,5 @@
+import { AiSettings } from "./AiSettings";
+import type { LlmStatus } from "./bindings/core";
 import { Inspector } from "./Inspector";
 import { BackupInstructions } from "./BackupInstructions";
 import { message } from "./errorMessage";
@@ -25,6 +27,17 @@ export default function App() {
   const [comparing, setComparing] = useState(false);
   const [paste, setPaste] = useState(false);
   const [feedback, setFeedback] = useState(false);
+  const [aiSettings, setAiSettings] = useState(false);
+  const [aiStatus, setAiStatus] = useState<LlmStatus | null>(null);
+  useEffect(() => {
+    if (desktopAvailable())
+      void api
+        .llmSettings()
+        .then((status) => {
+          if (status?.settings) setAiStatus(status);
+        })
+        .catch(() => {});
+  }, []);
   const [text, setText] = useState("");
   const [label, setLabel] = useState("Pasted config 1");
   const [busy, setBusy] = useState(false);
@@ -202,6 +215,7 @@ export default function App() {
         >
           {comparing ? "Back to inspector" : "Compare backups"}
         </button>
+        <button onClick={() => setAiSettings(true)}>AI summary settings</button>
         <WorkspaceExplorer
           restoredPage={sessionWorkspace}
           disabled={!desktop || busy}
@@ -278,7 +292,7 @@ export default function App() {
             >
               Send feedback
             </button>
-            <span className="pill">● Offline</span>
+            <span className="pill">● Local inspection</span>
           </div>
         </header>
         <section className="session-controls" aria-label="Portable sessions">
@@ -422,6 +436,8 @@ export default function App() {
         )}
         {comparing ? (
           <Comparison
+            aiStatus={aiStatus}
+            openAiSettings={() => setAiSettings(true)}
             documents={Array.from(workspace.artifacts.values()).flatMap((a) =>
               a.kind === "config" ? [a.document] : [],
             )}
@@ -501,6 +517,8 @@ export default function App() {
           <Inspector
             key={artifact.document.id}
             document={artifact.document}
+            aiStatus={aiStatus}
+            openAiSettings={() => setAiSettings(true)}
             onError={setError}
             reload={() =>
               void run(async () =>
@@ -510,6 +528,13 @@ export default function App() {
           />
         )}
       </main>
+      {aiSettings && (
+        <AiSettings
+          status={aiStatus}
+          onChange={setAiStatus}
+          onClose={() => setAiSettings(false)}
+        />
+      )}
       {feedback && (
         <Feedback
           configId={artifact?.kind === "config" ? artifact.document.id : null}

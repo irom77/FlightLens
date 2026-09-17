@@ -1292,3 +1292,65 @@ summary {
   font-weight: 600;
   padding: 8px;
 }
+
+.ai-settings-fields {
+  border: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.ai-settings-fields label:not(.checkbox) {
+  display: grid;
+  gap: 6px;
+}
+.ai-summary-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.ai-summary-heading .document-heading {
+  flex: 1;
+  min-width: 0;
+}
+.ai-summary-controls {
+  padding: 16px 34px 16px 0;
+  max-width: 280px;
+}
+.ai-summary-controls .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.ai-summary-controls .text-button {
+  margin: 0;
+}
+.ai-summary-controls p {
+  margin-bottom: 0;
+}
+.ai-summary > .ai-result,
+.ai-summary > .notice,
+.ai-summary > [role="status"] {
+  margin: 0 34px 20px;
+}
+.ai-result {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.ai-result-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+  line-height: 1.6;
+  max-height: 480px;
+  overflow: auto;
+}
+.ai-destination {
+  overflow-wrap: anywhere;
+}
+.ai-preview pre {
+  max-height: 180px;
+}
+.ai-settings-fields label {
+  margin-bottom: 0;
+}
