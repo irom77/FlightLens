@@ -8,7 +8,11 @@ import type {
 import { api, desktopAvailable } from "./ipc/client";
 import { Modal } from "./Modal";
 import { AiPreview } from "./AiPreview";
-import { providers, providerSettings, settingsProblem } from "./aiSettings";
+import {
+  providers,
+  providerSettings,
+  settingsProblem,
+} from "./aiSummarySettings";
 import { message } from "./errorMessage";
 
 export function AiSettings({

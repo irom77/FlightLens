@@ -3,7 +3,7 @@ import type { LlmPreview, LlmSettings } from "./bindings/core";
 import { api } from "./ipc/client";
 import { Modal } from "./Modal";
 import { message } from "./errorMessage";
-import { providers } from "./aiSettings";
+import { providers } from "./aiSummarySettings";
 
 export function AiPreview({
   preview,

@@ -12,7 +12,7 @@ import {
   generatedTime,
   providers,
   summaryProblem,
-} from "./aiSettings";
+} from "./aiSummarySettings";
 import { message } from "./errorMessage";
 
 export function AiResult({ summary }: { summary: LlmSummary }) {

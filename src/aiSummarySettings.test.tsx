@@ -5,7 +5,7 @@ import {
   providerSettings,
   settingsProblem,
   summaryProblem,
-} from "./aiSettings";
+} from "./aiSummarySettings";
 it("keeps summaries off and requires valid model, endpoint and timeout", () => {
   const settings = providerSettings("custom");
   expect(settings.enabled).toBe(false);

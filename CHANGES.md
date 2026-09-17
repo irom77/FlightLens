@@ -6,6 +6,11 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## 0.11.1 — 2026-09-17
+
+- Fix AI settings module resolution on case-insensitive Windows/macOS filesystems,
+  which blocked the 0.11.0 installer builds. AI summary behavior is unchanged.
+
 ## 0.11.0 — 2026-09-17
 
 - Add the core and desktop command foundation for optional AI summaries:

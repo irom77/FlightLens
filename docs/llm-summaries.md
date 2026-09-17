@@ -12,6 +12,13 @@ for the remaining checkpoints.
 
 ### Checkpoint 6 — final local verification and release preparation — 2026-09-17
 
+Release follow-up: the first tagged macOS build passed Rust checks but exposed
+a case-insensitive TypeScript resolution collision between `AiSettings.tsx` and
+`aiSettings.ts`. The helper and its test are now named `aiSummarySettings`, and
+imports use that distinct basename. Version `0.11.1` carries the correction;
+the pushed `v0.11.0` tag remains immutable. Native installer verification is
+performed by the new tagged workflows before publishing the milestone notes.
+
 Implementation and documentation cover Inspector and Compare summaries. Version
 metadata is now `0.11.0` in package.json, Tauri configuration, workspace Cargo.toml
 and the refreshed Cargo.lock: this is a new capability under the release policy.
