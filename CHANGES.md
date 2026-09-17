@@ -6,6 +6,11 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## 0.11.2 — 2026-09-17
+
+- Restore macOS release verification by making the synthetic HTTP server socket
+  mode explicit. The installer gate retains all transport assertions.
+
 ## 0.11.1 — 2026-09-17
 
 - Fix AI settings module resolution on case-insensitive Windows/macOS filesystems,

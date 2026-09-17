@@ -18,6 +18,9 @@ a case-insensitive TypeScript resolution collision between `AiSettings.tsx` and
 imports use that distinct basename. Version `0.11.1` carries the correction;
 the pushed `v0.11.0` tag remains immutable. Native installer verification is
 performed by the new tagged workflows before publishing the milestone notes.
+The macOS rerun exposed an inherited nonblocking socket in the synthetic HTTP
+server; `0.11.2` explicitly switches the accepted test socket to blocking mode.
+This preserves all transport assertions and does not change application behavior.
 
 Implementation and documentation cover Inspector and Compare summaries. Version
 metadata is now `0.11.0` in package.json, Tauri configuration, workspace Cargo.toml

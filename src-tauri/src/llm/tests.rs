@@ -414,6 +414,8 @@ fn server(reply: Vec<u8>, delay: Duration) -> (String, std::thread::JoinHandle<(
                 Err(e) => panic!("synthetic server: {e}"),
             }
         };
+        // Accepted sockets can inherit nonblocking mode on macOS.
+        socket.set_nonblocking(false).unwrap();
         socket
             .set_read_timeout(Some(Duration::from_secs(2)))
             .unwrap();
