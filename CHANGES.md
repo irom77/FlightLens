@@ -6,6 +6,15 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## Unreleased
+
+## 0.12.0 — 2026-09-18
+
+- Customize saved AI summary Markdown filenames to include the craft name,
+  firmware version, and generation date with safe alphanumeric normalization.
+- Persist performed AI summaries in memory, allowing seamless switching
+  between configurations or compared backups without losing results.
+
 ## 0.11.3 — 2026-09-18
 
 - Increase Gemini summaries’ token budget from 1,024 to 8,192 so internal

@@ -1020,6 +1020,71 @@ fn cached_export(
     }
     Ok(summary_markdown(summary, request, documents))
 }
+fn sanitize_filename_component(value: &str) -> String {
+    let mut sanitized = String::new();
+    let mut last_was_hyphen = false;
+    for c in value.chars() {
+        if c.is_ascii_alphanumeric() || c == '_' {
+            sanitized.push(c.to_ascii_lowercase());
+            last_was_hyphen = false;
+        } else if !last_was_hyphen {
+            sanitized.push('-');
+            last_was_hyphen = true;
+        }
+    }
+    let trimmed = sanitized.trim_matches('-');
+    trimmed.to_string()
+}
+fn suggested_filename(
+    request: &SummaryRequest,
+    documents: &[&ConfigDocument],
+    generated_at_seconds: &str,
+) -> String {
+    let date_part = utc_timestamp(generated_at_seconds)
+        .get(..10)
+        .unwrap_or("")
+        .to_string();
+    let sanitized_date = if date_part.is_empty() {
+        String::new()
+    } else {
+        format!("-{date_part}")
+    };
+
+    match request {
+        SummaryRequest::Inspector { .. } => {
+            let mut parts = vec!["flightlens-ai-summary".to_string()];
+            if let Some(ref craft) = documents[0].craft_name {
+                let s = sanitize_filename_component(craft);
+                if !s.is_empty() {
+                    parts.push(s);
+                }
+            }
+            if let Some(ref ver) = documents[0].firmware.version {
+                let s = sanitize_filename_component(ver);
+                if !s.is_empty() {
+                    parts.push(s);
+                }
+            }
+            format!("{}{}.md", parts.join("-"), sanitized_date)
+        }
+        SummaryRequest::Diff { .. } => {
+            let mut parts = vec!["flightlens-ai-comparison".to_string()];
+            let craft_names = documents
+                .iter()
+                .filter_map(|doc| {
+                    doc.craft_name
+                        .as_ref()
+                        .map(|c| sanitize_filename_component(c))
+                })
+                .filter(|s| !s.is_empty())
+                .collect::<Vec<_>>();
+            if !craft_names.is_empty() {
+                parts.push(craft_names.join("-vs-"));
+            }
+            format!("{}{}.md", parts.join("-"), sanitized_date)
+        }
+    }
+}
 #[tauri::command]
 pub async fn llm_save_summary(
     app: tauri::AppHandle,
@@ -1029,19 +1094,18 @@ pub async fn llm_save_summary(
     blocking(move || {
         let documents = request_documents(&app, &request)?;
         let settings = read_settings(&settings_path(&app)?)?;
+        let doc_refs = documents.iter().map(AsRef::as_ref).collect::<Vec<_>>();
         let text = cached_export(
             &app.state::<super::AppState>().llm,
             &settings,
             &request,
-            &documents.iter().map(AsRef::as_ref).collect::<Vec<_>>(),
+            &doc_refs,
             &summary,
         )?;
-        super::save::save_new(
-            &app,
-            "flightlens-ai-summary.md",
-            ("Markdown", &["md"]),
-            |_| Ok(text.as_bytes().to_vec()),
-        )
+        let filename = suggested_filename(&request, &doc_refs, &summary.generated_at);
+        super::save::save_new(&app, &filename, ("Markdown", &["md"]), |_| {
+            Ok(text.as_bytes().to_vec())
+        })
     })
     .await
 }

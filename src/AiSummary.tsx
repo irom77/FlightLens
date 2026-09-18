@@ -7,6 +7,7 @@ import type {
 } from "./bindings/core";
 import { api, desktopAvailable } from "./ipc/client";
 import { AiPreview } from "./AiPreview";
+import { useSelections } from "./stores/selections";
 import {
   disclaimer,
   generatedTime,
@@ -41,8 +42,10 @@ export function AiSummary({
   status: LlmStatus | null;
   openSettings: () => void;
 }) {
+  const { summaries, setSummary: storeSetSummary } = useSelections();
+  const requestKey = request ? JSON.stringify(request) : "";
+  const summary = requestKey ? (summaries[requestKey] ?? null) : null;
   const [preview, setPreview] = useState<LlmPreview | null>(null);
-  const [summary, setSummary] = useState<LlmSummary | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -142,7 +145,7 @@ export function AiSummary({
             >
               Regenerate
             </button>
-            <button onClick={() => setSummary(null)}>Dismiss</button>
+            <button onClick={() => storeSetSummary(requestKey, null)}>Dismiss</button>
           </div>
         </div>
       )}
@@ -159,7 +162,7 @@ export function AiSummary({
             const current = epoch.current;
             const result = await api.llmSummarize(request, regenerate.current);
             if (current === epoch.current) {
-              setSummary(result);
+              storeSetSummary(requestKey, result);
               setPreview(null);
             }
           }}

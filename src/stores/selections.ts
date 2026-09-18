@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { ComparisonDocument } from "../documentView";
+import type { LlmSummary } from "../bindings/core";
 
 export type Profiles = { rate: number; pid: number };
 export type ComparisonSelection = {
@@ -40,16 +41,19 @@ export function restoredProfiles(d: ComparisonDocument, saved: Profiles) {
 interface Selections {
   profiles: Record<string, Profiles>;
   comparison: ComparisonSelection | null;
+  summaries: Record<string, LlmSummary>;
   setProfile: (
     d: ComparisonDocument,
     kind: keyof Profiles,
     value: number,
   ) => void;
   setComparison: (comparison: ComparisonSelection | null) => void;
+  setSummary: (requestKey: string, summary: LlmSummary | null) => void;
 }
 export const useSelections = create<Selections>((set) => ({
   profiles: {},
   comparison: null,
+  summaries: {},
   setProfile: (d, kind, value) =>
     set((s) => ({
       profiles: {
@@ -58,6 +62,16 @@ export const useSelections = create<Selections>((set) => ({
       },
     })),
   setComparison: (comparison) => set({ comparison }),
+  setSummary: (requestKey, summary) =>
+    set((s) => {
+      const summaries = { ...s.summaries };
+      if (summary === null) {
+        delete summaries[requestKey];
+      } else {
+        summaries[requestKey] = summary;
+      }
+      return { summaries };
+    }),
 }));
 
 export function useProfiles(d?: ComparisonDocument) {
