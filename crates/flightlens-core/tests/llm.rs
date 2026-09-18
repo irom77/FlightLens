@@ -204,7 +204,7 @@ fn builds_gemini_request_with_key_only_in_header() {
         json!({
             "systemInstruction": {"parts": [{"text": prompt().system}]},
             "contents": [{"role": "user", "parts": [{"text": prompt().user}]}],
-            "generationConfig": {"temperature": 0.2, "maxOutputTokens": 1024}
+            "generationConfig": {"temperature": 0.2, "maxOutputTokens": 8192}
         })
     );
     assert!(!request.body.contains("synthetic-key"));

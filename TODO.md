@@ -7,10 +7,11 @@ file holds actionable tasks and explicitly deferred follow-up work.
 
 ## Next
 
-- LLM release checks still pending: a real provider request, installed Ollama
-  smoke test, and packaged Windows/macOS keychain, installer and license-bundle
-  checks. Only Linux is available here; fake credentials and a synthetic HTTP
-  server do not establish native keychain or model availability.
+- LLM release checks still pending: installed Ollama smoke test and packaged
+  Windows/macOS keychain, installer and license-bundle checks. Live Gemini
+  `gemini-3.8-flash` requests with synthetic comparison data reproduced the
+  1,024-token truncation and completed with 8,192 tokens on 2026-09-18.
+  Other providers and the packaged end-to-end summary flow remain unverified.
 - Keep LLM streaming, token/cost display, summary session persistence, telemetry
   summaries and user prompt customization deferred. LLM output must never drive
   parsing, audit verdicts, derived values or configuration exports.

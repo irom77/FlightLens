@@ -570,7 +570,7 @@ Four providers, two wire shapes.
 {
   "systemInstruction": { "parts": [{ "text": "<system>" }] },
   "contents": [{ "role": "user", "parts": [{ "text": "<user>" }] }],
-  "generationConfig": { "temperature": 0.2, "maxOutputTokens": 1024 }
+  "generationConfig": { "temperature": 0.2, "maxOutputTokens": 8192 }
 }
 ```
 
@@ -1083,3 +1083,16 @@ discipline in AGENTS.md still apply: stop when the unit is done, report what
 changed, what you verified with actual command output, and what you could not
 verify. Do not commit, push, or bump the version.
 ````
+
+### Gemini output budget follow-up (2026-09-18)
+
+Live `gemini-3.8-flash` testing with synthetic comparison data reproduced
+`MAX_TOKENS` at the previous 1,024-token limit (860 thinking tokens and 160
+visible output tokens). The same input completed twice at 8,192 tokens.
+Gemini requests now use that ceiling; thinking settings remain unchanged.
+The larger ceiling permits more billable output, and unusually demanding
+requests can still truncate. Partial responses remain rejected. See the
+[Gemini thinking documentation](https://ai.google.dev/gemini-api/docs/generate-content/thinking#token-limits-and-max_output_tokens)
+for the combined thinking/output budget. Live probes used the application
+system prompt and synthetic data, not actual backups; packaged UI validation
+remains pending.

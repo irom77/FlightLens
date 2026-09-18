@@ -89,12 +89,14 @@ pub fn build_request(
         headers.push(("X-Title".into(), "FlightLens".into()));
     }
     let (url, body) = match settings.provider.wire() {
+        // Gemini counts internal thinking against this same output budget.
+        // Leave room for both reasoning and the concise visible summary.
         Wire::Gemini => (
             format!("{base}/v1beta/models/{}:generateContent", settings.model),
             json!({
                 "systemInstruction": { "parts": [{ "text": prompt.system }] },
                 "contents": [{ "role": "user", "parts": [{ "text": prompt.user }] }],
-                "generationConfig": { "temperature": 0.2, "maxOutputTokens": 1024 }
+                "generationConfig": { "temperature": 0.2, "maxOutputTokens": 8192 }
             }),
         ),
         Wire::OpenAiCompatible => (

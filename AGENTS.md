@@ -1,5 +1,11 @@
 # Agent rules
 
+## Overview & Guidelines
+This document defines operational protocols, execution workflows, and tool usage rules for AI agents operating within this repository.
+
+---
+
+## 1. General Directives
 - Do not use Superpowers skills (`superpowers:*`) in this repository. Work directly with the available tools and other relevant skills.
 - Keep FlightLens focused on inspecting, comparing, and auditing FPV flight controller backups offline. Preserve offline operation.
 - Read the relevant code and repository configuration before making changes. Follow existing conventions.
@@ -15,3 +21,42 @@
 - Before choosing a version, preparing release notes, or publishing a release, read and follow [the release policy](docs/releases/README.md). It defines bump criteria, compatibility, cadence, and required milestone notes. Choose the bump from the changes being released, never from patch count or elapsed time.
 - Work in checkpoints rather than one long uninterrupted run. After each self-contained unit of work (a completed feature slice, a passing check, a group of related edits), stop and hand control back so the user can compact the conversation, review the diff, and commit or push before the next unit begins.
 - At each checkpoint, state briefly what changed, what was verified, and what the next unit would be; then wait for the user instead of continuing automatically.
+
+---
+
+## 2. Development Execution Modes
+
+We support two distinct modes of execution: **Standard Mode** (default) and **Adversarial Mode** (on-demand).
+
+### Mode A: Standard Execution (Default)
+By default, execute instructions directly:
+1. Plan and apply necessary file modifications.
+2. Run standard tests and linting (`pnpm test` and/or `cargo test` inside `src-tauri/`).
+3. Report results directly to the user.
+
+---
+
+### Mode B: Adversarial Execution (On-Demand Only)
+
+Run the multi-round adversarial harness **only** when explicitly requested by the user.
+
+#### Trigger Keywords & Flags
+Activate this mode if the prompt contains any of the following:
+- CLI Flags: `--adversarial`, `-adv`, `/adversarial`
+- Key Phrases:
+  - `"use adversarial review"`
+  - `"run with reviewer"`
+  - `"adversarial mode"`
+  - `"two personas / coder and reviewer"`
+  - `"critique and refine"`
+
+#### Roles & Personas
+- **Coder Persona (`.codex/prompts/coder.md`):** Implements code changes, writes comprehensive tests, and iterates based strictly on reviewer feedback without introducing regressions.
+- **Reviewer Persona (`.codex/prompts/reviewer.md`):** Acts as a security- and edge-case-focused auditor. Inspects `git diff` and execution logs. Does not write code; outputs either `STATUS: REJECTED` with specific critiques or `STATUS: APPROVED`.
+
+#### Execution Workflow
+When triggered:
+1. **Tree Cleanliness:** Check `git status` to verify there are no uncommitted collisions.
+2. **Launch Harness:** Execute the automated runner with the stripped task prompt:
+   ```bash
+   python .codex/scripts/adversarial_review.py "<TASK_SPECIFICATION>"

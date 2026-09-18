@@ -6,6 +6,12 @@ Work that is committed but not yet released sits under `## Unreleased` and is
 renamed to the version when the release is cut. Purely internal work
 (formatting, comments, test-only refactors) is left out.
 
+## 0.11.3 — 2026-09-18
+
+- Increase Gemini summaries’ token budget from 1,024 to 8,192 so internal
+  thinking has room alongside the visible summary. This addresses repeated
+  output-limit failures; longer responses can use more billable tokens.
+
 ## 0.11.2 — 2026-09-17
 
 - Restore macOS release verification by making the synthetic HTTP server socket
