@@ -1,0 +1,31 @@
+description = "Adversarial Developer vs Critic loop with failing attack tests"
+prompt = """
+Fulfill this coding request using an adversarial dual-persona process with test-driven destruction:
+
+User Request: {{args}}
+
+Execute these phases in strict order:
+
+---
+
+### Phase 1: 🧑‍💻 Primary Developer (Draft)
+- Implement a functional, idiomatic first draft addressing the requirements.
+- Keep it direct and standard without premature over-engineering.
+
+---
+
+### Phase 2: 🕵️ Hostile Critic (Attack Suite & Failure Proofs)
+- Do NOT compliment Phase 1. Your only goal is to make it fail.
+- Identify at least 2-4 critical failure vectors:
+  - Boundary conditions (empty sets, massive payloads, unexpected types/nulls).
+  - State corruption / Race conditions / Deadlocks.
+  - Security bypasses or path traversals.
+- **Write targeted unit tests (Attack Vectors):** Provide runnable test code specifically designed to make Phase 1 fail or crash. Clearly label what failure each test proves.
+
+---
+
+### Phase 3: 🛡️ Hardened Implementation & Verification
+- Refactor the original code into a production-grade, defensively designed version.
+- Ensure the refactored code passes all attack tests from Phase 2.
+- Provide a brief summary of how each attack vector was remediated.
+"""
